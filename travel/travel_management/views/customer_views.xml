@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Customer Menu Root -->
+    <menuitem id="menu_customer_root" name="Customer Management"/>
+
+    <!-- View for Customer Info Tree -->
+    <record id="view_customer_info_tree" model="ir.ui.view">
+        <field name="name">customer.info.tree</field>
+        <field name="model">customer.info</field>
+        <field name="arch" type="xml">
+            <tree string="Customer Info">
+                  
+            
+
+                            <field name="name"/>
+                            <field name="email"/>
+                            <field name="phone"/>
+                            <field name="address"/>
+                            <field name="date_of_birth"/>
+                            <field name="gender"/>
+             
+            </tree>
+        </field>
+    </record>
+
+    <!-- View for Customer Info Form -->
+    <record id="view_customer_info_form" model="ir.ui.view">
+        <field name="name">customer.info.form</field>
+        <field name="model">customer.info</field>
+        <field name="arch" type="xml">
+            <form string="Customer Info">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="email"/>
+                            <field name="phone"/>
+                            <field name="address"/>
+                            <field name="date_of_birth"/>
+                            <field name="gender"/>
+                        </group>
+                    </group>
+                </sheet>
+               
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="message_ids"/>
+                </div>
+               
+            </form>
+        </field>
+    </record>
+
+    <!-- Action for Customer Info -->
+    <record id="action_customer_info" model="ir.actions.act_window">
+        <field name="name">Customer Info</field>
+        <field name="res_model">customer.info</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Travel Management Menu -->
+    <menuitem id="travel_opperation_main" name="Travel Manage Module" sequence="50"/>
+
+    <!-- Submenu for Customer Info under Travel Management -->
+    <menuitem id="travel_operation_sub_again" name="Customer Info" parent="travel_opperation_main" action="action_customer_info"/>
+</odoo>

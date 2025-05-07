@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Travel Menu Root -->
+    <menuitem id="menu_travel_root" name="Travel Management"/>
+
+    <record id="view_travel_management_tree" model="ir.ui.view">
+        <field name="name">travel.management.tree</field>
+        <field name="model">travel.management</field>
+        <field name="arch" type="xml">
+            <tree string="Travel Management">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="destination"/>
+                <field name="departure_date"/>
+                <field name="return_date"/>
+                <field name="travel_mode"/>
+                <field name="ticket_number"/>
+                <field name="hotel_name"/>
+                <field name="hotel_booking"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_travel_management_form" model="ir.ui.view">
+        <field name="name">travel.management.form</field>
+        <field name="model">travel.management</field>
+        <field name="arch" type="xml">
+            <form string="Travel Management">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="employee_id"/>
+                            <field name="destination"/>
+                            <field name="departure_date"/>
+                            <field name="return_date"/>
+                            <field name="travel_mode"/>
+                            <field name="ticket_number"/>
+                            <field name="hotel_name"/>
+                            <field name="hotel_booking"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_travel_management" model="ir.actions.act_window">
+        <field name="name">Travel Management</field>
+        <field name="res_model">travel.management</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu
+    <menuitem id="menu_food_order_root" name="Food Management" sequence="10"/>
+    <menuitem id="menu_food_order_sub" name="Orders" parent="menu_food_order_root" action="action_food_order"/> -->
+
+  <menuitem id="travel_opperation_main" name="Travel Manage Module" sequence="10"/>
+  <menuitem id="travel_operation_sub" name="Travel Opeations" parent="travel_opperation_main" action="action_travel_management"/>
+</odoo>

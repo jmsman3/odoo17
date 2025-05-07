@@ -1,0 +1,8 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access_food_order_user,access.food.order.user,model_food_order,,1,1,1,1
+
+
+
+access_foodpanda_chef,access_foodpanda_chef,model_foodpanda_chef,,1,1,1,1
+

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_food_order_tree" model="ir.ui.view">
+        <field name="name">food.order.tree</field>
+        <field name="model">food.order</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="customer_name"/>
+                <field name="food_item"/>
+                <field name="quantity"/>
+                <field name="price_per_unit"/>
+                <field name="total_price"/>
+                <field name="status"
+                
+                decoration-warning="status == 'pending'"
+                decoration-primary="status == 'confirmed'"
+                decoration-success="status == 'delivered'"/>        
+
+                <field name="chef_id"/>
+                
+                
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_food_order_form" model="ir.ui.view">
+        <field name="name">food.order.form</field>
+        <field name="model">food.order</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="customer_name"/>
+                        <field name="food_item"/>
+                        <field name="quantity"/>
+                        <field name="price_per_unit"/>
+                        <field name="total_price" readonly="1"/>
+                        <field name="status"/>
+                        <field name="chef_id"/>
+                       
+                    </group>
+                </sheet>
+                
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="message_ids"/>
+                </div>
+            
+            
+
+            </form>
+        </field>
+    </record>
+    
+    <!-- Action -->
+    <record id="action_food_order" model="ir.actions.act_window">
+        <field name="name">Food Orders</field>
+        <field name="res_model">food.order</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu -->
+    <menuitem id="menu_food_order_root" name="Food Management" sequence="10"/>
+    <menuitem id="menu_food_order_sub" name="Orders" parent="menu_food_order_root" action="action_food_order"/>
+</odoo>
