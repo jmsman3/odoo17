@@ -35,7 +35,7 @@ class Chef(models.Model):
  
         #     print(f"His name is {each_chef_taking.name} and is is Skilled in Cooking {each_chef_taking.speciality}. But he is {each_chef_taking.experience_years} years experience person. He has a Very Good rating that is {each_chef_taking.rating}")
         #     print('\n') 
-        #
+      
 # #------------------------------------------------------------------------------------------------------------
         specific_chef = self.env['foodpanda.chef'].search([('speciality', '=', 'Biscuit  Maker')])
 
