@@ -1,6 +1,6 @@
 <odoo>
     <record id="view_move_form_inherited" model="ir.ui.view"> <!-- id can be anything-->
-        <field name="name">account.move.form</field> <!-- name can be anything, bes practise= model_name.extension-->
+        <field name="name">account.move.form</field> <!-- name can be anything, best practise= model_name.extension-->
         <field name="model">account.move</field> <!-- Form view er model name-->
          <field name="inherit_id" ref="account.view_move_form" /> <!-- Form view er external id -->
         <field name="arch" type="xml">
@@ -8,6 +8,13 @@
             <xpath expr="//field[@name='payment_reference']" position="before">
                 <field name="appointment_id" />
             </xpath>
+
+
+            <xpath expr="//group[@name='accounting_info_group']//field[@name='auto_post']" position="attributes"> <!-- misc_group er under e auto_post filed ta availabe ase,group field aage dete hobe , name field pore otherwise error show korbe  -->
+                <attribute name="invisible">1</attribute>  <!--1 means invisible will be true ,0 mean false -->
+            </xpath>
+           
+
         </field>
     </record>
 
@@ -19,9 +26,8 @@
 
                 <xpath expr="//field[@name='invoice_date']" position="after">
                     <field name="appointment_id" /> 
-                    for i in appointment_id: appointment_id.customer_name
-
                 </xpath>
+
             </field>
         </record>
 

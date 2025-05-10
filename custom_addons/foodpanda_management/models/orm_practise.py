@@ -1,7 +1,7 @@
-# # my_module.py
-# from odoo import models, fields, api
+# my_module.py
+from odoo import models, fields, api
 
-# # Model: Chef
+# Model: Chef
 # class Chef(models.Model):
 #     _name = 'food.chef'
 #     _description = 'Chef Info'
@@ -12,7 +12,7 @@
 #     food_ids = fields.One2many('food.item', 'chef_id', string='Food Items')
 
 
-# # Model: FoodItem
+# Model: FoodItem
 # class FoodItem(models.Model):
 #     _name = 'food.item'
 #     _description = 'Food Item Info'

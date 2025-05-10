@@ -5,6 +5,7 @@ class FoodPanda(models.Model):
     _name = 'food.order'
     _description= 'It is the best food ordering platform for customers'
     _inherit = ['mail.thread']
+    _rec_name = 'customer_name' 
 
     customer_name = fields.Char(string="Customer name", required=True)
     food_item = fields.Char(string="Food item", required=True)
@@ -26,7 +27,28 @@ class FoodPanda(models.Model):
 
     total_price = fields.Float(string='Total Price' , compute='_compute_total_price')
 
+    discount = fields.Float(string="Discount (%)", compute='_compute_discount')
+    net_price = fields.Float(string="Net Price", compute="_compute_net_price")
+
+
+    #This function for SET TOTAL PRICE
     @api.depends('quantity','price_per_unit')
     def _compute_total_price(self):
-        for jubaer in self:
-            jubaer.total_price = jubaer.quantity * jubaer.price_per_unit
+        for i in self:
+            i.total_price = i.quantity * i.price_per_unit
+    
+    @api.depends('quantity')
+    def _compute_discount(self):
+        for j in self:
+            if j.quantity > 10:
+                j.discount = 10.0
+            else:
+                j.discount = 0.0
+    
+    @api.onchange('total_price')
+    def _compute_net_price(self):
+        for k in self:
+            k.net_price = k.total_price * ( 1 - (k.discount/100.0))
+
+    
+
