@@ -1,0 +1,29 @@
+<odoo>
+    <record id="view_move_form_inherited" model="ir.ui.view"> <!-- id can be anything-->
+        <field name="name">account.move.form</field> <!-- name can be anything, bes practise= model_name.extension-->
+        <field name="model">account.move</field> <!-- Form view er model name-->
+         <field name="inherit_id" ref="account.view_move_form" /> <!-- Form view er external id -->
+        <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='payment_reference']" position="before">
+                <field name="appointment_id" />
+            </xpath>
+        </field>
+    </record>
+
+        <record id="view_invoice_tree_inherited" model="ir.ui.view"> <!-- id can be anything , best practise external_id + inherited-->
+            <field name="name">account.move.tree</field> <!-- name can be anything, bes practise= model_name.extension-->
+            <field name="model">account.move</field> <!-- List view er model name-->
+            <field name="inherit_id" ref="account.view_invoice_tree" /> <!-- List view er external id -->
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='invoice_date']" position="after">
+                    <field name="appointment_id" /> 
+                    for i in appointment_id: appointment_id.customer_name
+
+                </xpath>
+            </field>
+        </record>
+
+
+</odoo>

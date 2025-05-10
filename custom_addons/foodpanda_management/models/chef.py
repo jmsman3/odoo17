@@ -105,7 +105,7 @@ class Chef(models.Model):
 #         chef_and_operator_count = self.env['foodpanda.chef'].search([('experience_years', '>', '2'),('speciality', '=', 'Fish')])
 
 #         #Condition wise search count
-#         chef_and_operator_count_now = self.env['foodpanda.chef'].search_count([('experience_years', '>', '2'),('speciality', '=', 'Fish')])
+#         chef_and_operator_cou Joy bangalant_now = self.env['foodpanda.chef'].search_count([('experience_years', '>', '2'),('speciality', '=', 'Fish')])
 #         print("Experience and spciality wise count: ", chef_and_operator_count_now)
 #  #------------------------------------------------------------------------------------------------------------
 
@@ -180,19 +180,20 @@ class Chef(models.Model):
 #         print('\n')
         
    #---------------------------------------------------------------------------------------------------------------------------
-        #create Method 
-        # vals = {
-        #     'name': 'Neloy Hossain',
-        #     'speciality': 'Orange juice  Maker',
-        #     'experience_years': 1.1,
-        #     'rating': 0.1
+        # create Method 
+        vals = {
+            'name': 'Joy bangala',
+            'speciality': 'Apple juice  Maker',
+            'experience_years': 1.1,
+            'rating': 0.1
 
-        # }
-        # create_record = self.env['foodpanda.chef'].create(vals)
-        # print("his name isss.....",create_record.name )
+        }
+        create_record = self.env['foodpanda.chef'].create(vals)
+        print("his name isss.....",create_record.name )
+        print("His speciality......",create_record.speciality )
 
 
-        # print(f"New Record name is {create_record.name} With his Id Number -{create_record.id} \n His speciality is he is a {create_record.speciality} \n His is {create_record.experience_years} Years Experience person.\n Finally is ratig is {create_record.rating} \n")
+        print(f"New Record name is {create_record.name} With his Id Number -{create_record.id} \n His speciality is he is a {create_record.speciality} \n His is {create_record.experience_years} Years Experience person.\n Finally is ratig is {create_record.rating} \n")
     # ---------------------------------------------------------------------------------------------------------------------------
          #UPDATE an Existing Method.
 

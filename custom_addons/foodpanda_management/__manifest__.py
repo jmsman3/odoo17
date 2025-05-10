@@ -8,11 +8,12 @@
     'category': 'jubaer',
     'author':'Md. Jubaer Mahmud Sarker',
 
-    'depends':['base','mail'],
+    'depends':['base','mail','account'],
     'data':[
         'security/ir.model.access.csv',  # Link to access control file
         "views/item.xml",
         "views/chef.xml",
+        "views/account_move_views.xml",
     ],  #xml gula locate hobe
     'demo':[], #system e demo data show koranor jonno
 
