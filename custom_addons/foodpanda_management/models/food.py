@@ -32,23 +32,33 @@ class FoodPanda(models.Model):
 
 
     #This function for SET TOTAL PRICE
-    @api.depends('quantity','price_per_unit')
-    def _compute_total_price(self):
-        for i in self:
-            i.total_price = i.quantity * i.price_per_unit
-    
+    # @api.depends('quantity','price_per_unit')
+    # def _compute_total_price(self):
+    #     for i in self:
+    #         i.total_price = i.quantity * i.price_per_unit
+
+    #This function for SET TOTAL PRICE
     @api.depends('quantity')
     def _compute_discount(self):
-        for j in self:
-            if j.quantity > 10:
-                j.discount = 10.0
-            else:
-                j.discount = 0.0
-    
+        if self.quantity>10:
+            self.discount = 10
+        else:
+            self.discount = 0
+        
+    #This function for SET TOTAL PRICE
     @api.onchange('total_price')
     def _compute_net_price(self):
-        for k in self:
-            k.net_price = k.total_price * ( 1 - (k.discount/100.0))
+
+        self.net_price = self.total_price * ( 1 - (self.discount/100.0))
 
     
-
+    @api.depends('quantity','price_per_unit')
+    def _compute_total_price(self):
+       
+        self.total_price = self.quantity * self.price_per_unit
+        
+        # print("herrrrr selfff............", self)
+        # print('\n')
+        # print("herrrrr Total price............", self.total_price)
+        # print("herrrrr quantity price............", self.quantity)
+        # print("herrrrr price_per_unit price............", self.price_per_unit)

@@ -12,7 +12,7 @@
                     <field name="speciality" />
                     <field name="experience_years" />
                     <field name="rating" />
-                    <!-- <field name="image" widget="image" class="oe_avatar"  options="{'preview_image': 'image', 'size': [50, 50]}" /> -->
+                    <field name="image" widget="image" class="oe_avatar"  options="{'preview_image': 'image', 'size': [50, 50]}" />
                     <!-- <field name="food_order_id.customer_name"/> -->
                     <field name="is_available" />
                 </tree>

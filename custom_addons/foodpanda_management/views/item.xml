@@ -38,7 +38,7 @@
                         <!-- <field name="price_per_unit" attrs="{'readonly': [('price_per_unit' , '=', 'delivered')]}" />  -->
                         <!-- structure=  attrs="{'readonly': [(field_name, operator, value)]}" -->
                  
-                        
+                        <field name="price_per_unit"/>
                         <field name="total_price" readonly="1"/>
                         <field name="discount" readonly="1"/> 
                         <field name="net_price" readonly="1"/> 
