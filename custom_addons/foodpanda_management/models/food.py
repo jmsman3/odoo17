@@ -31,13 +31,6 @@ class FoodPanda(models.Model):
     net_price = fields.Float(string="Net Price", compute="_compute_net_price")
 
 
-    #This function for SET TOTAL PRICE
-    # @api.depends('quantity','price_per_unit')
-    # def _compute_total_price(self):
-    #     for i in self:
-    #         i.total_price = i.quantity * i.price_per_unit
-
-    #This function for SET TOTAL PRICE
     @api.depends('quantity')
     def _compute_discount(self):
         if self.quantity>10:
