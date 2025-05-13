@@ -42,6 +42,7 @@
                         <field name="total_price" readonly="1"/>
                         <field name="discount" readonly="1"/> 
                         <field name="net_price" readonly="1"/> 
+                        <field name="order_date_and_time"/>
                 
                         <field name="status"/>
                         <field name="chef_id"/>

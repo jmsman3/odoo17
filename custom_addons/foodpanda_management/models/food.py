@@ -1,5 +1,6 @@
 from odoo import api, fields, models
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError 
+from datetime import timedelta
 
 class FoodPanda(models.Model):
     _name = 'food.order'
@@ -38,6 +39,52 @@ class FoodPanda(models.Model):
             raise ValidationError("Quantity must be greater than Zero")
         if self.price_per_unit <=0:
             raise ValidationError("Price per Unit Must be Greater than Zero")
+    
+    # @api.constrains('order_date_and_time')
+    # def check_order_date_future_or_not(self):
+
+    #     print("----------------------------------------------------------------------")
+    #     print("Date only......." , self)
+    #     print("----------------------------------------------------------------------")
+
+    #     if self.order_date_and_time > fields.Datetime.now():
+    #         raise ValidationError("Order date time cannot be in future")
+    #     else:
+    #         pass
+        
+    #     #CHecking order date is toooo old(# 30 din er besi hole error show kora lagbe)
+    #     date_storing_withn_30_days_ago = fields.datetime.now() - timedelta(days=30)
+    #     if self.order_date_and_time < date_storing_withn_30_days_ago:
+    #         raise ValidationError("Order date is too old. Must be within the last 30 days") 
+    #     else:
+    #         pass
+        
+    #     #Check SETup Order Must be deya lagbe 
+    #     if not self.order_date_and_time:
+    #         raise ValidationError("Order Date and Time Required")
+    
+
+    @api.constrains('order_date_and_time')
+    def check_order_date_future_or_not(self):
+
+        print("----------------------------------------------------------------------")
+        print("Date only......." , self)
+        print("----------------------------------------------------------------------")
+        for record in self:
+            # Order Date Required
+            if not record.order_date_and_time:
+                raise ValidationError("Order Date and Time Required")
+
+            # Future date check
+            if record.order_date_and_time > fields.Datetime.now():
+                raise ValidationError("Order date time cannot be in future")
+
+            # Too old date check
+            date_30_days_ago = fields.Datetime.now() - timedelta(days=30)
+            if record.order_date_and_time < date_30_days_ago:
+                raise ValidationError("Order date is too old. Must be within the last 30 days")
+
+        
         
     
     #THIS FUNCTION FOR DISCOUNT CALCULAION(Save data in Databse, if api depends) 
