@@ -1,8 +1,9 @@
 <odoo>
     <record id="view_move_form_inherited" model="ir.ui.view"> <!-- id can be anything-->
-        <field name="name">account.move.form</field> <!-- name can be anything, best practise= model_name.extension-->
+        <field name="name">account.move.form</field> <!-- name can be anything, best practise=
+        model_name.extension-->
         <field name="model">account.move</field> <!-- Form view er model name-->
-         <field name="inherit_id" ref="account.view_move_form" /> <!-- Form view er external id -->
+        <field name="inherit_id" ref="account.view_move_form" /> <!-- Form view er external id -->
         <field name="arch" type="xml">
 
             <xpath expr="//field[@name='payment_reference']" position="before">
@@ -10,25 +11,59 @@
             </xpath>
 
 
-            <xpath expr="//group[@name='accounting_info_group']//field[@name='auto_post']" position="attributes"> 
-                <attribute name="invisible">1</attribute>  <!--1 means invisible will be true ,0 mean false -->
+            <xpath expr="//group[@name='accounting_info_group']//field[@name='auto_post']"
+                position="attributes">
+                <attribute name="invisible">1</attribute>  <!--1
+                means invisible will be true ,0 mean false -->
             </xpath>
-           
+
         </field>
     </record>
 
-        <record id="view_invoice_tree_inherited" model="ir.ui.view"> <!-- id can be anything , best practise external_id + inherited-->
-            <field name="name">account.move.tree</field> <!-- name can be anything, bes practise= model_name.extension-->
-            <field name="model">account.move</field> <!-- List view er model name-->
-            <field name="inherit_id" ref="account.view_invoice_tree" /> <!-- List view er external id -->
-            <field name="arch" type="xml">
+    <record id="view_invoice_tree_inherited" model="ir.ui.view"> <!-- id can be anything , best
+        practise external_id + inherited-->
+        <field name="name">account.move.tree</field> <!-- name can be anything, bes practise=
+        model_name.extension-->
+        <field name="model">account.move</field> <!-- List view er model name-->
+        <field name="inherit_id" ref="account.view_invoice_tree" /> <!-- List view er external id -->
+        <field name="arch" type="xml">
 
-                <xpath expr="//field[@name='invoice_date']" position="after">
-                    <field name="appointment_id" /> 
-                </xpath>
+            <xpath expr="//field[@name='invoice_date']" position="after">
+                <field name="appointment_id" />
+            </xpath>
 
-            </field>
-        </record>
+        </field>
+    </record>
+
+
+    <!-- <record id="view_move_line_form_inherit" model="ir.ui.view">
+        <field name="name">account.move.line.form.inherit</field>
+        <field name="model">account.move.line</field>
+        <field name="inherit_id" ref="account.view_move_line_form" />
+        <field name="arch" type="xml">
+
+
+            <xpath
+                expr="//page[@name='invoice_tab']//field[@name='invoice_line_ids']//tree/field[@name='product_id']"
+                position="after">
+
+                <field name="food_item" />
+            </xpath>
+
+        </field>
+    </record> -->
+
+    <record id="view_move_form_inherit_add_food_item" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.food.item</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />  
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='product_id']" position="after">
+                <field name="full_object"/> 
+            </xpath>
+        </field>
+    </record> 
+
 
 
 </odoo>
