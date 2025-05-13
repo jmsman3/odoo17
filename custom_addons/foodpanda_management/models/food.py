@@ -57,11 +57,11 @@ class FoodPanda(models.Model):
     #THIS FUNCTION FOR Total Price CALCULAION(Save data in Databse, if api depends) 
     @api.depends('quantity','price_per_unit')
     def _compute_total_price(self):
-        print("-------------------------------------------------------------------------------")
+        print("----------------------------------------------------------------------")
         print("Total price......." , self)
-        print("-------------------------------------------------------------------------------")
-        for record in self:
+        print("----------------------------------------------------------------------")
 
+        for record in self:
             record.total_price = record.quantity * record.price_per_unit
         
         # print("herrrrr selfff............", self)
