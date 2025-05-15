@@ -13,6 +13,8 @@ class FoodPanda(models.Model):
     quantity = fields.Integer(string="Quantity", default=1)
     price_per_unit = fields.Float(string="Price per Unit",required=True)
 
+    food_image = fields.Image(string="food_profile_picture")
+
     order_date_and_time = fields.Datetime(string="Orders date and time", default=fields.Datetime.now)
 
     status = fields.Selection(
