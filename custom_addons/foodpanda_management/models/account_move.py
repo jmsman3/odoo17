@@ -14,7 +14,7 @@ class AccountMoveLine(models.Model):
     _inherit  = "account.move.line"
 
     full_object = fields.Many2one('food.order' , string="Product Owner")
-    # food_item = fields.Char(related='full_object.food_item', string="Food name", store = True )
+    food_item = fields.Char(related='full_object.food_item', string="Food name", store = True )
 
 
 
