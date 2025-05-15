@@ -26,7 +26,8 @@ class FoodPanda(models.Model):
     
     chef_id = fields.Many2one('foodpanda.chef', string="Chef Assigned")
 
-    total_price = fields.Float(string='Total Price' , compute='_compute_total_price')
+    total_price = fields.Float(string='Total Price' , compute='_compute_total_price', store=True) 
+    # must be store ture kora lagbe pivot view te sql query korar jonno 
 
     discount = fields.Float(string="Discount (%)", compute='_compute_discount')
     net_price = fields.Float(string="Net Price", compute="_compute_net_price")
