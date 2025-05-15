@@ -61,11 +61,90 @@
         </field>
     </record>
     
+    <!-- Graph View -->
+    <record id="view_food_order_graph" model="ir.ui.view">
+        <field name="name">food.order.graph</field>
+        <field name="model">food.order</field>
+        <field name="arch" type="xml">
+            <graph string="Food Order Statistics" type="bar"> <!-- bar, pie, line -->
+                <field name="food_item" type="row"/>
+                <field name="quantity" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    
+
+    <!-- aita kanvan view -->
+    <record id="view_food_order_kanban" model="ir.ui.view">
+        <field name="name">food.order.kanban</field>
+        <field name="model">food.order</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-style="
+                            border-left: 4px solid;
+                            padding: 10px;
+                            margin: 5px;
+                            background-color: #f9f9f9;
+                            border-radius: 6px;
+                            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+
+                            border-color:
+                                #{record.status.raw_value == 'pending' and '#f1c40f' or ''}
+                                #{record.status.raw_value == 'confirmed' and '#3498db' or ''}
+                                #{record.status.raw_value == 'delivered' and '#2ecc71' or ''}
+                        ">
+                            <strong><field name="customer_name"/></strong><br/>
+                            <span>Item: <field name="food_item"/></span><br/>
+                            <!-- <span>Quantity: <field name="quantity"/></span><br/> -->
+                            <!-- <span>Unit Price: <field name="price_per_unit"/></span><br/> -->
+                            <span>Total: <field name="total_price"/></span><br/>
+                            <span>Status: <field name="status"/></span><br/>
+                            <span>Chef: <field name="chef_id"/></span>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    
+    <!-- aita pivot view  -->
+    <record id="view_food_order_pivot" model="ir.ui.view">
+        <field name="name">food.order.pivot</field>
+        <field name="model">food.order</field>
+        <field name="arch" type="xml">
+            <pivot string="Food Order Pivot">
+                <field name="food_item" type="row"/>
+                <field name="status" type="col"/>
+                <field name="quantity" type="measure"/>
+                <field name="total_price" type="measure"/> 
+                <!-- must be store ture kora lagbe pivot view te sql query korar jonno -->
+                <field name="price_per_unit" type="measure" />
+            </pivot>
+        </field>
+    </record>
+    
+    
+    <!-- Calendar view  -->
+    <record id="view_food_order_calendar" model="ir.ui.view">
+        <field name="name">food.order.calendar</field>
+        <field name="model">food.order</field>
+        <field name="arch" type="xml">
+            <calendar string="Food Orders Calendar" date_start="order_date_and_time" color="status">
+                <field name="customer_name"/>
+                <field name="food_item"/>
+            </calendar>
+        </field>
+    </record>
+    
+
     <!-- Action -->
     <record id="action_food_order" model="ir.actions.act_window">
         <field name="name">Food Orders</field>
         <field name="res_model">food.order</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">kanban,tree,form,graph,pivot,calendar</field>
     </record>
 
     <!-- Menu -->
