@@ -1,0 +1,15 @@
+<odoo>
+    <data noupdate="1">
+      <record id="ir_cron_mark_unavailable_chefs" model="ir.cron">
+        <field name="name">Auto Unavailable Chefs</field>
+        <field name="model_id" ref="model_foodpanda_chef"/>
+        <field name="state">code</field>
+        <field name="code">model.auto_mark_unavailable()</field>
+        <field name="interval_number">1</field>           <!-- Every 1 unit time e cron run korbe. --> 
+        <field name="interval_type">minutes</field>
+        <field name="numbercall">-1</field> <!-- -1 means infinite execution — joto din active thakbe, totodin run hobe. -->
+        <field name="active">True</field>
+      </record>
+    </data>
+  </odoo>
+  

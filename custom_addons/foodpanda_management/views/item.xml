@@ -120,7 +120,7 @@
                             <!-- Right: Food Image -->
                             <div>
                                 <img
-                                    t-att-src="kanban_image('food.order', 'food_image', record.id.value)"
+                                    t-att-src="kanban_image('food.order', 'food_image', record.id.value)" alt="Food image"
                                     style="width: 80px; height: 80px; object-fit: cover; border-radius: 6px; margin-left: 10px; border: 1px solid #ccc;" />
                             </div>
                         </div>
