@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 class Chef(models.Model):
     _name = 'foodpanda.chef'
@@ -19,6 +19,25 @@ class Chef(models.Model):
     note = fields.Text(string="Additional Notes")
 
     food_order_id = fields.One2many("food.order", 'chef_id', string="Food orders") 
+
+
+    @api.model
+    def auto_mark_unavailable(self):
+        chefs = self.search([('is_available', '=', True)])
+        # for chef in chefs:
+        #     chef.is_available = False
+        #     print(f"Chef {chef.name} marked as unavailable ✅")
+        # print(">>> Scheduler done: All available chefs are now unavailable.")
+
+        chefs.write({'is_available': False})
+        print(f"Scheduler done: {chefs} chefs markde as Unavailable.........>>>>!")
+
+
+
+
+
+
+
 
     def action_confirm(self):
 
@@ -181,19 +200,19 @@ class Chef(models.Model):
         
    #---------------------------------------------------------------------------------------------------------------------------
         # create Method 
-        vals = {
-            'name': 'Joy bangala',
-            'speciality': 'Apple juice  Maker',
-            'experience_years': 1.1,
-            'rating': 0.1
+        # vals = {
+        #     'name': 'Joy bangala',
+        #     'speciality': 'Apple juice  Maker',
+        #     'experience_years': 1.1,
+        #     'rating': 0.1
 
-        }
-        create_record = self.env['foodpanda.chef'].create(vals)
-        print("his name isss.....",create_record.name )
-        print("His speciality......",create_record.speciality )
+        # }
+        # create_record = self.env['foodpanda.chef'].create(vals)
+        # print("his name isss.....",create_record.name )
+        # print("His speciality......",create_record.speciality )
 
 
-        print(f"New Record name is {create_record.name} With his Id Number -{create_record.id} \n His speciality is he is a {create_record.speciality} \n His is {create_record.experience_years} Years Experience person.\n Finally is ratig is {create_record.rating} \n")
+        # print(f"New Record name is {create_record.name} With his Id Number -{create_record.id} \n His speciality is he is a {create_record.speciality} \n His is {create_record.experience_years} Years Experience person.\n Finally is ratig is {create_record.rating} \n")
     # ---------------------------------------------------------------------------------------------------------------------------
          #UPDATE an Existing Method.
 
