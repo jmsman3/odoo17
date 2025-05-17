@@ -14,6 +14,7 @@
         "views/item.xml",
         "views/chef.xml",
         "views/account_move_views.xml",
+        "views/cron.xml",
     ],  #xml gula locate hobe
     'demo':[], #system e demo data show koranor jonno
 
