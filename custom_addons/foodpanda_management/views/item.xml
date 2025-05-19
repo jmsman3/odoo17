@@ -155,7 +155,7 @@
         <field name="arch" type="xml">
             <calendar string="Food Orders Calendar" date_start="order_date_and_time" color="status">
                 <field name="customer_name" />
-                <field name="food_item" />
+                <field name="food_item" /> 
             </calendar>
         </field>
     </record>
