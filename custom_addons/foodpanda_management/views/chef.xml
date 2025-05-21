@@ -31,7 +31,7 @@
                             <button string="Each Chef" name="action_confirm" type="object"
                                 class="oe_highlight" />
                         </header>
-
+SANDA15
                         <group>
                             <field name="name" />
                             <field name="image" widget="image" class="oe_avatar"/>

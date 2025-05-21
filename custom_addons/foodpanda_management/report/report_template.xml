@@ -1,23 +1,192 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-      
         <template id="report_for_chef" name="Chef Report Template">
             <t t-call="web.html_container">
+
                 <t t-call="web.external_layout">
-                    <!-- Loop through the records passed to report -->
+
+
+
                     <t t-foreach="docs" t-as="doc">
                         <div class="page">
-                            <h2>Chef Management Report</h2>
+                            <h2 style="text-align:center;">Chef Management Report</h2>
 
-                            <!-- field from Chef model -->
-                            <p><strong>Name:</strong> <span t-field="doc.name"/></p>
-                            <p><strong>Speciality:</strong> <span t-field="doc.speciality"/></p>
-                            <p><strong>Experience (years):</strong> <span t-field="doc.experience_years"/></p>
-                             
-                      
+                            <div style="display:flex; align-items:flex-start; margin-bottom: 20px;">
+                                <!-- Chef Image -->
+                                <div style="width: 120px; height: 120px; margin-right: 20px;">
+                                    <img t-if="doc.image"
+                                        t-att-src="'data:image/png;base64,%s' % doc.image.decode('utf-8')"
+                                        style="width: 100%; height: auto; border-radius: 10px; border: 1px solid #ccc;" />
+                                    <p t-if="not doc.image" style="font-size:12px; color:gray;">No
+                                        Image</p>
+                                    <br />
+                                    <span t-field="doc.name" style="font-weight: bold; color: #000;" />
+                                </div>
+
+                                <!-- Profile Details Table -->
+                                <div style="flex-grow:1;">
+                                    <table
+                                        style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                                        <tr style="background-color: #f2f2f2;">
+                                            <th
+                                                style="text-align: left; padding: 6px; border: 1px solid #ccc;">
+                                                Name:</th>
+                                            <td style="padding: 6px; border: 1px solid #ccc;">
+                                                <span t-field="doc.name" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th
+                                                style="text-align: left; padding: 6px; border: 1px solid #ccc;">
+                                                Speciality:</th>
+                                            <td style="padding: 6px; border: 1px solid #ccc;">
+                                                <span t-field="doc.speciality" />
+                                            </td>
+                                        </tr>
+                                        <tr style="background-color: #f9f9f9;">
+                                            <th
+                                                style="text-align: left; padding: 6px; border: 1px solid #ccc;">Experience
+                                                (Years):</th>
+                                            <td style="padding: 6px; border: 1px solid #ccc;">
+                                                <span t-field="doc.experience_years" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th
+                                                style="text-align: left; padding: 6px; border: 1px solid #ccc;">
+                                                Rating:</th>
+                                            <td style="padding: 6px; border: 1px solid #ccc;">
+                                                <span t-field="doc.rating" />
+                                            </td>
+                                        </tr>
+                                        <tr style="background-color: #f9f9f9;">
+                                            <th
+                                                style="text-align: left; padding: 6px; border: 1px solid #ccc;">
+                                                Phone:</th>
+                                            <td style="padding: 6px; border: 1px solid #ccc;">
+                                                <span t-field="doc.phone" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th
+                                                style="text-align: left; padding: 6px; border: 1px solid #ccc;">
+                                                Email:</th>
+                                            <td style="padding: 6px; border: 1px solid #ccc;">
+                                                <span t-field="doc.email" />
+                                            </td>
+                                        </tr>
+                                        <tr style="background-color: #f9f9f9;">
+                                            <th
+                                                style="text-align: left; padding: 6px; border: 1px solid #ccc;">
+                                                Available:</th>
+                                            <td style="padding: 6px; border: 1px solid #ccc;">
+                                                <span t-if="doc.is_available">✅ Yes </span>
+                                                <span t-if="not doc.is_available">No ❌</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th
+                                                style="text-align: left; padding: 6px; border: 1px solid #ccc;">
+                                                Active:</th>
+                                            <td style="padding: 6px; border: 1px solid #ccc;">
+                                                <span t-if="doc.active">✅ Yes </span>
+                                                <span t-if="not doc.active">No ❌</span>
+                                            </td>
+                                        </tr>
+                                        <tr style="background-color: #f9f9f9;">
+                                            <th
+                                                style="text-align: left; padding: 6px; border: 1px solid #ccc;">
+                                                Notes:</th>
+                                            <td style="padding: 6px; border: 1px solid #ccc;">
+                                                <span t-field="doc.note" />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Orders Table -->
+                            <h3 style="margin-top: 30px;">Orders by this Chef:</h3>
+                            <table
+                                style="width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px;"
+                                class="table table-sm table-bordered">
+                                <thead>
+                                    <tr style="background-color: #eee;">
+                                        <th style="border: 1px solid #ccc; padding: 5px;">Customer</th>
+                                        <th style="border: 1px solid #ccc; padding: 5px;">Food Item</th>
+                                        <th style="border: 1px solid #ccc; padding: 5px;">Image</th>
+                                        <th style="border: 1px solid #ccc; padding: 5px;">Quantity</th>
+                                        <th style="border: 1px solid #ccc; padding: 5px;">Price/Unit</th>
+                                        <th style="border: 1px solid #ccc; padding: 5px;">Total</th>
+                                        <th style="border: 1px solid #ccc; padding: 5px;">Status</th>
+                                        <th style="border: 1px solid #ccc; padding: 5px;">Order Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="total_revenue" t-value="0" />
+                                    <t t-foreach="doc.food_order_id" t-as="order">
+                                        <t t-set="total_revenue"
+                                            t-value="total_revenue + order.total_price" />
+                                        <tr>
+                                            <td style="border: 1px solid #ccc; padding: 5px;">
+                                                <t t-esc="order.customer_name" />
+                                            </td>
+                                            <td style="border: 1px solid #ccc; padding: 5px;">
+                                                <t t-esc="order.food_item" />
+                                            </td>
+                                            <td
+                                                style="border: 1px solid #ccc; padding: 5px; text-align: center;">
+                                                <t t-if="order.food_image">
+                                                    <img
+                                                        t-att-src="'data:image/png;base64,%s' % order.food_image.decode('utf-8')"
+                                                        style="max-width: 60px; max-height: 60px; display: block; margin: 0 auto;" />
+                                                </t>
+                                                <t t-else="">
+                                                    <p style="font-size: 12px; color: gray;">No
+                                                        Image</p>
+                                                </t>
+                                            </td>
+                                            <td style="border: 1px solid #ccc; padding: 5px;">
+                                                <t t-esc="order.quantity" />
+                                            </td>
+                                            <td style="border: 1px solid #ccc; padding: 5px;">
+                                                <t t-esc="order.price_per_unit" />
+                                            </td>
+                                            <td style="border: 1px solid #ccc; padding: 5px;">
+                                                <t t-esc="order.total_price" />
+                                            </td>
+                                            <td style="border: 1px solid #ccc; padding: 5px;">
+                                                <t t-esc="order.status" />
+                                            </td>
+                                            <td style="border: 1px solid #ccc; padding: 5px;">
+                                                <t
+                                                    t-esc="order.order_date_and_time.strftime('%Y-%m-%d %H:%M') if order.order_date_and_time else ''" />
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                                <tfoot>
+                                    <tr style="background-color: #f9f9f9;">
+                                        <td colspan="5"
+                                            style="border: 1px solid #ccc; padding: 5px; text-align: right;">
+                                            <strong>Total Revenue:</strong>
+                                        </td>
+                                        <td style="border: 1px solid #ccc; padding: 5px;">
+                                            <strong>
+                                                <t t-esc="total_revenue" />
+                                            </strong>
+                                        </td>
+                                        <td colspan="2"
+                                            style="border: 1px solid #ccc; padding: 5px;"></td>
+                                    </tr>
+                                </tfoot>
+
+                            </table>
+
                         </div>
                     </t>
+                    
                 </t>
             </t>
         </template>

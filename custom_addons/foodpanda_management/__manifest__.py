@@ -8,7 +8,7 @@
     'category': 'jubaer',
     'author':'Md. Jubaer Mahmud Sarker',
 
-    'depends':['base','mail','account'],
+    'depends':['base','mail','account','web'],
     'data':[
         'security/ir.model.access.csv',  # Link to access control file
         "views/item.xml",
