@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+      
+        <template id="report_for_chef" name="Chef Report Template">
+            <t t-call="web.html_container">
+                <t t-call="web.external_layout">
+                    <!-- Loop through the records passed to report -->
+                    <t t-foreach="docs" t-as="doc">
+                        <div class="page">
+                            <h2>Chef Management Report</h2>
+
+                            <!-- field from Chef model -->
+                            <p><strong>Name:</strong> <span t-field="doc.name"/></p>
+                            <p><strong>Speciality:</strong> <span t-field="doc.speciality"/></p>
+                            <p><strong>Experience (years):</strong> <span t-field="doc.experience_years"/></p>
+                             
+                      
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

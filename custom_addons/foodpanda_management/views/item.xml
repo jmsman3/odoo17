@@ -31,7 +31,7 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    
+                   
                         <group>
                             <field name="food_image" widget="image" class="oe_avatar"/>
                             <field name="customer_name" />
@@ -87,6 +87,8 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div
+                            
+                            t-attf-class="oe_kanban_global_click"   
                             t-attf-style="
                             display: flex;
                             justify-content: space-between;
