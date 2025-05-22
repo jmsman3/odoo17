@@ -6,7 +6,7 @@ class AccountMove(models.Model):
     appointment_id = fields.Many2one('food.order', string="Chef Appointment") #this line iherits the whole objects 
 
     
-
+ 
 
 
 
