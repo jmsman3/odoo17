@@ -13,7 +13,7 @@ class FoodPanda(models.Model):
     quantity = fields.Integer(string="Quantity", default=1)
     price_per_unit = fields.Float(string="Price per Unit",required=True)
 
-    food_image = fields.Image(string="food_profile_picture")
+    food_image = fields.Image()
 
     order_date_and_time = fields.Datetime(string="Orders date and time", default=fields.Datetime.now)
 
@@ -33,8 +33,29 @@ class FoodPanda(models.Model):
 
     discount = fields.Float(string="Discount (%)", compute='_compute_discount')
     net_price = fields.Float(string="Net Price", compute="_compute_net_price")
+
+    customer_stage = fields.Selection([('new','new'),('pre_order','pre_order'),('confirmed','confirmed'),('cancelled','cancelled'),], string="Customer Stage" , default="new", tracking=True)
+
+    # @api.model
+    # def _expand_customer_stage(self, stages, domain, order):
+    #     return ['new', 'pre_order', 'confirmed', 'cancelled']
+
     
-    
+    # def action_set_pre_order(self):
+    #     for rec in self:
+    #         if rec.customer_stage == 'new':
+    #             rec.customer_stage = 'pre_order'
+
+    # def action_confirm_order(self):
+    #     for rec in self:
+    #         if rec.customer_stage == 'pre_order':
+    #             rec.customer_stage = 'confirmed'
+
+    # def action_cancel_order(self):
+    #     for rec in self:
+    #         if rec.customer_stage in ['new', 'pre_order']:
+    #             rec.customer_stage = 'cancelled'
+
     #Constraint er kaaj holo Validation Handel kora
     @api.constrains('quantity','price_per_unit')
     def checking_quanity_valid_or_not(self):
