@@ -109,7 +109,7 @@
 
                             
 
-                            <!-- Orders Table -->
+                            <!-- Orders Table for chef -->
                             <h3 style="margin-top: 30px;">Orders by this Chef:</h3>
                             <table
                                 style="width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px;"
@@ -126,6 +126,8 @@
                                         <th style="border: 1px solid #ccc; padding: 5px;">Order Date</th>
                                     </tr>
                                 </thead>
+
+        
                                 <tbody>
                                     <t t-set="total_revenue" t-value="0" />
                                     <t t-foreach="doc.food_order_id" t-as="order">
