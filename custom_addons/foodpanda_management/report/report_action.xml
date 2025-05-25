@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-
+         <!-- for pdf -->
         <record id="action_report_for_chef" model="ir.actions.report">
             <field name="name">Chef Management Report</field>
 
@@ -16,7 +16,9 @@
 
             <field name="binding_model_id" ref="model_foodpanda_chef" />
             <field name="binding_type">report</field>
-        </record>
+        </record> 
+
+        <!-- for excel -->
 
         <record id="action_report_for_chef_xlsx" model="ir.actions.report">
             <field name="name">Print XLSX</field>
