@@ -1,9 +1,6 @@
 from odoo import models
 
-from xlsxwriter.workbook import Workbook
-
-
-
+# from xlsxwriter import workbook
 
 from odoo import models
 
@@ -28,6 +25,7 @@ class ChefCardXlsx(models.AbstractModel):
             'Name', 'Speciality', 'Experience', 'Rating',
             'Phone', 'Email', 'Available?', 'Active?', 'Notes'
         ]
+
         for col, header in enumerate(headers):
             sheet.write(0, col, header, format_header)
 
