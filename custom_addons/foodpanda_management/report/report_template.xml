@@ -126,7 +126,7 @@
                                         <th style="border: 1px solid #ccc; padding: 5px;">Order Date</th>
                                     </tr>
                                 </thead>
-
+ 
         
                                 <tbody>
                                     <t t-set="total_revenue" t-value="0" />
