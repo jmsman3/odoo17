@@ -53,7 +53,7 @@ from odoo import models, fields, api
 #     print("Food Deleted.")
 
 
-# # You would run this script inside the Odoo environment
+# You would run this script inside the Odoo environment
 # if __name__ == "__main__":
 #     from odoo import api, SUPERUSER_ID
 #     env = api.Environment(SUPERUSER_ID, {})
