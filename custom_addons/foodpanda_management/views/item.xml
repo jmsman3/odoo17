@@ -192,7 +192,7 @@
                     <filter string="Chef" name="group_by_chef" context="{'group_by':'chef_id'}" />
                 </group>
 
-                <!-- Search Fields -->
+                <!-- Search Fields side bar -->
                 <field name="customer_name" />
                 <field name="food_item" />
 
@@ -220,9 +220,9 @@
     
 
     
-    
-
         <!-- Menu Item for Invoices under Food Management -->
+        <!-- any external id is possible -->
+
         <menuitem 
             id="invoices" 
             name="Invoice"
@@ -231,6 +231,5 @@
             sequence="40" 
         />
 
-         <!-- any external id is possible -->
-
+        
 </odoo>
