@@ -16,7 +16,8 @@
         "views/account_move_views.xml",
         "views/cron.xml",
         "report/report_template.xml",  
-        "report/report_action.xml",      
+        "report/report_action.xml",   
+        "wizard/my_wizerd_view.xml",   
     
     ],  #xml gula locate hobe
     'demo':[], #system e demo data show koranor jonno

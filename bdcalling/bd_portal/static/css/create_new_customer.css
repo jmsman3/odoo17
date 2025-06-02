@@ -1,0 +1,18 @@
+.input-group-file {
+    position: relative;
+}
+
+#image_1920 {
+    display: none;
+}
+
+.input-file {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid black;
+    padding: 9px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}

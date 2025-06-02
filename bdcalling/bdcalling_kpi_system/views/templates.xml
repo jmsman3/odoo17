@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Menu -->
+    <menuitem id="menu_kpi_root" name="KPI &amp; Bonus" sequence="80" web_icon="kpi_bonus,static/description/icon.png"/>
+    
+    <!-- Configuration Menu -->
+    <menuitem id="menu_kpi_config" name="Configuration" parent="menu_kpi_root" sequence="100"/>
+    
+    <menuitem id="menu_kpi_role" name="KPI Roles" parent="menu_kpi_config" action="action_kpi_role" sequence="10"/>
+    <menuitem id="menu_kpi_grade" name="KPI Grades" parent="menu_kpi_config" action="action_kpi_grade" sequence="20"/>
+    <!-- <menuitem id="menu_kpi_level" name="KPI Levels" parent="menu_kpi_config" action="action_kpi_level" sequence="30"/> -->
+    
+    <!-- Employee KPI Menu -->
+    <menuitem id="menu_employee_kpi_sale" name="Sales KPI" parent="menu_kpi_root" action="action_employee_kpi_sales" sequence="10"/>
+    <menuitem id="menu_employee_kpi_operation" name="Operation KPI" parent="menu_kpi_root" action="action_employee_kpi_operation" sequence="10"/>
+    
+    <record id="action_calculate_monthly_bonus" model="ir.actions.server">
+        <field name="name">Calculate Monthly Bonus</field>
+        <field name="model_id" ref="model_employee_kpi"/>
+        <field name="binding_model_id" ref="model_employee_kpi"/>
+        <field name="state">code</field>
+        <field name="code">model.calculate_monthly_bonus()</field>
+    </record>
+
+    <menuitem id="menu_calculate_monthly_bonus" 
+              name="Run Monthly Calculation" 
+              parent="menu_kpi_root" 
+              action="action_calculate_monthly_bonus" 
+              sequence="20" 
+              groups="hr.group_hr_manager"/>
+
+</odoo>

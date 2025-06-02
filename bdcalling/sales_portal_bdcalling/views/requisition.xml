@@ -1,0 +1,918 @@
+<odoo>
+    <template id="requisition" name="Requisition Form">
+        <t t-call="portal.portal_layout">
+            <t t-set="user" t-value="request.env.user" />
+            <t t-set="fin_not_count" t-value="0" />
+
+            <t t-if="user.scm_department">
+                <t t-set="fin_not_count"
+                    t-value="request.env['bd.notification'].sudo().search_count([
+            ('department', '=', 'finance'),
+            ('mark_as_read', '=', False),
+            ])" />
+            </t>
+            <title>Requisition Section</title>
+
+            <!-- Bootstrap CSS -->
+            <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+                rel="stylesheet" />
+            <link
+                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+                rel="stylesheet" />
+            <style>
+                .nav-item:hover {
+                background-color: #1A5EED;
+                border-radius: 4px;
+                }
+                .nav-item:hover .nav-link,
+                .nav-item.active .nav-link {
+                color: white !important;
+                }
+            </style>
+            <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+            <div class="d-flex" id="requisition">
+                <!-- Sidebar -->
+                <div class="sidebar d-flex flex-column bg-light border-right" id="sidebar"
+                    style="min-height: 100vh; width: 250px;">
+                    <div class="text-center py-3" id="logoContainer" style="display: none;">
+                        <img src="/sales_portal_bdcalling/static/img/navigation-image-2.png"
+                            alt="Logo" class="img-fluid" style="max-width: 185px;" />
+                    </div>
+                    <ul class="nav flex-column pl-4 pt-4">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/bdcalling/dashboard">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard </a>
+                        </li>
+                        <t t-if="user.operation_man == False">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/sale/dashboard">
+                                    <i class="fas fa-chart-line"></i> Sales </a>
+                            </li>
+                        </t>
+                        <t t-if="not user.sale_leader and not user.sales_man">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/operation_dashboard">
+                                    <i class="fas fa-cogs"></i> Operation </a>
+                            </li>
+                        </t>
+
+                        <t t-if="not user.operation_man and not user.sales_man">
+                            <li class="nav-item ">
+                                <a class="nav-link text-dark" href="/portal/requisition/dashboard">
+                                    <i class="fas fa-clipboard-list"></i> Requisition </a>
+                            </li>
+                        </t>
+                        <hr
+                            style="border: 1px solid #000; margin: 10px 0; width: 90%; background-color: #000;" />
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/web/session/logout">
+                                <i class="fas fa-sign-out-alt"></i> Logout </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="flex-grow-1 ">
+                    <nav class="navbar navbar-light bg-white border-bottom">
+                        <div class="container-fluid px-2">
+                            <div class="d-flex align-items-center w-100">
+                                <div class="d-flex align-items-center flex-grow-1 mx-2">
+                                    <a href="javascript:void(0);" onclick="window.history.back();">
+                                        <img
+                                            src="/sales_portal_bdcalling/static/img/header-icon-arrow-left.png"
+                                            alt="" class="img-fluid"
+                                            style="width: 20px; height: 20px;" />
+                                    </a>
+                                    <h1 class="h4 text-dark mb-0 ml-2">Requisition Form</h1>
+                                </div>
+                                <div class="d-flex align-items-center ml-auto">
+                                    <div class="position-relative ml-3 mt-2">
+                                        <a href="/portal/notifications"
+                                            class="text-decoration-none ">
+                                            <i class="far fa-bell text-muted"
+                                                style="font-size: 24px;"></i>
+                                            <span
+                                                class="position-absolute badge badge-danger rounded-circle"
+                                                style="top: -5px; right: -5px; font-size: 10px; min-width: 18px; height: 18px; line-height: 14px; padding: 2px;"
+                                                t-esc="fin_not_count if fin_not_count else '0'">0</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <button class="navbar-toggler border-0 p-0 ml-3 d-md-none"
+                                    type="button" onclick="toggleSidebar()">
+                                    <span class="navbar-toggler-icon"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <div class="p-3 px-3">
+
+                        <div t-if="is_req_req_permission"
+                            class="bg-white border rounded shadow-sm p-3 mb-4">
+                            <form action="" method="post" enctype="multipart/form-data"
+                                id="requisition">
+                                <input type="hidden" name="csrf_token"
+                                    t-att-value="request.csrf_token()" />
+                                <input type="hidden" name="form_posted" value="yes" />
+                                <div class="form-header mb-4 mt-4">
+                                    <h5 class="mb-3">Fill This Form</h5>
+                                </div>
+                                <div class="form-row mb-3">
+                                    <div class="form-group col-md-6">
+                                        <label>Employee ID</label>
+                                        <input class="form-control" type="number"
+                                            t-att-value="employee_id.barcode" disabled="1"
+                                            placeholder="Employee id (autofill)" />
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label>Employee Name</label>
+                                        <div class="input-group">
+                                            <input class="form-control" type="text"
+                                                t-att-value="employee_id.name" disabled="1"
+                                                placeholder="Select employee name (autofill)" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row mb-3">
+                                    <div class="form-group col-md-6">
+                                        <label>Employee Phone No</label>
+                                        <div class="input-group">
+                                            <input class="form-control" type="tel"
+                                                t-att-value="employee_id.work_phone" disabled="1"
+                                                placeholder="Employee phone number" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label>Job ID</label>
+                                        <input class="form-control" type="text"
+                                            t-att-value="employee_id.job_id.name if employee_id.job_id else None"
+                                            disabled="1" placeholder="Designation (autofill)" />
+                                    </div>
+                                </div>
+                                <div class="form-row mb-3">
+                                    <div class="form-group col-md-6">
+                                        <label>Company Name</label>
+                                        <input class="form-control" type="text"
+                                            t-att-value="employee_id.company_id.name if employee_id.company_id else None"
+                                            disabled="1" placeholder="Employee Company name" />
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label>Team Name</label>
+                                        <div class="input-group">
+                                            <select class="form-control" name="team_id" required="1">
+                                                <option value="">Select Team Name</option>
+                                                <t t-foreach="teams" t-as="team">
+                                                    <option t-att-value="team.id" t-esc="team.name"></option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row mb-3">
+                                    <div class="form-group col-md-6">
+                                        <label>Item Category</label>
+                                        <div class="input-group">
+                                            <select class="form-control" name="req_from"
+                                                required="1">
+                                                <option value="">Select Item Category</option>
+                                                <option value="admin">Admin</option>
+                                                <option value="it">It</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label>Priority</label>
+                                        <div class="input-group">
+                                            <select class="form-control" name="priority"
+                                                required="1">
+                                                <option value="" selected="1">Select Priority</option>
+                                                <option value="high">High</option>
+                                                <option value="medium">Medium</option>
+                                                <option value="low">Low</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Product Lines -->
+                                <div class="mb-4 mt-2">
+                                    <div class="input-group2 p-line">
+                                        <input type="hidden" id="product_lines" name="product_lines" />
+                                        <div id="product_lines_container">
+                                            <!-- Dynamic product lines will be added here -->
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-3">
+                                        <button type="button" id="p_line_add_product"
+                                            class="btn btn-dark d-flex align-items-center">
+                                            <i class="fa fa-plus me-2"></i> Add product </button>
+                                    </div>
+                                </div>
+
+                                <!-- Main file attachment section -->
+                                <div class="mt-4">
+                                    <!-- <h6 class="mb-3">Attachments</h6> -->
+
+                                    <div id="con_req_att_list" class="row mb-3"
+                                        style="display: none;">
+                                        <div class="col-12">
+                                            <div class="card p-3 bg-light">
+                                                <h6>Attached Files</h6>
+                                                <small class="text-muted">Click Attach Files Again
+                                                    If Any Change Needed</small>
+                                                <ul id="req_att_list" class="list-group mt-2"></ul>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <!-- <div class="input-group">
+                                                <input id="req_att_files" type="file" class="d-none" multiple="1" name="attach_files" />
+                                                <button type="button" class="btn btn-dark w-100 d-flex align-items-center justify-content-center"
+                                            onclick="document.getElementById('req_att_files').click()">
+                                                    <i class="fa fa-paperclip me-2"></i> Attach files
+                                                </button>
+                                            </div> -->
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="input-group">
+                                                <button
+                                                    class="btn btn-dark w-100 d-flex align-items-center justify-content-center"
+                                                    type="submit">Send Request</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </t>
+    </template>
+    <template id="requisition_dashboard" name="Requisition Dashboard">
+        <t t-call="portal.portal_layout">
+            <t t-set="user" t-value="request.env.user" />
+            <t t-set="fin_not_count" t-value="0" />
+
+            <t t-if="user.scm_department">
+                <t t-set="fin_not_count"
+                    t-value="request.env['bd.notification'].sudo().search_count([
+            ('department', '=', 'finance'),
+            ('mark_as_read', '=', False),
+            ])" />
+            </t>
+            <title>Requisition Section</title>
+
+            <!-- Bootstrap CSS -->
+            <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+                rel="stylesheet" />
+            <link
+                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+                rel="stylesheet" />
+            <style>
+                .avatar-sm {
+                width: 32px;
+                height: 32px;
+                }
+                /* Base styles */
+                body {
+                overflow-x: hidden;
+                }
+                .nav-item:hover {
+                background-color: #1A5EED;
+                border-radius: 4px;
+                }
+
+                .nav-item:hover .nav-link,
+                .nav-item.active .nav-link {
+                color: white !important;
+                background-color: #1c1c1c;
+                }
+
+                /* Mobile sidebar */
+                @media (max-width: 768px) {
+                .sidebar {
+                position: fixed;
+                top: 0;
+                left: -250px;
+                height: 100vh;
+                transition: left 0.3s ease;
+                z-index: 1050;
+                box-shadow: 0 0 15px rgba(0,0,0,0.2);
+                }
+
+                .sidebar.active {
+                left: 0;
+                }
+
+                /* Overlay when sidebar is active */
+                .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0,0,0,0.5);
+                z-index: 1040;
+                }
+
+                .sidebar-overlay.active {
+                display: block;
+                }
+
+                /* Adjust main content when sidebar is hidden */
+                #requisition_dashboard > .flex-grow-1 {
+                margin-left: 0;
+                width: 100%;
+                }
+                }
+                .table-container {
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: thin;
+                scrollbar-color: #AFAFAF transparent;
+                max-width: 100%;
+                display: block !important;
+                width: 100% !important;
+                border-radius: 0.25rem;
+                }
+
+                .table-container::-webkit-scrollbar {
+                width: 8px;
+                height: 8px;
+                }
+
+                .table-container::-webkit-scrollbar-track {
+                background-color: transparent;
+                }
+
+                .table-container::-webkit-scrollbar-thumb {
+                background: #AFAFAF;
+                border-radius: 4px;
+                }
+
+                .table {
+                width: auto;
+                min-width: 100%;
+                table-layout: auto;
+                margin-bottom: 0 !important;
+                }
+
+                .table th {
+                white-space: nowrap;
+                position: sticky;
+                top: 0;
+                background-color: #f8f9fa;
+                z-index: 10;
+                }
+
+                .table td {
+                white-space: nowrap;
+                vertical-align: middle;
+                }
+                .sidebar {
+                min-height: auto;
+                width: 250px;
+                position: absolute;
+                }
+                .main-content {
+                margin-left: 250px;
+                overflow: hidden;
+                min-height: 100vh;
+
+                }
+                .table th,
+                .table td {
+                vertical-align: middle;
+                }
+
+                /* Pagination responsiveness */
+                @media (max-width: 576px) {
+                .o_portal_pager {
+                display: flex;
+                justify-content: center;
+                flex-wrap: wrap;
+                }
+
+                .o_portal_pager .page-item {
+                margin-bottom: 0.5rem;
+                }
+                }
+                @media (max-width: 767px) {
+                .main-content{
+                margin-left: 0 !important;
+                }
+
+                }
+                @media (max-width: 768px) {
+                /* Adjusting padding for better spacing */
+                .p-4 {
+                padding: 1rem !important;
+                }
+                /* Headings and Buttons: Centering and stacking properly */
+                .d-flex.justify-content-between.align-items-center {
+                flex-direction: column;
+                align-items: center !important;
+                text-align: center;
+                gap: 10px;
+                }
+                h1 {
+                font-size: 1rem;
+                }
+                .d-flex.justify-content-between .d-flex {
+                flex-direction: column;
+
+                gap: 10px;
+                }
+
+                .d-flex.justify-content-between button {
+                width: 100%;
+                }
+
+
+                }
+
+
+            </style>
+            <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+            <div class="d-flex" id="requisition_dashboard">
+                <!-- Sidebar -->
+                <div class="sidebar d-flex flex-column bg-light border-right" id="sidebar"
+                    style="min-height: 100vh; width: 250px;">
+                    <div class="text-center py-3" id="logoContainer" style="display: none;">
+                        <img src="/sales_portal_bdcalling/static/img/navigation-image-2.png"
+                            alt="Logo" class="img-fluid" style="max-width: 185px;" />
+                    </div>
+                    <ul class="nav flex-column pl-4 pt-4">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/bdcalling/dashboard">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard </a>
+                        </li>
+                        <t t-if="user.operation_man == False">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/sale/dashboard">
+                                    <i class="fas fa-chart-line"></i> Sales </a>
+                            </li>
+                        </t>
+                        <t t-if="not user.sale_leader and not user.sales_man">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/operation_dashboard">
+                                    <i class="fas fa-cogs"></i> Operation </a>
+                            </li>
+                        </t>
+
+                        <t t-if="not user.operation_man and not user.sales_man">
+                            <li class="nav-item ">
+                                <a class="nav-link text-dark" href="/portal/requisition/dashboard">
+                                    <i class="fas fa-clipboard-list"></i> Requisition </a>
+                            </li>
+                        </t>
+                        <hr
+                            style="border: 1px solid #000; margin: 10px 0; width: 90%; background-color: #000;" />
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/web/session/logout">
+                                <i class="fas fa-sign-out-alt"></i> Logout </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="main-content">
+
+                    <div class="flex-grow-1 ">
+                        <nav class="navbar navbar-light bg-white border-bottom">
+                            <div class="container-fluid px-2">
+                                <div class="d-flex align-items-center w-100">
+                                    <!-- Hamburger Menu Icon -->
+                                    <!-- Search Bar -->
+                                    <a href="javascript:void(0);" onclick="window.history.back();">
+                                        <img
+                                            src="/sales_portal_bdcalling/static/img/header-icon-arrow-left.png"
+                                            alt="" class="img-fluid mr-3"
+                                            style="width: 20px; height: 20px;" />
+                                    </a>
+                                    <div class="position-relative flex-grow-1 mx-2 search-container">
+                                        <form method="get">
+                                            <input type="text" name="search_value"
+                                                class="form-control pl-5" placeholder="Search"
+                                                t-att-value="search_value" />
+                                            <i class="fas fa-search position-absolute"
+                                                style="top: 55%; left: 20px; transform: translateY(-50%); color: #aaa;"></i>
+                                        </form>
+                                    </div>
+                                    <!-- Notification and User Profile -->
+                                    <div class="d-flex align-items-center">
+                                        <!-- Notification Icon -->
+                                        <div class="position-relative ml-3">
+                                            <a href="/portal/notifications"
+                                                class="text-decoration-none">
+                                                <i class="far fa-bell text-muted"
+                                                    style="font-size: 20px;"></i>
+                                                <span
+                                                    class="position-absolute badge badge-danger rounded-circle"
+                                                    style="top: -5px; right: -5px; font-size: 10px; min-width: 18px; height: 18px; line-height: 14px; padding: 2px;"
+                                                    t-esc="fin_not_count if fin_not_count else '0'">
+                                                    0</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <button class="navbar-toggler border-0 p-0 ml-3 d-md-none"
+                                        type="button" onclick="toggleSidebar()">
+                                        <span class="navbar-toggler-icon"></span>
+                                    </button>
+
+                                </div>
+                            </div>
+                        </nav>
+
+                        <div class="p-3">
+                            <t t-if="is_req_req_permission">
+
+                                <div class="bg-white border rounded shadow-sm p-3 mb-4">
+                                    <div class="mt-2 mb-4">
+                                        <div
+                                            class="d-flex justify-content-between align-items-center mb-3">
+                                            <div class="d-flex align-items-center gap-1 px-1  ">
+                                                <h1 class="h4 text-dark ml-2">All Requistion</h1>
+                                            </div>
+                                            <div class="d-flex justify-content-between">
+                                                <a href="/portal/requisition">
+                                                    <button
+                                                        class="btn btn-dark d-flex align-items-center gap-2 mr-3">
+                                                        <img
+                                                            src="/sales_portal_bdcalling/static/img/icon-plus.png"
+                                                            alt="" class="img-fluid"
+                                                            style="width: 16px; height: 16px;" />
+                                                        <span class="text-white small"
+                                                            style="height: 20px;">Add New Requistion
+                                                        </span>
+                                                    </button>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="table-container">
+                                        <div class="table-responsive bg-white rounded shadow-sm">
+                                            <table
+                                                class="table table-bordered table-hover text-center">
+                                                <thead class="table-light">
+                                                    <tr class="tr_header">
+                                                        <td>Requisition ID</td>
+                                                        <td>Requisition Type</td>
+                                                        <td>Employee ID</td>
+                                                        <td>Employee Name</td>
+                                                        <td>Company</td>
+                                                        <td>Job ID</td>
+                                                        <td>Request Date</td>
+                                                        <td>Deadline</td>
+                                                        <td>Department Head</td>
+                                                        <td>Date</td>
+                                                        <td>IT Department</td>
+                                                        <td>Date</td>
+                                                        <td>Admin</td>
+                                                        <td>Date</td>
+                                                        <td>SCM</td>
+                                                        <td>Date</td>
+                                                        <td>Finance</td>
+                                                        <td>Date</td>
+                                                        <td>CEO</td>
+                                                        <td>Date</td>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody style="font-size: 14px;">
+                                                    <t t-foreach="requisitions" t-as="req">
+
+                                                        <t t-set="state" t-value="req.app_state" />
+
+                                                        <t t-set="app_list_class" t-value="''" />
+                                                        <t t-if="state == 'cancel'">
+                                                            <t t-set="app_list_class"
+                                                                t-value="'req_canceled'" />
+                                                        </t>
+
+                                                        <t t-if="req.budget >= 50000">
+                                                            <t
+                                                                t-if="req.req_from == 'it' and req.department_head_state == 'accepted' and req.it_department_state == 'accepted' and req.admin_department_state == 'accepted' and req.finance_department_state == 'accepted' and req.scm_department_state == 'accepted' and req.ceo_state == 'accepted'">
+                                                                <t t-set="app_list_class"
+                                                                    t-value="'req_approved'" />
+                                                            </t>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <t
+                                                                t-if="req.req_from == 'it' and req.department_head_state == 'accepted' and req.it_department_state == 'accepted' and req.admin_department_state == 'accepted' and req.finance_department_state == 'accepted' and req.scm_department_state == 'accepted'">
+                                                                <t t-set="app_list_class"
+                                                                    t-value="'req_approved'" />
+                                                            </t>
+                                                        </t>
+
+                                                        <!-- For admin -->
+                                                        <t t-if="req.budget >= 50000">
+                                                            <t
+                                                                t-if="req.req_from == 'admin' and req.department_head_state == 'accepted' and req.admin_department_state == 'accepted' and req.finance_department_state == 'accepted' and req.scm_department_state == 'accepted' and req.ceo_state == 'accepted'">
+                                                                <t t-set="app_list_class"
+                                                                    t-value="'req_approved'" />
+                                                            </t>
+                                                        </t>
+                                                        <t t-else="">
+                                                            <t
+                                                                t-if="req.req_from == 'admin' and req.department_head_state == 'accepted' and req.admin_department_state == 'accepted' and req.finance_department_state == 'accepted' and req.scm_department_state == 'accepted'">
+                                                                <t t-set="app_list_class"
+                                                                    t-value="'req_approved'" />
+                                                            </t>
+                                                        </t>
+
+                                                        <tr t-att-class="app_list_class">
+                                                            <td>
+                                                                <div class="text-primary"
+                                                                    data-toggle="modal"
+                                                                    t-att-data-target="'#req_modal%s' % req.id"
+                                                                    style="cursor: pointer;">
+                                                                    <t t-esc="req.name" />
+                                                                </div>
+                                                            </td>
+                                                            <td class="text-capitalize">
+                                                                <t t-esc="req.req_from" />
+                                                            </td>
+                                                            <td>
+                                                                <t
+                                                                    t-esc="req.employee_id.barcode if req.employee_id else None" />
+                                                            </td>
+                                                            <td>
+                                                                <t
+                                                                    t-esc="req.employee_id.name if req.employee_id else ''" />
+                                                            </td>
+                                                            <td>
+                                                                <t
+                                                                    t-esc="req.company_id.name if req.company_id else None" />
+                                                            </td>
+                                                            <td>
+                                                                <t
+                                                                    t-esc="req.job_id.name if req.job_id else None" />
+                                                            </td>
+                                                            <!--<td><t
+                                                            t-esc="req.req_date"/></td>-->
+                                                            <td>
+                                                                <t t-if="req.create_date"
+                                                                    t-esc="'%s' % req.create_date.strftime('%d %B, %Y')" />
+                                                            </td>
+                                                            <td>
+                                                                <t t-if="req.deadline"
+                                                                    t-esc="'%s' % req.deadline.strftime('%d %B, %Y')" />
+                                                            </td>
+                                                            <!--<td><t
+                                                            t-esc="req.picking_type_id.name if
+                                                            req.picking_type_id else None"/></td>-->
+                                                            <!--Department
+                                                            Head-->
+                                                            <t t-set="dhs"
+                                                                t-value="req.department_head_state" />
+                                                            <t t-set="dhs_date"
+                                                                t-value="req.approval_date_department_head" />
+                                                            <t t-set="dhs_class" t-value="''" />
+                                                            <t t-if="dhs == 'accepted'">
+                                                                <t t-set="dhs_class"
+                                                                    t-value="'bg-success-state'" />
+                                                            </t>
+                                                            <t t-if="dhs == 'canceled'">
+                                                                <t t-set="dhs_class"
+                                                                    t-value="'bg-danger-state'" />
+                                                            </t>
+                                                            <td t-att-class="dhs_class">
+                                                                <div t-esc="dhs" />
+                                                            </td>
+                                                            <td t-att-class="dhs_class">
+                                                                <div t-esc="dhs_date" />
+                                                            </td>
+                                                            <!-- IT Department -->
+                                                            <t t-set="its"
+                                                                t-value="req.it_department_state" />
+                                                            <t t-set="its_date"
+                                                                t-value="req.approval_date_it_department" />
+                                                            <t t-set="its_class" t-value="''" />
+                                                            <t t-if="its == 'accepted'">
+                                                                <t t-set="its_class"
+                                                                    t-value="'bg-success-state'" />
+                                                            </t>
+                                                            <t t-if="its == 'canceled'">
+                                                                <t t-set="its_class"
+                                                                    t-value="'bg-danger-state'" />
+                                                            </t>
+                                                            <td t-att-class="its_class">
+                                                                <div t-esc="its" />
+                                                            </td>
+                                                            <td t-att-class="its_class">
+                                                                <div t-esc="its_date" />
+                                                            </td>
+
+                                                            <!-- Admin -->
+                                                            <t t-set="ads"
+                                                                t-value="req.admin_department_state" />
+                                                            <t t-set="ads_date"
+                                                                t-value="req.approval_date_admin_department" />
+                                                            <t t-set="ads_class" t-value="''" />
+
+                                                            <t t-if="ads == 'accepted'">
+                                                                <t t-set="ads_class"
+                                                                    t-value="'bg-success-state'" />
+                                                            </t>
+
+                                                            <t t-if="ads == 'canceled'">
+                                                                <t t-set="ads_class"
+                                                                    t-value="'bg-danger-state'" />
+                                                            </t>
+
+                                                            <td t-att-class="ads_class">
+                                                                <div t-esc="ads" />
+                                                            </td>
+                                                            <td t-att-class="ads_class">
+                                                                <div t-esc="ads_date" />
+                                                            </td>
+
+                                                            <!-- SCM -->
+                                                            <t t-set="scms"
+                                                                t-value="req.scm_department_state" />
+                                                            <t t-set="scms_date"
+                                                                t-value="req.approval_date_scm_department" />
+                                                            <t t-set="scms_class" t-value="''" />
+
+                                                            <t t-if="scms == 'accepted'">
+                                                                <t t-set="scms_class"
+                                                                    t-value="'bg-success-state'" />
+                                                            </t>
+
+                                                            <t t-if="scms == 'canceled'">
+                                                                <t t-set="scms_class"
+                                                                    t-value="'bg-danger-state'" />
+                                                            </t>
+
+                                                            <td t-att-class="scms_class">
+                                                                <div t-esc="scms" />
+                                                            </td>
+                                                            <td t-att-class="scms_class">
+                                                                <div t-esc="scms_date" />
+                                                            </td>
+
+                                                            <!-- Finance -->
+                                                            <t t-set="fis"
+                                                                t-value="req.finance_department_state" />
+                                                            <t t-set="fis_date"
+                                                                t-value="req.approval_date_finance_department" />
+                                                            <t t-set="fis_class" t-value="''" />
+
+                                                            <t t-if="fis == 'accepted'">
+                                                                <t t-set="fis_class"
+                                                                    t-value="'bg-success-state'" />
+                                                            </t>
+
+                                                            <t t-if="fis == 'canceled'">
+                                                                <t t-set="fis_class"
+                                                                    t-value="'bg-danger-state'" />
+                                                            </t>
+
+                                                            <td t-att-class="fis_class">
+                                                                <div t-esc="fis" />
+                                                            </td>
+                                                            <td t-att-class="fis_class">
+                                                                <div t-esc="fis_date" />
+                                                            </td>
+
+                                                            <!-- CEO -->
+                                                            <t t-set="ceos" t-value="req.ceo_state" />
+                                                            <t t-set="ceos_date"
+                                                                t-value="req.approval_date_ceo" />
+                                                            <t t-set="ceos_class" t-value="''" />
+
+                                                            <t t-if="ceos == 'accepted'">
+                                                                <t t-set="ceos_class"
+                                                                    t-value="'bg-success-state'" />
+                                                            </t>
+
+                                                            <t t-if="ceos == 'canceled'">
+                                                                <t t-set="ceos_class"
+                                                                    t-value="'bg-danger-state'" />
+                                                            </t>
+
+                                                            <td t-att-class="ceos_class">
+                                                                <div t-esc="ceos" />
+                                                            </td>
+                                                            <td t-att-class="ceos_class">
+                                                                <div t-esc="ceos_date" />
+                                                            </td>
+
+                                                        </tr>
+                                                        <div class="modal fade"
+                                                            t-attf-id="req_modal{{ req.id }}"
+                                                            tabindex="-1" role="dialog"
+                                                            aria-labelledby="reqModalLabel"
+                                                            aria-hidden="true">
+                                                            <div class="modal-dialog modal-lg"
+                                                                role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title">Requisition
+                                                                            Details - <t
+                                                                                t-esc="req.name" /></h5>
+                                                                        <button type="button"
+                                                                            class="close"
+                                                                            data-dismiss="modal"
+                                                                            aria-label="Close">
+                                                                            <span aria-hidden="true">
+                                                                                &#215;</span>
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <!-- Customize this section
+                                                                        with the details you want -->
+                                                                        <p>
+                                                                            <strong>Employee:</strong>
+                                                                            <t
+                                                                                t-esc="req.employee_id.name if req.employee_id else ''" />
+                                                                        </p>
+                                                                        <p>
+                                                                            <strong>Job:</strong>
+                                                                            <t
+                                                                                t-esc="req.job_id.name if req.job_id else ''" />
+                                                                        </p>
+                                                                        <p>
+                                                                            <strong>Budget:</strong>
+                                                                            <t t-esc="req.budget" />
+                                                                        </p>
+                                                                        <p>
+                                                                            <strong>Request Date:</strong>
+                                                                            <t
+                                                                                t-if="req.create_date"
+                                                                                t-esc="req.create_date.strftime('%d %B, %Y')" />
+                                                                        </p>
+                                                                        <p>
+                                                                            <strong>Deadline:</strong>
+                                                                            <t t-if="req.deadline"
+                                                                                t-esc="req.deadline.strftime('%d %B, %Y')" />
+                                                                        </p>
+                                                                        <!-- Add more fields as
+                                                                        needed -->
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button"
+                                                                            class="btn btn-secondary"
+                                                                            data-dismiss="modal">
+                                                                            Close</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                    </t>
+                                                    <t
+                                                        t-if="not requisitions or len(requisitions) == 0">
+                                                        <tr>
+                                                            <td colspan="16"
+                                                                class="text-center py-4">
+                                                                <div class="text-muted">No
+                                                                    Requisitions</div>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="o_portal_pager text-center mt-3 mb-3"
+                                        t-if="pager and pager.get('page_count', 0) > 1">
+                                        <t t-call="portal.pager">
+                                            <t t-set="classname" t-value="'float'" />
+                                        </t>
+                                    </div>
+                                </div>
+                            </t>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+                function toggleSidebar() {
+                document.getElementById('sidebar').classList.toggle('active');
+                document.getElementById('sidebarOverlay').classList.toggle('active');
+                const logo = document.getElementById('logoContainer');
+                if (logo.style.display === "none") {
+                logo.style.display = "block";
+                } else {
+                logo.style.display = "none";
+                }
+                }
+            </script>
+        </t>
+    </template>
+</odoo>

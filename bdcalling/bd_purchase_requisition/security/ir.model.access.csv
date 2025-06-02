@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cus_purchase_requisition,cus.purchase.requisition,model_cus_purchase_requisition,,1,1,1,1
+access_requisition_order_line,requisition.order.line,model_requisition_order_line,,1,1,1,1
+bd_file,bd_file,model_bd_file,,1,1,1,1
+bd_req_attachment,bd_req_attachment,model_bd_req_attachment,,1,1,1,1
+bd_notification,bd_notification,model_bd_notification,,1,1,1,1

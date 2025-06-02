@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="dashboard_temp" name="Dashboard">
+        <t t-call="portal.portal_layout">
+            <t t-set="user" t-value="request.env.user" />
+            <t t-set="fin_not_count" t-value="0" />
+
+            <t t-if="user.scm_department">
+                <t t-set="fin_not_count"
+                    t-value="request.env['bd.notification'].sudo().search_count([
+            ('department', '=', 'finance'),
+            ('mark_as_read', '=', False),
+            ])" />
+            </t>
+
+            <title>Dashboard</title>
+
+            <!-- Bootstrap CSS -->
+            <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+                rel="stylesheet" />
+            <link
+                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+                rel="stylesheet" />
+            <link rel="stylesheet"
+                href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" />
+
+            <link href="/sales_portal_bdcalling/static/css/dashboard.css"
+                rel="stylesheet" />
+            <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+            <div class="d-flex">
+                <div class="sidebar d-flex flex-column bg-light border-right" id="sidebar"
+                    style="min-height: 100vh; width: 250px !important;">
+                    <div class="text-center py-3" id="logoContainer" style="display: none;">
+                        <img src="/sales_portal_bdcalling/static/img/navigation-image-2.png"
+                            alt="Logo" class="img-fluid" style="max-width: 185px;" />
+                    </div>
+                    <ul class="nav flex-column pl-4 pt-4">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/bdcalling/dashboard">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard </a>
+                        </li>
+                        <t t-if="user.operation_man == False">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/sale/dashboard">
+                                    <i class="fas fa-chart-line"></i> Sales </a>
+                            </li>
+                        </t>
+                        <t t-if="not user.sale_leader and not user.sales_man">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/operation_dashboard">
+                                    <i class="fas fa-cogs"></i> Operation </a>
+                            </li>
+                        </t>
+                        <t t-if="not user.operation_man and not user.sales_man">
+                            <li class="nav-item ">
+                                <a class="nav-link text-dark" href="/portal/requisition/dashboard">
+                                    <i class="fas fa-clipboard-list"></i> Requisition </a>
+                            </li>
+                        </t>
+                        <!-- Added navbar for employee information -->
+                        <t t-if="user.operation_man == False">
+                            <li class="nav-item ">
+                                <a class="nav-link text-dark" href="/portal/employees">
+                                    <i class="fas fa-clipboard-list"></i> Employee Information </a>
+                            </li>
+                        </t>
+                        <hr
+                            style="border: 1px solid #000; margin: 10px 0; width: 90%; background-color: #000;" />
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/web/session/logout">
+                                <i class="fas fa-sign-out-alt"></i> Logout </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Main Content -->
+                <div class="flex-grow-1 main-content">
+                    <nav class="navbar navbar-light bg-white border-bottom">
+                        <div class="container-fluid px-2">
+                            <div class="d-flex align-items-center w-100">
+                                <!-- Hamburger Menu Icon -->
+
+                                <!-- Search Bar -->
+                                <a href="javascript:void(0);" onclick="window.history.back();">
+                                    <img
+                                        src="/sales_portal_bdcalling/static/img/header-icon-arrow-left.png"
+                                        alt="" class="img-fluid mr-3"
+                                        style="width: 20px; height: 20px;" />
+                                </a>
+                                <div class="position-relative flex-grow-1 mx-2 search-container">
+                                    <form method="get">
+                                        <input type="text" name="search_value"
+                                            class="form-control pl-5" placeholder="Search"
+                                            t-att-value="search_value" />
+                                        <i class="fas fa-search position-absolute"
+                                            style="top: 55%; left: 20px; transform: translateY(-50%); color: #aaa;"></i>
+
+                                    </form>
+
+                                </div>
+
+                                <!-- Notification and User Profile -->
+                                <div class="d-flex align-items-center">
+                                    <!-- Notification Icon -->
+                                    <div class="position-relative ml-3">
+                                        <a href="/portal/notifications" class="text-decoration-none">
+                                            <i class="far fa-bell text-muted"
+                                                style="font-size: 20px;"></i>
+                                            <span
+                                                class="position-absolute badge badge-danger rounded-circle"
+                                                style="top: -5px; right: -5px; font-size: 10px; min-width: 18px; height: 18px; line-height: 14px; padding: 2px;"
+                                                t-esc="fin_not_count if fin_not_count else '0'">0</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <button class="navbar-toggler border-0 p-0 ml-3 d-md-none"
+                                    type="button" onclick="toggleSidebar()">
+                                    <span class="navbar-toggler-icon"></span>
+                                </button>
+
+                            </div>
+                        </div>
+                    </nav>
+
+                    <div class="p-4" style="font-family: Arial, sans-serif;">
+                        <h2 class="mb-3">Dashboard</h2>
+                        <div class="row g-3">
+                            <div class="col-md-2 col-sm-4 col-6">
+                                <div class="dashboard-card d-flex align-items-center">
+                                    <i class="bi bi-journal-text"></i>
+                                    <div>
+                                        <p class="title">Total Order</p>
+                                        <div class="value"
+                                            t-esc="total_order if isinstance(total_order, int) else len(total_order)"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-4 col-6">
+                                <div class="dashboard-card d-flex align-items-center">
+                                    <i class="bi bi-exclamation-triangle"></i>
+                                    <div>
+                                        <p class="title">Total NRA</p>
+                                        <div class="value"
+                                            t-esc="0 if total_nra is None else (total_nra if isinstance(total_nra, int) else (len(total_nra) if total_nra else 0))"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-4 col-6">
+                                <div class="dashboard-card d-flex align-items-center">
+                                    <i class="bi bi-clock-history"></i>
+                                    <div>
+                                        <p class="title">Total WIP</p>
+                                        <div class="value"
+                                            t-esc="0 if total_wip is None else (total_wip if isinstance(total_wip, int) else (len(total_wip) if total_wip else 0))"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-4 col-6">
+                                <div class="dashboard-card d-flex align-items-center">
+                                    <i class="bi bi-pencil-square"></i>
+                                    <div>
+                                        <p class="title">Total Revisions</p>
+                                        <div class="value"
+                                            t-esc="0 if total_revisions is None else (total_revisions if isinstance(total_revisions, int) else (len(total_revisions) if total_revisions else 0))"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-4 col-6">
+                                <div class="dashboard-card d-flex align-items-center">
+                                    <i class="bi bi-check-circle-fill"></i>
+                                    <div>
+                                        <p class="title">Total Completed</p>
+                                        <div class="value"
+                                            t-esc="0 if total_completed is None else (total_completed if isinstance(total_completed, int) else (len(total_completed) if total_completed else 0))"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-sm-4 col-6">
+                                <div class="dashboard-card d-flex align-items-center">
+                                    <i class="bi bi-x-circle-fill"></i>
+                                    <div>
+                                        <p class="title">Total Canceled</p>
+                                        <div class="value"
+                                            t-esc="0 if total_canceled is None else (total_canceled if isinstance(total_canceled, int) else (len(total_canceled) if total_canceled else 0))"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-4">
+                            <div class="col-md-6">
+                                <div class="dashboard-card d-flex align-items-center">
+                                    <i class="bi bi-trophy"></i>
+                                    <div>
+                                        <p class="title">Best Sales Performer</p>
+                                        <div class="value" t-if="best_sale_performer"
+                                            t-esc="best_sale_performer.name"></div>
+                                        <div class="value" t-else="">N/A</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="dashboard-card d-flex align-items-center">
+                                    <i class="bi bi-award"></i>
+                                    <div>
+                                        <p class="title">Best Delivery Performer</p>
+                                        <div class="value" t-if="best_delivery_team_id"
+                                            t-esc="best_delivery_team_id.name"></div>
+                                        <div class="value" t-else="">N/A</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Purchase portal -->
+                        <div t-if="purchase_access" class="mt-5">
+                            <h4 class="mt-4 mb-3">Approved Purchase Requisition</h4>
+                            <div class="row g-3">
+                                <div class="col-md-2 col-sm-4 col-6">
+                                    <div class="dashboard-card d-flex align-items-center">
+                                        <i class="bi bi-file-earmark-check"></i>
+                                        <div>
+                                            <p class="title">Total PR</p>
+                                            <div class="value" t-esc="total_pr_count or 0"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-6">
+                                    <div class="dashboard-card d-flex align-items-center">
+                                        <i class="bi bi-file-earmark-check"></i>
+                                        <div>
+                                            <p class="title">DH Approved</p>
+                                            <div class="value" t-esc="total_dh_acc_count or 0"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-6">
+                                    <div class="dashboard-card d-flex align-items-center">
+                                        <i class="bi bi-file-earmark-check"></i>
+                                        <div>
+                                            <p class="title">IT Approved</p>
+                                            <div class="value" t-esc="total_it_acc_count or 0"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-6">
+                                    <div class="dashboard-card d-flex align-items-center">
+                                        <i class="bi bi-file-earmark-check"></i>
+                                        <div>
+                                            <p class="title">Admin Approved</p>
+                                            <div class="value" t-esc="total_ad_acc_count or 0"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-6">
+                                    <div class="dashboard-card d-flex align-items-center">
+                                        <i class="bi bi-file-earmark-check"></i>
+                                        <div>
+                                            <p class="title">SCM Approved</p>
+                                            <div class="value" t-esc="total_scm_acc_count or 0"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-6">
+                                    <div class="dashboard-card d-flex align-items-center">
+                                        <i class="bi bi-file-earmark-check"></i>
+                                        <div>
+                                            <p class="title">Finance Approved</p>
+                                            <div class="value" t-esc="total_fin_acc_count or 0"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-6 mt-2">
+                                    <div class="dashboard-card d-flex align-items-center">
+                                        <i class="bi bi-file-earmark-check"></i>
+                                        <div>
+                                            <p class="title">CEO Approved</p>
+                                            <div class="value" t-esc="total_ceo_acc_count or 0"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-6 mt-2">
+                                    <div class="dashboard-card d-flex align-items-center">
+                                        <i class="bi bi-file-earmark-check"></i>
+                                        <div>
+                                            <p class="title">Total Done</p>
+                                            <div class="value" t-esc="total_ceo_acc_count or 0"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <h4 class="mt-4 mb-3">Pending Purchase Requisition</h4>
+                            <div class="row g-3">
+                                <div class="col-md-2 col-sm-4 col-6">
+                                    <div class="dashboard-card d-flex align-items-center">
+                                        <i class="bi bi-clock"></i>
+                                        <div>
+                                            <p class="title">DH Pending</p>
+                                            <div class="value" t-esc="total_dh_pen_count or 0"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-6">
+                                    <div class="dashboard-card d-flex align-items-center">
+                                        <i class="bi bi-clock"></i>
+                                        <div>
+                                            <p class="title">IT Pending</p>
+                                            <div class="value" t-esc="total_it_pen_count or 0"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-6">
+                                    <div class="dashboard-card d-flex align-items-center">
+                                        <i class="bi bi-clock"></i>
+                                        <div>
+                                            <p class="title">Admin Pending</p>
+                                            <div class="value" t-esc="total_ad_pen_count or 0"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-6">
+                                    <div class="dashboard-card d-flex align-items-center">
+                                        <i class="bi bi-clock"></i>
+                                        <div>
+                                            <p class="title">SCM Pending</p>
+                                            <div class="value" t-esc="total_scm_pen_count or 0"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-6">
+                                    <div class="dashboard-card d-flex align-items-center">
+                                        <i class="bi bi-clock"></i>
+                                        <div>
+                                            <p class="title">Finance Pending</p>
+                                            <div class="value" t-esc="total_fin_pen_count or 0"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-sm-4 col-6">
+                                    <div class="dashboard-card d-flex align-items-center">
+                                        <i class="bi bi-clock"></i>
+                                        <div>
+                                            <p class="title">CEO Pending</p>
+                                            <div class="value" t-esc="total_ceo_pen_count or 0"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                function toggleSidebar() {
+                document.getElementById('sidebar').classList.toggle('active');
+                document.getElementById('sidebarOverlay').classList.toggle('active');
+                const logo = document.getElementById('logoContainer');
+                if (logo.style.display === "none") {
+                logo.style.display = "block";
+                } else {
+                logo.style.display = "none";
+                }
+                }
+            </script>
+        </t>
+    </template>
+
+    <template id="notifications">
+        <t t-call="portal.portal_layout">
+            <t t-set="user" t-value="request.env.user" />
+            <t t-set="fin_not_count" t-value="0" />
+
+            <t t-if="user.scm_department">
+                <t t-set="fin_not_count"
+                    t-value="request.env['bd.notification'].sudo().search_count([
+            ('department', '=', 'finance'),
+            ('mark_as_read', '=', False),
+            ])" />
+            </t>
+
+            <title>Notifications</title>
+
+            <!-- Styles -->
+            <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+                rel="stylesheet" />
+            <link
+                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+                rel="stylesheet" />
+
+            <link href="/sales_portal_bdcalling/static/css/notifications.css?v=1"
+                rel="stylesheet" />
+            <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+            <div class="d-flex">
+                <!-- Sidebar -->
+                <div class="sidebar d-flex flex-column bg-light border-right" id="sidebar"
+                    style="min-height: 100vh; width: 250px;">
+                    <div class="text-center py-3" id="logoContainer" style="display: none;">
+                        <img src="/sales_portal_bdcalling/static/img/navigation-image-2.png"
+                            alt="Logo" class="img-fluid" style="max-width: 185px;" />
+                    </div>
+                    <ul class="nav flex-column pl-4 pt-4">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/bdcalling/dashboard">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard </a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a class="nav-link text-dark" href="/portal/to_do_list">
+                                <i class="fas fa-list-alt"></i>
+                                To-Do List
+                            </a>
+                        </li> -->
+                        <t t-if="user.operation_man == False">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/sale/dashboard">
+                                    <i class="fas fa-chart-line"></i> Sales </a>
+                            </li>
+                        </t>
+                        <t t-if="not user.sale_leader and not user.sales_man">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/operation_dashboard">
+                                    <i class="fas fa-cogs"></i> Operation </a>
+                            </li>
+                        </t>
+                        <t t-if="not user.operation_man and not user.sales_man">
+                            <li class="nav-item ">
+                                <a class="nav-link text-dark" href="/portal/requisition/dashboard">
+                                    <i class="fas fa-clipboard-list"></i> Requisition </a>
+                            </li>
+                        </t>
+                        <hr
+                            style="border: 1px solid #000; margin: 10px 0; width: 90%; background-color: #000;" />
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/web/session/logout">
+                                <i class="fas fa-sign-out-alt"></i> Logout </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Main Content -->
+                <div class="flex-grow-1">
+                    <nav class="navbar navbar-light bg-white border-bottom">
+                        <div class="container-fluid px-2">
+                            <div class="d-flex align-items-center w-100">
+                                <!-- Hamburger Menu Icon -->
+
+                                <!-- Search Bar -->
+                                <a href="javascript:void(0);" onclick="window.history.back();">
+                                    <img
+                                        src="/sales_portal_bdcalling/static/img/header-icon-arrow-left.png"
+                                        alt="" class="img-fluid mr-3"
+                                        style="width: 20px; height: 20px;" />
+                                </a>
+                                <div class="position-relative flex-grow-1 mx-2 search-container">
+                                    <form method="get">
+                                        <input type="text" name="search_value"
+                                            class="form-control pl-5" placeholder="Search"
+                                            t-att-value="search_value" />
+                                        <i class="fas fa-search position-absolute"
+                                            style="top: 55%; left: 20px; transform: translateY(-50%); color: #aaa;"></i>
+
+                                    </form>
+
+                                </div>
+
+                                <!-- Notification and User Profile -->
+                                <div class="d-flex align-items-center">
+                                    <!-- Notification Icon -->
+                                    <div class="position-relative ml-3">
+                                        <a href="/portal/notifications" class="text-decoration-none">
+                                            <i class="far fa-bell text-muted"
+                                                style="font-size: 20px;"></i>
+                                            <span
+                                                class="position-absolute badge badge-danger rounded-circle"
+                                                style="top: -5px; right: -5px; font-size: 10px; min-width: 18px; height: 18px; line-height: 14px; padding: 2px;"
+                                                t-esc="fin_not_count if fin_not_count else '0'">0</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <button class="navbar-toggler border-0 p-0 ml-3 d-md-none"
+                                    type="button" onclick="toggleSidebar()">
+                                    <span class="navbar-toggler-icon"></span>
+                                </button>
+
+                            </div>
+                        </div>
+                    </nav>
+
+                    <div class=" p-2 px-3">
+                        <div class="rounded  p-4 mt-4" style="background: #FAFAFA;">
+                            <div style="padding: 20px;">
+                                <ul t-if="fin_not" class="list-group">
+                                    <t t-foreach="fin_not" t-as="nt">
+                                        <li class="list-group-item">
+                                            <div
+                                                t-esc="'%s, %s' % (nt.name, nt.req_id.name if nt.req_id else '')"
+                                                class="font-weight-bold"></div>
+                                            <div>
+                                                <a
+                                                    href="/portal/requisition/approval?filter_requisition_id=&amp;filter_department=finance_department&amp;filter_status=cancelled&amp;filter_company_id=">
+                                                    Go to approval page
+                                                </a>
+                                            </div>
+                                            <div class="text-muted"
+                                                t-esc="nt.create_date.strftime('%d %B, %Y')"></div>
+                                        </li>
+                                    </t>
+                                </ul>
+                                <div t-else="" class="alert alert-light">
+                                    <div>No Notifications</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Contents -->
+            <script type="text/javascript">
+                function toggleSidebar() {
+                document.getElementById('sidebar').classList.toggle('active');
+                document.getElementById('sidebarOverlay').classList.toggle('active');
+                const logo = document.getElementById('logoContainer');
+                if (logo.style.display === "none") {
+                logo.style.display = "block";
+                } else {
+                logo.style.display = "none";
+                }
+                }
+            </script>
+        </t>
+    </template>
+
+</odoo>

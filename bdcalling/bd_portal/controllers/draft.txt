@@ -1,0 +1,255 @@
+class Abc():
+
+    attachment_vals = {
+        'datas': base64.b64encode(b'My attachment'),
+        'name': 'doc.txt',
+    }
+    
+    attachment = self.env['ir.attachment'].create(attachment_vals)
+    
+    statement = self.env['account.bank.statement'].create({
+        'name': 'test_statement',
+        'attachment_ids': [Command.set(attachment.ids)],
+    })
+    
+    # ---
+    attachment = self.env['ir.attachment'].create({
+        'type': 'binary',
+        'name': 'INV-%s-0001.pdf' % invoice_date.strftime('%Y-%m'),
+        'res_model': 'mail.compose.message',
+        'datas': base64.encodebytes(content),
+    })
+    
+    # ---
+    gift_card_pdf = self.env['ir.attachment'].create({
+                                'name': filename,
+                                'type': 'binary',
+                                'datas': base64.b64encode(report[0]),
+                                'store_fname': filename,
+                                'res_model': 'pos.order',
+                                'res_id': self.ids[0],
+                                'mimetype': 'application/x-pdf'
+                            })
+    
+    
+    
+    # ------------------------------
+    session_create_new_customer = req.session.get('session_create_new_customer')
+    if not session_create_new_customer:
+        return redirect('/portal/sales/create_new_customer')
+    
+    req.session.pop('session_create_new_customer', None)
+    
+    # Create customer
+    customer_values = kw
+    
+    if 'image_1920' in kw:
+        image_1920_file = kw.get('image_1920')
+        customer_values['image_1920'] = base64.b64encode(image_1920_file.read())
+    
+    customer_values['is_mp_customer'] = True
+    
+    new_customer = req.env['res.partner'].sudo().create(customer_values)
+    
+    alert_info = None
+    alert_danger = None
+    
+    if new_customer:
+        alert_info = f'Customer {new_customer.name} created successfully'
+    else:
+        alert_danger = f'Create New Customer Failed'
+
+
+
+
+
+
+
+
+
+    # Create sales from portal
+    @http.route('/portal/sales/create', auth='user')
+    def portal_sales_create(self, **kw):
+        pt = get_partner()
+        if not pt:
+            return 'Partner not found'
+
+        env_user = req.env.user
+
+        if env_user and not env_user.can_create_sale:
+            return 'Sorry, You have no permission to create sale'
+
+        # Service types
+        service_types = req.env['product.template'].sudo().search([('portal_available', '=', True)])
+
+        user_id = req.env.user.id
+        print('user_id', user_id)
+
+        company_id = req.env.company
+        print('company_id', company_id)
+
+        # profile_fiverr = req.env['bd.profile'].sudo().search([('platform_source', '=', 'fiverr')])
+        # profile_upwork = req.env['bd.profile'].sudo().search([('platform_source', '=', 'upwork')])
+        # profile_pph = req.env['bd.profile'].sudo().search([('platform_source', '=', 'pph')])
+        # print('profile_fiverr', profile_fiverr)
+        # print('profile_upwork', profile_upwork)
+        # print('profile_pph', profile_pph)
+        #
+        # profiles = {
+        #     'fiverr': None,
+        #     'upwork': None,
+        #     'pph': None,
+        # }
+        #
+        # pf_items = []
+        # for pf in profile_fiverr:
+        #     item = {
+        #         'id': pf.id,
+        #         'name': pf.name,
+        #     }
+        #     pf_items.append(item)
+        #
+        # profiles['fiverr'] = pf_items
+        #
+        # upwork_items = []
+        # for upwork in profile_upwork:
+        #     item = {
+        #         'id': upwork.id,
+        #         'name': upwork.name,
+        #     }
+        #     upwork_items.append(item)
+        #
+        # pph_items = []
+        # for pph in profile_pph:
+        #     item = {
+        #         'id': pph.id,
+        #         'name': pph.name,
+        #     }
+        #     pph_items.append(item)
+        #
+        # profiles['fiverr'] = pf_items
+        # profiles['upwork'] = upwork_items
+        # profiles['pph'] = pph_items
+        #
+        # json_profiles = json.dumps(profiles)
+        # print('json_profiles', json_profiles)
+
+        # ----
+
+        platform_sources = req.env['bd.platform_source'].sudo().search([])
+
+        all_profiles = []
+        profiles = req.env['bd.profile'].sudo().search([('company_id', '=', company_id.id)])
+
+        for profile in profiles:
+            profile_value = {
+                'platform_source_id': profile.platform_source_id.id if profile.platform_source_id else None,
+                'platform_source_name': profile.platform_source_id.name if profile.platform_source_id else '',
+                'name': profile.name,
+                'id': profile.id,
+                'company_id': company_id.id,
+            }
+
+            all_profiles.append(profile_value)
+
+        json_all_profiles = json.dumps(all_profiles)
+        print('json_all_profiles', json_all_profiles)
+
+        # ----
+
+        # Clients
+        client_user_ids = req.env['res.partner'].sudo().search([
+            ('is_mp_customer', '=', True),
+            ('name', '!=', ''),
+        ])
+        clients = []
+        for client in client_user_ids:
+            _client = {
+                'id': client.id,
+                'client_user_name': client.name,
+                'name': client.name,
+                'email': client.email,
+                'phone': client.phone,
+                'mp_customer_fullname': client.mp_customer_fullname,
+            }
+            clients.append(_client)
+        js_clients = json.dumps(clients)
+
+        # Employee Details
+        employee_id = req.env['hr.employee'].sudo().search([('user_id2', '=', user_id)])
+        if not employee_id:
+            return 'Employee not found for this user'
+
+        # All Companies
+        # companies = req.env['res.company'].sudo().search([('active', '=', True)])
+        # print('companies', companies)
+
+        # Sales Employee Details
+        employees_ids = req.env['hr.employee'].sudo().search([('barcode', '!=', False)])
+        employees = []
+        for employee in employees_ids:
+            _employee = {
+                'id': employee.id,
+                'name': employee.name,
+                'barcode': employee.barcode,
+                'company_name': employee.company_id.name if employee.company_id else None,
+            }
+            employees.append(_employee)
+        js_employees = json.dumps(employees)
+
+        # Server data
+        # Server data
+        server_data = {
+            'service_types': None,
+        }
+
+        # Service types
+        service_types_list = []
+        for st in service_types:
+            vals = {
+                'id': st.id,
+                'unit_price': st.list_price,
+            }
+            service_types_list.append(vals)
+
+        server_data['service_types'] = service_types_list
+
+        # Employee Information
+        employee = {
+            'id': employee_id.id,
+            'barcode': employee_id.barcode if employee_id.barcode else '',
+            'name': employee_id.name,
+        }
+
+        server_data['employee'] = employee
+
+        # Make json
+        js_server_data = json.dumps(server_data)
+
+        # Start a session
+        req.session['session_create_sale'] = True
+
+        # Project Information
+        is_project_manager = False
+        if env_user.department_head or env_user.it_department:
+            is_project_manager = True
+
+        order_sources = req.env['bd.order_source'].sudo().search([])
+
+        return req.render('bd_portal.create_sale', {
+            'service_types': service_types,
+            # 'is_portal_manager': is_portal_manager,
+            'user_id': user_id,
+            'company_id': company_id,
+            # 'json_profiles': json_profiles,
+            'client_user_ids': client_user_ids,
+            'js_clients': js_clients,
+            'employee_id': employee_id,
+            'js_employees': js_employees,
+            'js_server_data': js_server_data,
+            'is_project_manager': is_project_manager,
+            'env_user': env_user,
+            'order_sources': order_sources,
+            'platform_sources': platform_sources,
+            'json_all_profiles': json_all_profiles,
+        })

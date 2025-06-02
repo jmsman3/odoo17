@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_move_form_inherit_23" model="ir.ui.view">
+            <field name="name">account.move.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form"/>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@id='other_tab']//field[@name='fiscal_position_id']" position="after">
+                    <field name="order" readonly="state != 'draft'"/>
+                    <field name="service_type" readonly="state != 'draft'"/>
+                    <field name="provider" readonly="state != 'draft'"/>
+                </xpath>
+
+                <xpath expr="//page[@id='other_tab']//field[@name='auto_post']" position="after">
+                    <field name="gig" readonly="state != 'draft'"/>
+                    <field name="seller" readonly="state != 'draft'"/>
+                    <field name="transaction" readonly="state != 'draft'"/>
+                    <field name="team" readonly="state != 'draft'"/>
+                </xpath>
+                <xpath expr="//page[@id='other_tab_entry']//field[@name='company_id']" position="after">
+                    <field name="order"  readonly="state != 'draft'"/>
+                    <field name="service_type" readonly="state != 'draft'"/>
+                    <field name="provider"  readonly="state != 'draft'"/>
+                    <field name="ref"  readonly="state != 'draft'"/>
+                    <field name="gig"  readonly="state != 'draft'"/>
+                    <field name="seller"  readonly="state != 'draft'"/>
+                    <field name="transaction" readonly="state != 'draft'"/>
+                    <field name="team" readonly="state != 'draft'"/>
+                </xpath>
+
+            </field>
+        </record>
+
+
+        <record id="view_account_journal_tree_inherit" model="ir.ui.view">
+            <field name="name">account.journal.tree</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_tree"/>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <field name="type" position="after">
+                    <field name="bank_type" optional="hidden"/>
+                </field>
+
+            </field>
+        </record>
+
+        <record id="view_account_journal_form_inherit" model="ir.ui.view">
+            <field name="name">account.journal.form</field>
+            <field name="model">account.journal</field>
+            <field name="inherit_id" ref="account.view_account_journal_form"/>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <field name="type" position="after">
+                    <field name="bank_type" invisible="type != 'bank'"/>
+                </field>
+
+            </field>
+        </record>
+
+
+        <record id="view_account_search_inherit" model="ir.ui.view">
+            <field name="name">account.account.search</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_search"/>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <field name="account_type" position="after">
+                    <field name="bank_type"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Bank Type" name="group_by_bank_type" domain="[]"
+                                context="{'group_by': 'bank_type'}"/>
+                    </group>
+                </field>
+
+            </field>
+        </record>
+
+
+        <record id="account_account_list_inherit" model="ir.ui.view">
+            <field name="name">account.account.list</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_list"/>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <field name="account_type" position="after">
+                    <field name="bank_type"/>
+                </field>
+
+            </field>
+        </record>
+
+        <record id="account_account_form_inherit" model="ir.ui.view">
+            <field name="name">account.account.form</field>
+            <field name="model">account.account</field>
+            <field name="inherit_id" ref="account.view_account_form"/>
+            <field name="priority" eval="8"/>
+            <field name="arch" type="xml">
+                <field name="account_type" position="after">
+                    <field name="bank_type"/>
+                </field>
+
+            </field>
+        </record>
+    </data>
+</odoo>

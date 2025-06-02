@@ -1,0 +1,89 @@
+<odoo>
+
+    <!-- scm_department -->
+    <div class="step">
+        <div class="step_circle v_line">
+            <div class="circle_inner">
+                <t t-if="req.scm_department_state == 'accepted'">
+                    <t t-call="bd_portal.svg_accepted"/>
+                </t>
+                <t t-else="">
+                    <t t-call="bd_portal.svg_received"/>
+                </t>
+            </div>
+        </div>
+        <div class="step_text">
+            <div>
+                <div>SCM Department</div>
+            </div>
+            <div>
+
+                <t t-if="state == 'approve_finance'">
+                    <div class="step_received">
+                        Received
+                    </div>
+                </t>
+
+                <t t-else="">
+
+                    <t t-if="req.scm_department_state == 'canceled'">
+                        <div class="step_cancelled">
+                            Canceled
+                        </div>
+                    </t>
+                    <t t-if="req.scm_department_state == 'accepted'">
+                        <div class="step_accepted">
+                            Accepted
+                        </div>
+                    </t>
+
+                </t>
+            </div>
+        </div>
+    </div>
+    <!-- End scm_department -->
+
+    <!-- finance_department -->
+    <div class="step">
+        <div class="step_circle v_line">
+            <div class="circle_inner">
+                <t t-if="req.finance_department_state == 'accepted'">
+                    <t t-call="bd_portal.svg_accepted"/>
+                </t>
+                <t t-else="">
+                    <t t-call="bd_portal.svg_received"/>
+                </t>
+            </div>
+        </div>
+        <div class="step_text">
+            <div>
+                <div>Finance Department</div>
+            </div>
+            <div>
+
+                <t t-if="state == 'approve_admin'">
+                    <div class="step_received">
+                        Received
+                    </div>
+                </t>
+
+                <t t-else="">
+
+                    <t t-if="req.finance_department_state == 'canceled'">
+                        <div class="step_cancelled">
+                            Canceled
+                        </div>
+                    </t>
+                    <t t-if="req.finance_department_state == 'accepted'">
+                        <div class="step_accepted">
+                            Accepted
+                        </div>
+                    </t>
+
+                </t>
+            </div>
+        </div>
+    </div>
+    <!-- End finance_department -->
+
+</odoo>

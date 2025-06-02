@@ -1,0 +1,1361 @@
+<odoo>
+    <template id="svg_received">
+        <svg width="20" height="20"
+             viewBox="0 0 24 24"
+             fill="none"
+             xmlns="http://www.w3.org/2000/svg">
+            <path
+                    d="M12 8V12L15 15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                    stroke="#1D1D1F"
+                    stroke-width="1"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"/>
+        </svg>
+    </template>
+
+    <template id="svg_accepted">
+        <svg class="circle_icon" width="20"
+             height="20"
+             viewBox="0 0 24 24"
+             fill="none"
+             xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 13L9 17L19 7"
+                  stroke="#1D1D1F"
+                  stroke-width="1"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"/>
+        </svg>
+    </template>
+
+    <template id="requisition_approval">
+        <t t-call="bd_portal.base">
+            <t t-set="header">
+                <title>Requisition Approval | bdCalling</title>
+                <link rel="stylesheet" href="/bd_portal/static/css/requisition_approval.css?v=3"/>
+            </t>
+            <t t-set="footer">
+                <script src="/bd_portal/static/js/requisition_approval.js?portal_requisition_approval=1"></script>
+            </t>
+            <t t-set="page_code" t-value="'requisition'"/>
+
+            <!-- Contents -->
+            <div class="db_home_content container-fluid mt-3 mb-5 mx-1">
+
+                <!-- breadcrumbs -->
+                <!--<div class="detail_breadcrumbs">
+                    <div>
+                        <a href="/portal/requisition">Requisition Form</a>
+                    </div>
+                    <div class="mx-2">|</div>
+                    <div>
+                        <a class="font-weight-bold" href="/portal/requisition/approval">Approval</a>
+                    </div>
+                </div>-->
+
+                <!-- Requisition Information -->
+                <div class="req_info">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h5 class="mb-0 py-3">Requisition List<t
+                                    t-esc="' - %s' % len(my_requisitions) if my_requisitions else None"/></h5>
+                        </div>
+                        <div>
+                            <div class="d-flex">
+                                <div class="ctl_button2 mr-2 btn btn-dark" data-toggle="collapse"
+                                     data-target="#req_filter"
+                                     aria-expanded="true">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="vertical_align_middle" width="24"
+                                         height="24" viewBox="0 0 24 24" fill="white">
+                                        <path d="M3 4C3 3.44772 3.44772 3 4 3H20C20.5523 3 21 3.44772 21 4V6.58579C21 6.851 20.8946 7.10536 20.7071 7.29289L14.2929 13.7071C14.1054 13.8946 14 14.149 14 14.4142V17L10 21V14.4142C10 14.149 9.89464 13.8946 9.70711 13.7071L3.29289 7.29289C3.10536 7.10536 3 6.851 3 6.58579V4Z"
+                                              stroke="#1D1D1F" stroke-width="1" stroke-linecap="round"
+                                              stroke-linejoin="round"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div t-if="approval_info" class="alert alert-info alert-dismissible">
+                        <button type="button" class="close" data-dismiss="alert">x</button>
+                        <t t-raw="approval_info"/>
+                    </div>
+
+                    <div id="req_filter"
+                         t-att-class="'filter collapse %s' % 'show' if is_filter else 'filter collapse'">
+                        <form action="">
+                            <div class="container-fluid mt-3">
+                                <small class="text-muted d-block mb-2">Filter by Requisition ID Or Department and status
+                                    Or Company</small>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <input id="filter_requisition_id" class="input" type="text"
+                                                   placeholder="Requisition ID"
+                                                   name="filter_requisition_id"
+                                                   t-att-value="kw.get('filter_requisition_id')"/>
+                                        </div>
+
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+
+                                            <t t-set="sel_dep" t-value="filter_department"/>
+
+                                            <select id="filter_department" class="input" name="filter_department">
+                                                <option value="">Select Department</option>
+                                                <option value="department_head"
+                                                        t-att-selected="sel_dep == 'department_head'">Department
+                                                    Head</option>
+                                                <option value="it_department"
+                                                        t-att-selected="sel_dep == 'it_department'">It
+                                                    Department</option>
+                                                <option value="admin_department"
+                                                        t-att-selected="sel_dep == 'admin_department'">Admin
+                                                    Department</option>
+                                                <option value="scm_department"
+                                                        t-att-selected="sel_dep == 'scm_department'">SCM
+                                                    Department</option>
+                                                <option value="finance_department"
+                                                        t-att-selected="sel_dep == 'finance_department'">Finance
+                                                    Department</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+
+                                            <t t-set="sel_status" t-value="kw.get('filter_status')"/>
+
+                                            <select id="filter_status" class="input" name="filter_status">
+                                                <option value="" t-att-selected="sel_status == ''">Select
+                                                    Status</option>
+                                                <option value="accepted" t-att-selected="sel_status == 'accepted'">
+                                                    Accepted</option>
+                                                <option value="cancelled" t-att-selected="sel_status == 'cancelled'">
+                                                    Cancelled</option>
+                                                <option value="to_approve" t-att-selected="sel_status == 'to_approve'">
+                                                    To Approve</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <button class="button button-primary btn-block py-2" type="submit">
+                                                Filter</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+
+                                            <t t-set="sel_company" t-value="kw.get('filter_company')"/>
+                                            <t t-set="companies"
+                                               t-value="request.env['res.company'].sudo().search([])"/>
+
+                                            <select id="filter_company_id" class="input" name="filter_company_id">
+
+                                                <option value="">Select Company</option>
+
+                                                <t t-foreach="companies" t-as="company_id">
+                                                    <option t-att-value="company_id.id"
+                                                            t-esc="company_id.name"></option>
+                                                </t>
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col"></div>
+                                    <div class="col">
+                                        <a t-if="is_filter" class="btn btn-outline-dark btn-sm btn-block py-2"
+                                           href="/portal/requisition/approval/save_session">Save Session</a>
+                                    </div>
+                                    <div class="col">
+                                        <a t-if="is_filter" class="btn btn-outline-danger btn-sm btn-block py-2"
+                                           href="/portal/requisition">Clear Filter</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- order table -->
+                    <div class="table-container">
+                        <t t-if="my_requisitions">
+                            <table class="req_table" style="min-width: 100%;">
+
+                                <tr class="tr_header">
+                                    <td>Requisition ID</td>
+                                    <td>Requisition Type</td>
+                                    <td>Employee ID</td>
+                                    <td>Employee Name</td>
+                                    <td>Company</td>
+                                    <!-- <td>Job ID</td>-->
+                                    <td>Request Date</td>
+                                    <td>Deadline</td>
+                                    <!--<td>Picking Type ID</td>-->
+
+                                    <td>Department Head</td>
+                                    <td>Date</td>
+                                    <td>IT Department</td>
+                                    <td>Date</td>
+                                    <td>Admin</td>
+                                    <td>Date</td>
+                                    <td>SCM</td>
+                                    <td>Date</td>
+                                    <td>Finance</td>
+                                    <td>Date</td>
+                                    <td>CEO</td>
+                                    <td>Date</td>
+
+                                    <td>Approval State</td>
+                                </tr>
+
+                                <t t-foreach="my_requisitions" t-as="my_requisition">
+
+                                    <t t-set="req" t-value="my_requisition.get('requisition')"/>
+                                    <t t-set="can_i_approve" t-value="my_requisition.get('can_i_approve')"/>
+                                    <t t-set="state" t-value="req.app_state"/>
+
+                                    <t t-set="app_list_class" t-value="''"/>
+                                    <t t-if="state == 'cancel'">
+                                        <t t-set="app_list_class" t-value="'req_canceled'"/>
+                                    </t>
+
+                                    <!-- For it -->
+                                    <t t-if="req.budget >= 50000">
+                                        <t t-if="req.req_from == 'it' and req.department_head_state == 'accepted' and req.it_department_state == 'accepted' and req.admin_department_state == 'accepted' and req.finance_department_state == 'accepted' and req.scm_department_state == 'accepted' and req.ceo_state == 'accepted'">
+                                            <t t-set="app_list_class" t-value="'req_approved'"/>
+                                        </t>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-if="req.req_from == 'it' and req.department_head_state == 'accepted' and req.it_department_state == 'accepted' and req.admin_department_state == 'accepted' and req.finance_department_state == 'accepted' and req.scm_department_state == 'accepted'">
+                                            <t t-set="app_list_class" t-value="'req_approved'"/>
+                                        </t>
+                                    </t>
+
+                                    <!-- For admin -->
+                                    <t t-if="req.budget >= 50000">
+                                        <t t-if="req.req_from == 'admin' and req.department_head_state == 'accepted' and req.admin_department_state == 'accepted' and req.finance_department_state == 'accepted' and req.scm_department_state == 'accepted' and req.ceo_state == 'accepted'">
+                                            <t t-set="app_list_class" t-value="'req_approved'"/>
+                                        </t>
+                                    </t>
+                                    <t t-else="">
+                                        <t t-if="req.req_from == 'admin' and req.department_head_state == 'accepted' and req.admin_department_state == 'accepted' and req.finance_department_state == 'accepted' and req.scm_department_state == 'accepted'">
+                                            <t t-set="app_list_class" t-value="'req_approved'"/>
+                                        </t>
+                                    </t>
+
+                                    <tr t-att-class="app_list_class">
+                                        <td>
+                                            <!-- Button to Open the Modal -->
+                                            <div class="text-primary"
+                                                 data-toggle="modal"
+                                                 t-att-data-target="'#modal_approval_form_detail_%s' % req.id"
+                                                 t-esc="req.name"
+                                                 style="cursor: pointer;">
+                                            </div>
+
+                                            <!--
+                                             Requisitions Detail Form
+                                             -->
+
+                                            <!-- The Modal -->
+                                            <div class="modal fade" t-att-id="'modal_approval_form_detail_%s' % req.id">
+                                                <div class="modal-dialog modal-lg2">
+                                                    <div class="modal-content">
+
+                                                        <!-- Modal Header -->
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Requisition For Approval</h4>
+                                                            <button type="button" class="close"
+                                                                    data-dismiss="modal">x</button>
+                                                        </div>
+
+                                                        <!-- Modal body -->
+                                                        <div class="modal-body">
+                                                            <!-- Form -->
+                                                            <form action="" method="post" enctype="multipart/form-data">
+                                                                <input type="hidden" name="csrf_token"
+                                                                       t-att-value="request.csrf_token()"/>
+                                                                <input type="hidden" name="form_posted" value="yes"/>
+                                                                <div class="dt_box mt-3">
+                                                                    <!-- <h5 class="mb-3">Fill This Form</h5> -->
+
+                                                                    <!-- Alert for new requisition -->
+                                                                    <!--<div t-if="new_req" class="row">
+                                                                        <div class="col">
+                                                                            <div class="alert alert-success alert-dismissible">
+                                                                                <button type="button" class="close" data-dismiss="alert">x</button>
+                                                                                Requisition Request Sent Successfully
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col"></div>
+                                                                    </div>-->
+
+                                                                    <div class="row">
+                                                                        <div class="col">
+                                                                            <div class="input-group">
+                                                                                <input class="input" type="number"
+                                                                                       t-att-value="req.employee_id.barcode if req.employee_id else None"
+                                                                                       disabled="1"
+                                                                                       placeholder="Employee id (autofill)"/>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <div class="input-group">
+                                                                                <input class="input" type="text"
+                                                                                       t-att-value="req.employee_id.name if req.employee_id else None"
+                                                                                       disabled="1"
+                                                                                       placeholder="Select employee name (autofill)"/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="row">
+                                                                        <div class="col">
+                                                                            <div class="input-group">
+                                                                                <input class="input" type="text"
+                                                                                       t-att-value="req.employee_id.work_phone if req.employee_id else None"
+                                                                                       disabled="1"
+                                                                                       placeholder="Employee phone number"/>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <div class="input-group">
+                                                                                <input class="input" type="text"
+                                                                                       t-att-value="req.employee_id.job_id.name if req.employee_id and req.employee_id.job_id else None"
+                                                                                       disabled="1"
+                                                                                       placeholder="Designation (autofill)"/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="row">
+                                                                        <div class="col">
+                                                                            <div class="input-group">
+                                                                                <input class="input" type="text"
+                                                                                       t-att-value="req.employee_id.company_id.name if req.employee_id and employee_id.company_id else None"
+                                                                                       disabled="1"
+                                                                                       placeholder="Company name"/>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <div class="input-group">
+                                                                                <select class="input"
+                                                                                        name="team_id"
+                                                                                        disabled="1"
+                                                                                        required="1">
+                                                                                    <option t-esc="req.team_id.name if req.team_id else ''"></option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="row">
+                                                                        <div class="col">
+                                                                            <div class="input-group">
+                                                                                <select class="input"
+                                                                                        name="req_from"
+                                                                                        required="1"
+                                                                                        disabled="1">
+                                                                                    <option t-esc="req.req_from"></option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <!--<div class="input-group">
+                                                                                <input class="input" type="text"
+                                                                                       placeholder="Item name"
+                                                                                       disabled="1"
+                                                                                       t-att-value="req.item_name"/>
+                                                                            </div>-->
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!--<div class="row">
+                                                                        <div class="col">
+                                                                            <div class="input-group">
+                                                                                <textarea class="input" rows="4"
+                                                                                          placeholder="Item description"
+                                                                                          disabled="1"><t
+                                                                                        t-esc="req.item_description"/></textarea>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>-->
+
+
+                                                                    <div t-if="req.item_name">
+                                                                        <h6>Products</h6>
+                                                                        <div class="input-group">
+                                                                            <input class="input" type="text"
+                                                                                   placeholder="Item name"
+                                                                                   disabled="1"
+                                                                                   t-att-value="req.item_name"/>
+                                                                        </div>
+
+                                                                        <div class="input-group">
+                                                                            <textarea class="input" rows="4"
+                                                                                      placeholder="Item description"
+                                                                                      disabled="1"><t
+                                                                                    t-esc="req.item_description"/></textarea>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                    <!-- Products -->
+                                                                    <div t-if="req.order_line_ids">
+                                                                        <h6>Products</h6>
+                                                                        <table class="table req_products">
+                                                                            <tr>
+                                                                                <td>Product Name</td>
+                                                                                <td>Description</td>
+                                                                                <td>Quantity</td>
+                                                                                <td>Purpose Of use</td>
+                                                                                <!--<td>Price Unit</td>-->
+                                                                                <!--<td>Price Subtotal</td>-->
+                                                                            </tr>
+
+                                                                            <t t-foreach="req.order_line_ids"
+                                                                               t-as="line">
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <t t-esc="line.product_id.name if line.product_id else ''"/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <t t-esc="line.name"/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <t t-esc="line.quantity"/>
+                                                                                    </td>
+                                                                                    <td>
+                                                                                        <t t-esc="line.purpose_of_use"/>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            </t>
+
+                                                                        </table>
+                                                                    </div>
+                                                                    <!-- End Products -->
+
+                                                                    <div class="row">
+                                                                        <div class="col">
+                                                                            <!--<div class="input-group input-group-file">
+                                                                                <input id="req_att_files" type="file"
+                                                                                       multiple="1"
+                                                                                       name="attach_files"/>
+                                                                                <label class="input-file"
+                                                                                       for="req_att_files">
+                                                                                    <svg class="mr-2" width="20"
+                                                                                         height="20" viewBox="0 0 24 24"
+                                                                                         fill="none"
+                                                                                         xmlns="http://www.w3.org/2000/svg">
+                                                                                        <path
+                                                                                                d="M4 16L4 17C4 18.6569 5.34315 20 7 20L17 20C18.6569 20 20 18.6569 20 17L20 16M16 8L12 4M12 4L8 8M12 4L12 16"
+                                                                                                stroke="#1D1D1F"
+                                                                                                stroke-width="2"
+                                                                                                stroke-linecap="round"
+                                                                                                stroke-linejoin="round"/>
+                                                                                    </svg>
+                                                                                    Attach files
+                                                                                </label>
+                                                                            </div>-->
+                                                                            <div>Attachments</div>
+                                                                            <div class="mt-1 pb-4">
+                                                                                <t t-if="req.attachment_ids">
+                                                                                    <t t-foreach="req.attachment_ids"
+                                                                                       t-as="file">
+                                                                                        <div>
+                                                                                            <a t-att-href="'/web/content/bd.req.attachment/%s/file?download=true' % file.id"
+                                                                                               t-esc="file.name"></a>
+                                                                                        </div>
+                                                                                    </t>
+                                                                                </t>
+                                                                                <t t-else="">
+                                                                                    <div><small class="text-muted">No
+                                                                                        Attachments</small></div>
+                                                                                </t>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="row">
+                                                                        <div class="col">
+                                                                            <div class="input-group">
+                                                                                <select class="input" name="quantity"
+                                                                                        disabled="1">
+                                                                                    <option t-esc="req.quantity"></option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <div class="input-group">
+                                                                                <input class="input" type="date"
+                                                                                       name="deadline"
+                                                                                       placeholder="Select deadline"
+                                                                                       disabled="1"
+                                                                                       t-att-value="req.deadline"/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!--<div class="row">
+                                                                        <div class="col">
+                                                                            <div class="input-group">
+                                                                                <input class="input" type="text"
+                                                                                       name="purpose_of_use"
+                                                                                       placeholder="Purpose of use"
+                                                                                       disabled="1"
+                                                                                       t-att-value="req.purpose_of_use"/>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>-->
+
+                                                                    <div class="row">
+                                                                        <div class="col">
+                                                                            <div class="input-group">
+                                                                                <input class="input" type="text"
+                                                                                       placeholder="Alternative products (optional)"
+                                                                                       name="alternative_products"
+                                                                                       disabled="1"
+                                                                                       t-att-value="req.alternative_products"/>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <!--<div class="input-group input-group-file">
+                                                                                <input id="req_ap_att_files" type="file"
+                                                                                       multiple="1"
+                                                                                       name="alternative_product_file_ids"/>
+                                                                                <label class="input-file"
+                                                                                       for="req_ap_att_files">
+                                                                                    <svg class="mr-2" width="20"
+                                                                                         height="20" viewBox="0 0 24 24"
+                                                                                         fill="none"
+                                                                                         xmlns="http://www.w3.org/2000/svg">
+                                                                                        <path
+                                                                                                d="M4 16L4 17C4 18.6569 5.34315 20 7 20L17 20C18.6569 20 20 18.6569 20 17L20 16M16 8L12 4M12 4L8 8M12 4L12 16"
+                                                                                                stroke="#1D1D1F"
+                                                                                                stroke-width="2"
+                                                                                                stroke-linecap="round"
+                                                                                                stroke-linejoin="round"/>
+                                                                                    </svg>
+                                                                                    Attach files
+                                                                                </label>
+                                                                            </div>-->
+                                                                            <div>Alternative Product Attachments</div>
+                                                                            <div class="mt-1 pb-4">
+                                                                                <t t-if="req.alternative_product_file_ids">
+                                                                                    <t t-foreach="req.alternative_product_file_ids"
+                                                                                       t-as="file">
+                                                                                        <div>
+                                                                                            <a t-att-href="'/web/content/bd.file/%s/file?download=true' % file.id"
+                                                                                               t-esc="file.name"></a>
+                                                                                        </div>
+                                                                                    </t>
+                                                                                </t>
+                                                                                <t t-else="">
+                                                                                    <div>
+                                                                                        <small class="text-muted">
+                                                                                            No Attachments
+                                                                                        </small></div>
+                                                                                </t>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+
+                                                                    <!-- Send request -->
+                                                                    <!--<div class="mt-3 d-flex flex-row-reverse">
+                                                                        <button class="button button-primary px-5 py-2"
+                                                                                type="submit">Send Request</button>
+                                                                    </div>-->
+
+                                                                    <div class="row">
+                                                                        <div class="col">
+
+                                                                            <div t-if="user_id and user_id.scm_department or user_id.finance_department or user_id.is_ceo">
+                                                                                <div class="mb-2">Budget Price</div>
+                                                                                <div class="input-group">
+                                                                                    <input id="budget" class="input"
+                                                                                           type="number"
+                                                                                           placeholder="Budget Price"
+                                                                                           min="0"
+                                                                                           t-att-value="req.budget"
+                                                                                           t-att-disabled="user_id.finance_department or req.app_state != 'approve_admin'"
+                                                                                           name="budget"/>
+                                                                                </div>
+                                                                            </div>
+
+                                                                            <div t-if="user_id and user_id.finance_department or user_id.is_ceo">
+                                                                                <div class="mb-2">Budget Pass Date</div>
+                                                                                <div class="input-group">
+                                                                                    <input id="budget_pass_date"
+                                                                                           name="budget_pass_date"
+                                                                                           class="input"
+                                                                                           type="date"
+                                                                                           t-att-value="req.budget_pass_date"
+                                                                                           t-att-disabled="req.budget_pass_date"
+                                                                                           placeholder="Budget Pass Date"/>
+                                                                                </div>
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div class="col"></div>
+                                                                    </div>
+
+                                                                </div>
+                                                                <!-- End dt_box -->
+
+                                                            </form>
+                                                            <!-- End form -->
+
+                                                            <!-- ======================================== -->
+                                                            <div class="row">
+                                                                <div class="col"></div>
+                                                                <div class="col">
+
+                                                                    <t t-set="can_ceo_approve" t-value="False"/>
+
+                                                                    <t t-if="can_i_approve and user_id.is_ceo and req.budget >= 50000">
+                                                                        <t t-set="can_ceo_approve" t-value="True"/>
+                                                                    </t>
+
+                                                                    <!-- CEO approval -->
+                                                                    <t t-if="can_ceo_approve">
+                                                                        <div class="row">
+                                                                            <div class="col">
+                                                                                <a class="btn btn-danger btn-block"
+                                                                                   t-att-href="'/portal/requisition/approval/action?action=REJECT&amp;requisition_id=%s' % req.id">
+                                                                                    Reject</a>
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <a id="approve"
+                                                                                   class="btn btn-success btn-block"
+                                                                                   t-att-href="'/portal/requisition/approval/action?action=APPROVE&amp;requisition_id=%s' % req.id">
+                                                                                    Approve</a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </t>
+                                                                    <t t-else="">
+                                                                        <!-- Not CEO, Other users -->
+                                                                        <div t-if="not user_id.is_ceo and can_i_approve"
+                                                                             class="row">
+                                                                            <div class="col">
+                                                                                <a class="btn btn-danger btn-block"
+                                                                                   t-att-href="'/portal/requisition/approval/action?action=REJECT&amp;requisition_id=%s' % req.id">
+                                                                                    Reject</a>
+                                                                            </div>
+                                                                            <div class="col">
+                                                                                <a id="approve"
+                                                                                   class="btn btn-success btn-block"
+                                                                                   t-att-href="'/portal/requisition/approval/action?action=APPROVE&amp;requisition_id=%s' % req.id">
+                                                                                    Approve</a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </t>
+
+                                                                </div>
+                                                            </div>
+                                                            <!-- ======================================== -->
+
+                                                        </div>
+
+                                                        <!-- Modal footer -->
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                    data-dismiss="modal">Close</button>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!--
+                                            End Requisitions Detail Form
+                                            -->
+
+                                        </td>
+
+                                        <td class="text-capitalize"><t t-esc="req.req_from"/></td>
+
+                                        <td><t t-esc="req.employee_id.barcode if req.employee_id else None"/></td>
+
+                                        <td><t t-esc="req.employee_id.name if req.employee_id else ''"/></td>
+
+                                        <td class="text-capitalize">
+                                            <t t-esc="req.employee_id.company_id.name if req.employee_id and req.employee_id.company_id else None"/>
+                                        </td>
+
+                                        <td><t t-if="req.create_date"
+                                               t-esc="'%s' % req.create_date.strftime('%d %B, %Y')"/></td>
+                                        <td><t t-if="req.deadline"
+                                               t-esc="'%s' % req.deadline.strftime('%d %B, %Y')"/></td>
+
+                                        <!--
+                                        Current State and state modal
+                                        -->
+
+                                        <!--Department Head-->
+                                        <t t-set="dhs" t-value="req.department_head_state"/>
+                                        <t t-set="dhs_date" t-value="req.approval_date_department_head"/>
+                                        <t t-set="dhs_class" t-value="''"/>
+
+                                        <t t-if="dhs == 'accepted'">
+                                            <t t-set="dhs_class" t-value="'bg-success-state'"/>
+                                        </t>
+
+                                        <t t-if="dhs == 'canceled'">
+                                            <t t-set="dhs_class" t-value="'bg-danger-state'"/>
+                                        </t>
+
+                                        <td t-att-class="dhs_class">
+                                            <div t-esc="dhs"/>
+                                        </td>
+
+                                        <td t-att-class="dhs_class">
+                                            <div t-esc="dhs_date"/>
+                                        </td>
+
+                                        <!-- IT Department -->
+                                        <t t-set="its" t-value="req.it_department_state"/>
+                                        <t t-set="its_date" t-value="req.approval_date_it_department"/>
+                                        <t t-set="its_class" t-value="''"/>
+
+                                        <t t-if="its == 'accepted'">
+                                            <t t-set="its_class" t-value="'bg-success-state'"/>
+                                        </t>
+
+                                        <t t-if="its == 'canceled'">
+                                            <t t-set="its_class" t-value="'bg-danger-state'"/>
+                                        </t>
+
+                                        <td t-att-class="its_class">
+                                            <div t-esc="its"/>
+                                        </td>
+
+                                        <td t-att-class="its_class">
+                                            <div t-esc="its_date"/>
+                                        </td>
+
+                                        <!-- Admin -->
+                                        <t t-set="ads" t-value="req.admin_department_state"/>
+                                        <t t-set="ads_date" t-value="req.approval_date_admin_department"/>
+                                        <t t-set="ads_class" t-value="''"/>
+
+                                        <t t-if="ads == 'accepted'">
+                                            <t t-set="ads_class" t-value="'bg-success-state'"/>
+                                        </t>
+
+                                        <t t-if="ads == 'canceled'">
+                                            <t t-set="ads_class" t-value="'bg-danger-state'"/>
+                                        </t>
+
+                                        <td t-att-class="ads_class">
+                                            <div t-esc="ads"/>
+                                        </td>
+
+                                        <td t-att-class="ads_class">
+                                            <div t-esc="ads_date"/>
+                                        </td>
+
+                                        <!-- SCM -->
+                                        <t t-set="scms" t-value="req.scm_department_state"/>
+                                        <t t-set="scms_date" t-value="req.approval_date_scm_department"/>
+                                        <t t-set="scms_class" t-value="''"/>
+
+                                        <t t-if="scms == 'accepted'">
+                                            <t t-set="scms_class" t-value="'bg-success-state'"/>
+                                        </t>
+
+                                        <t t-if="scms == 'canceled'">
+                                            <t t-set="scms_class" t-value="'bg-danger-state'"/>
+                                        </t>
+
+                                        <td t-att-class="scms_class">
+                                            <div t-esc="scms"/>
+                                        </td>
+                                        <td t-att-class="scms_class">
+                                            <div t-esc="scms_date"/>
+                                        </td>
+
+                                        <!-- Finance -->
+                                        <t t-set="fis" t-value="req.finance_department_state"/>
+                                        <t t-set="fis_date" t-value="req.approval_date_finance_department"/>
+                                        <t t-set="fis_class" t-value="''"/>
+
+                                        <t t-if="fis == 'accepted'">
+                                            <t t-set="fis_class" t-value="'bg-success-state'"/>
+                                        </t>
+
+                                        <t t-if="fis == 'canceled'">
+                                            <t t-set="fis_class" t-value="'bg-danger-state'"/>
+                                        </t>
+
+                                        <td t-att-class="fis_class">
+                                            <div t-esc="fis"/>
+                                        </td>
+
+                                        <td t-att-class="fis_class">
+                                            <div t-esc="fis_date"/>
+                                        </td>
+
+                                        <!-- CEO -->
+                                        <t t-set="ceos" t-value="req.ceo_state"/>
+                                        <t t-set="ceos_date" t-value="req.approval_date_ceo"/>
+                                        <t t-set="ceos_class" t-value="''"/>
+
+                                        <t t-if="ceos == 'accepted'">
+                                            <t t-set="ceos_class" t-value="'bg-success-state'"/>
+                                        </t>
+
+                                        <t t-if="ceos == 'canceled'">
+                                            <t t-set="ceos_class" t-value="'bg-danger-state'"/>
+                                        </t>
+
+                                        <td t-att-class="ceos_class">
+                                            <div t-esc="ceos"/>
+                                        </td>
+
+                                        <td t-att-class="ceos_class">
+                                            <div t-esc="ceos_date"/>
+                                        </td>
+
+                                        <td>
+                                            <!-- Current State -->
+                                            <t t-if="state is None or state == 'draft'">
+                                                <div class="">Current State: <span class="badge badge-secondary">
+                                                    Pending</span></div>
+                                            </t>
+                                            <t t-elif="state == 'done'">
+                                                <div class="">Current State: <span class="badge badge-success">
+                                                    Done</span></div>
+                                            </t>
+                                            <t t-elif="state == 'cancel'">
+                                                <div class="">Current State: <span class="badge badge-danger">
+                                                    Cancel</span></div>
+                                            </t>
+                                            <t t-else="">
+                                                <div class="">Current State: <span class="badge badge-primary"
+                                                                                   t-esc="state"></span></div>
+                                            </t>
+
+                                            <div class="text-primary" data-toggle="modal"
+                                                 t-att-data-target="'#req_modal%s' % req.id"
+                                                 style="cursor: pointer;">
+                                                View States
+                                            </div>
+
+                                            <!--
+                                            ================================================
+                                            Requisition States modal
+                                            -->
+
+                                            <!-- The Modal -->
+                                            <div class="modal" t-att-id="'req_modal%s' % req.id">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+
+                                                        <!-- Modal Header -->
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Requisition States</h4>
+                                                            <button type="button" class="close" data-dismiss="modal">
+                                                                x</button>
+                                                        </div>
+
+                                                        <!-- Modal body -->
+                                                        <div class="modal-body">
+
+                                                            <t t-set="state" t-value="req.app_state"/>
+
+                                                            <div class="v_steps">
+
+                                                                <t t-set="v_line_value" t-value="''"/>
+                                                                <t t-if="req.budget >= 50000">
+                                                                    <t t-set="v_line_value" t-value="''"/>
+                                                                </t>
+                                                                <t t-else="">
+                                                                    <t t-set="v_line_value" t-value="'2'"/>
+                                                                </t>
+
+                                                                <!-- IT Department Steps -->
+                                                                <t t-if="req.req_from == 'it'">
+
+                                                                    <!-- department_head_it -->
+                                                                    <div class="step">
+                                                                        <div class="step_circle v_line">
+                                                                            <div class="circle_inner">
+                                                                                <t t-if="req.department_head_state == 'accepted'">
+                                                                                    <t t-call="bd_portal.svg_accepted"/>
+                                                                                </t>
+                                                                                <t t-else="">
+                                                                                    <t t-call="bd_portal.svg_received"/>
+                                                                                </t>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="step_text">
+                                                                            <div>
+                                                                                <div>Department Head</div>
+                                                                            </div>
+                                                                            <div>
+
+                                                                                <t t-if="state is None or state == 'draft'">
+                                                                                    <div class="step_received">
+                                                                                        Received</div>
+                                                                                </t>
+
+                                                                                <t t-else="">
+
+                                                                                    <t t-if="req.department_head_state == 'canceled'">
+                                                                                        <div class="step_cancelled">
+                                                                                            Canceled</div>
+                                                                                    </t>
+                                                                                    <t t-if="req.department_head_state == 'accepted'">
+                                                                                        <div class="step_accepted">
+                                                                                            Accepted</div>
+                                                                                    </t>
+
+                                                                                </t>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- End department_head_it -->
+
+                                                                    <!-- it_department -->
+                                                                    <div class="step">
+                                                                        <div class="step_circle v_line">
+                                                                            <div class="circle_inner">
+                                                                                <t t-if="req.it_department_state == 'accepted'">
+                                                                                    <t t-call="bd_portal.svg_accepted"/>
+                                                                                </t>
+                                                                                <t t-else="">
+                                                                                    <t t-call="bd_portal.svg_received"/>
+                                                                                </t>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="step_text">
+                                                                            <div><div>It Department</div></div>
+                                                                            <div>
+
+                                                                                <t t-if="state == 'approve_dh'">
+                                                                                    <div class="step_received">
+                                                                                        Received</div>
+                                                                                </t>
+
+                                                                                <t t-else="">
+
+                                                                                    <t t-if="req.it_department_state == 'canceled'">
+                                                                                        <div class="step_cancelled">
+                                                                                            Canceled</div>
+                                                                                    </t>
+                                                                                    <t t-if="req.it_department_state == 'accepted'">
+                                                                                        <div class="step_accepted">
+                                                                                            Accepted</div>
+                                                                                    </t>
+
+                                                                                </t>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- End it_department -->
+
+                                                                    <!-- admin_department -->
+                                                                    <div class="step">
+                                                                        <div class="step_circle v_line">
+                                                                            <div class="circle_inner">
+                                                                                <t t-if="req.admin_department_state == 'accepted'">
+                                                                                    <t t-call="bd_portal.svg_accepted"/>
+                                                                                </t>
+                                                                                <t t-else="">
+                                                                                    <t t-call="bd_portal.svg_received"/>
+                                                                                </t>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="step_text">
+                                                                            <div><div>Admin Department</div></div>
+                                                                            <div>
+
+                                                                                <t t-if="state == 'approve_it'">
+                                                                                    <div class="step_received">
+                                                                                        Received</div>
+                                                                                </t>
+
+                                                                                <t t-else="">
+
+                                                                                    <t t-if="req.admin_department_state == 'canceled'">
+                                                                                        <div class="step_cancelled">
+                                                                                            Canceled</div>
+                                                                                    </t>
+                                                                                    <t t-if="req.admin_department_state == 'accepted'">
+                                                                                        <div class="step_accepted">
+                                                                                            Accepted</div>
+                                                                                    </t>
+
+                                                                                </t>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- End it_department -->
+
+                                                                    <!-- scm_department -->
+                                                                    <div class="step">
+                                                                        <div class="step_circle v_line">
+                                                                            <div class="circle_inner">
+                                                                                <t t-if="req.scm_department_state == 'accepted'">
+                                                                                    <t t-call="bd_portal.svg_accepted"/>
+                                                                                </t>
+                                                                                <t t-else="">
+                                                                                    <t t-call="bd_portal.svg_received"/>
+                                                                                </t>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="step_text">
+                                                                            <div><div>SCM Department</div></div>
+                                                                            <div>
+
+                                                                                <t t-if="state == 'approve_admin'">
+                                                                                    <div class="step_received">
+                                                                                        Received</div>
+                                                                                </t>
+
+                                                                                <t t-else="">
+
+                                                                                    <t t-if="req.scm_department_state == 'canceled'">
+                                                                                        <div class="step_cancelled">
+                                                                                            Canceled</div>
+                                                                                    </t>
+                                                                                    <t t-if="req.scm_department_state == 'accepted'">
+                                                                                        <div class="step_accepted">
+                                                                                            Accepted</div>
+                                                                                    </t>
+
+                                                                                </t>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- End scm_department -->
+
+                                                                    <!-- finance_department -->
+                                                                    <div class="step">
+                                                                        <div t-att-class="'step_circle v_line%s' % v_line_value">
+                                                                            <div class="circle_inner">
+                                                                                <t t-if="req.finance_department_state == 'accepted'">
+                                                                                    <t t-call="bd_portal.svg_accepted"/>
+                                                                                </t>
+                                                                                <t t-else="">
+                                                                                    <t t-call="bd_portal.svg_received"/>
+                                                                                </t>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="step_text">
+                                                                            <div><div>Finance Department</div></div>
+                                                                            <div>
+
+                                                                                <t t-if="state == 'approve_scm'">
+                                                                                    <div class="step_received">
+                                                                                        Received</div>
+                                                                                </t>
+
+                                                                                <t t-else="">
+
+                                                                                    <t t-if="req.finance_department_state == 'canceled'">
+                                                                                        <div class="step_cancelled">
+                                                                                            Canceled</div>
+                                                                                    </t>
+                                                                                    <t t-if="req.finance_department_state == 'accepted'">
+                                                                                        <div class="step_accepted">
+                                                                                            Accepted</div>
+                                                                                    </t>
+
+                                                                                </t>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- End finance_department -->
+
+                                                                    <!-- CEO
+                                                                    budget >= 50000 then CEO only can see this block
+                                                                    -->
+                                                                    <div t-if="req.budget >= 50000" class="step">
+
+                                                                        <div class="step_circle v_line2">
+                                                                            <div class="circle_inner">
+                                                                                <t t-if="req.ceo_state == 'accepted'"> <!-- accepted -->
+                                                                                    <t t-call="bd_portal.svg_accepted"/>
+                                                                                </t>
+                                                                                <t t-else="">
+                                                                                    <t t-call="bd_portal.svg_received"/>
+                                                                                </t>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="step_text">
+                                                                            <div><div>CEO</div></div>
+                                                                            <div>
+
+                                                                                <t t-if="state == 'approve_finance'"> <!-- approve_scm -->
+                                                                                    <div class="step_received">
+                                                                                        Received
+                                                                                    </div>
+                                                                                </t>
+
+                                                                                <t t-else="">
+
+                                                                                    <t t-if="req.ceo_state == 'canceled'">
+                                                                                        <div class="step_cancelled">
+                                                                                            Canceled</div>
+                                                                                    </t>
+                                                                                    <t t-if="req.ceo_state == 'accepted'">
+                                                                                        <div class="step_accepted">
+                                                                                            Accepted</div>
+                                                                                    </t>
+
+                                                                                </t>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- End CEO -->
+
+                                                                </t>
+
+                                                                <t t-elif="req.req_from == 'admin'">
+
+                                                                    <!-- department_head_it -->
+                                                                    <div class="step">
+                                                                        <div class="step_circle v_line">
+                                                                            <div class="circle_inner">
+                                                                                <t t-if="req.department_head_state == 'accepted'">
+                                                                                    <t t-call="bd_portal.svg_accepted"/>
+                                                                                </t>
+                                                                                <t t-else="">
+                                                                                    <t t-call="bd_portal.svg_received"/>
+                                                                                </t>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="step_text">
+                                                                            <div>
+                                                                                <div>Department Head</div>
+                                                                            </div>
+                                                                            <div>
+
+                                                                                <t t-if="state is None or state == 'draft'">
+                                                                                    <div class="step_received">
+                                                                                        Received</div>
+                                                                                </t>
+
+                                                                                <t t-else="">
+
+                                                                                    <t t-if="req.department_head_state == 'canceled'">
+                                                                                        <div class="step_cancelled">
+                                                                                            Canceled</div>
+                                                                                    </t>
+                                                                                    <t t-if="req.department_head_state == 'accepted'">
+                                                                                        <div class="step_accepted">
+                                                                                            Accepted</div>
+                                                                                    </t>
+
+                                                                                </t>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- End department_head_it -->
+
+                                                                    <!-- admin_department -->
+                                                                    <div class="step">
+                                                                        <div class="step_circle v_line">
+                                                                            <div class="circle_inner">
+                                                                                <t t-if="req.admin_department_state == 'accepted'">
+                                                                                    <t t-call="bd_portal.svg_accepted"/>
+                                                                                </t>
+                                                                                <t t-else="">
+                                                                                    <t t-call="bd_portal.svg_received"/>
+                                                                                </t>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="step_text">
+                                                                            <div><div>Admin Department</div></div>
+                                                                            <div>
+
+                                                                                <t t-if="state == 'approve_dh'">
+                                                                                    <div class="step_received">
+                                                                                        Received</div>
+                                                                                </t>
+
+                                                                                <t t-else="">
+
+                                                                                    <t t-if="req.admin_department_state == 'canceled'">
+                                                                                        <div class="step_cancelled">
+                                                                                            Canceled</div>
+                                                                                    </t>
+                                                                                    <t t-if="req.admin_department_state == 'accepted'">
+                                                                                        <div class="step_accepted">
+                                                                                            Accepted</div>
+                                                                                    </t>
+
+                                                                                </t>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- End it_department -->
+
+                                                                    <!-- scm_department -->
+                                                                    <div class="step">
+                                                                        <div class="step_circle v_line">
+                                                                            <div class="circle_inner">
+                                                                                <t t-if="req.scm_department_state == 'accepted'">
+                                                                                    <t t-call="bd_portal.svg_accepted"/>
+                                                                                </t>
+                                                                                <t t-else="">
+                                                                                    <t t-call="bd_portal.svg_received"/>
+                                                                                </t>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="step_text">
+                                                                            <div><div>SCM Department</div></div>
+                                                                            <div>
+
+                                                                                <t t-if="state == 'approve_admin'">
+                                                                                    <div class="step_received">
+                                                                                        Received</div>
+                                                                                </t>
+
+                                                                                <t t-else="">
+
+                                                                                    <t t-if="req.scm_department_state == 'canceled'">
+                                                                                        <div class="step_cancelled">
+                                                                                            Canceled</div>
+                                                                                    </t>
+                                                                                    <t t-if="req.scm_department_state == 'accepted'">
+                                                                                        <div class="step_accepted">
+                                                                                            Accepted</div>
+                                                                                    </t>
+
+                                                                                </t>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- End scm_department -->
+
+                                                                    <!-- finance_department -->
+                                                                    <div class="step">
+                                                                        <div t-att-class="'step_circle v_line%s' % v_line_value">
+                                                                            <div class="circle_inner">
+                                                                                <t t-if="req.finance_department_state == 'accepted'">
+                                                                                    <t t-call="bd_portal.svg_accepted"/>
+                                                                                </t>
+                                                                                <t t-else="">
+                                                                                    <t t-call="bd_portal.svg_received"/>
+                                                                                </t>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="step_text">
+                                                                            <div><div>Finance Department</div></div>
+                                                                            <div>
+
+                                                                                <t t-if="state == 'approve_scm'">
+                                                                                    <div class="step_received">
+                                                                                        Received</div>
+                                                                                </t>
+
+                                                                                <t t-else="">
+
+                                                                                    <t t-if="req.finance_department_state == 'canceled'">
+                                                                                        <div class="step_cancelled">
+                                                                                            Canceled</div>
+                                                                                    </t>
+                                                                                    <t t-if="req.finance_department_state == 'accepted'">
+                                                                                        <div class="step_accepted">
+                                                                                            Accepted</div>
+                                                                                    </t>
+
+                                                                                </t>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- End finance_department -->
+
+                                                                    <!-- CEO -->
+                                                                    <div t-if="req.budget >= 50000" class="step">
+                                                                        <div class="step_circle v_line2">
+                                                                            <div class="circle_inner">
+                                                                                <t t-if="req.ceo_state == 'accepted'">
+                                                                                    <t t-call="bd_portal.svg_accepted"/>
+                                                                                </t>
+                                                                                <t t-else="">
+                                                                                    <t t-call="bd_portal.svg_received"/>
+                                                                                </t>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="step_text">
+                                                                            <div><div>CEO</div></div>
+                                                                            <div>
+
+                                                                                <t t-if="state == 'approve_finance'">
+                                                                                    <div class="step_received">
+                                                                                        Received</div>
+                                                                                </t>
+
+                                                                                <t t-else="">
+
+                                                                                    <t t-if="req.ceo_state == 'canceled'">
+                                                                                        <div class="step_cancelled">
+                                                                                            Canceled</div>
+                                                                                    </t>
+                                                                                    <t t-if="req.ceo_state == 'accepted'">
+                                                                                        <div class="step_accepted">
+                                                                                            Accepted</div>
+                                                                                    </t>
+
+                                                                                </t>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- End CEO -->
+
+                                                                </t>
+
+                                                            </div>
+
+                                                        </div>
+
+                                                        <!-- Modal footer -->
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-danger"
+                                                                    data-dismiss="modal">
+                                                                Close</button>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!--
+                                            End Requisition States modal
+                                            ================================================
+                                            -->
+
+                                            <!--
+                                            End Current State and state modal
+                                            -->
+                                        </td>
+
+                                    </tr>
+
+                                </t>
+                            </table>
+                        </t>
+                        <t t-else="">
+                            <div class="text-muted">No Requisitions</div>
+                        </t>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+        </t>
+    </template>
+
+</odoo>

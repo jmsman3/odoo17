@@ -1,0 +1,60 @@
+<odoo>
+    <template id="create_new_customer_status">
+        <t t-call="bd_portal.base">
+            <t t-set="header">
+                <title>Status of Add New Customer | bdCalling</title>
+                <link rel="stylesheet" href="/bd_portal/static/css/create_sale.css?v=1"/>
+            </t>
+            <t t-set="footer">
+                <!--<script src="/bd_portal/static/js/create_sale.js?v=1"></script>-->
+            </t>
+            <t t-set="page_code" t-value="'sales'"/>
+
+            <!-- Contents -->
+            <div class="db_home_content container-fluid mt-3 mb-5 mx-1">
+
+                <!-- breadcrumbs -->
+                <div class="detail_breadcrumbs">
+                    <div>
+                        <a href="/portal/dashboard">Dashboard</a>
+                    </div>
+                    <div class="mx-2">/</div>
+                    <div>
+                        <a href="/portal/sales">Sales</a>
+                    </div>
+                    <div class="mx-2">/</div>
+                    <div class="font-weight-bold">Create Order</div>
+                </div>
+
+                <div class="mt-3">
+
+                    <!-- Alert Info -->
+                    <div t-if="alert_info" class="alert alert-info">
+                        <div t-esc="alert_info"></div>
+                    </div>
+
+                    <!-- Alert Danger -->
+                    <div t-if="alert_danger" class="alert alert-danger">
+                        <div t-esc="alert_danger"></div>
+                    </div>
+
+                    <div class="mt-2">
+                        <div>
+                            <a href="/portal/dashboard">Dashboard</a>
+                        </div>
+                        <div>
+                            <a href="/portal/sales/create">Create New Order</a>
+                        </div>
+                        <div>
+                            <a href="/portal/sales?page=1">View All Orders</a>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </t>
+    </template>
+</odoo>

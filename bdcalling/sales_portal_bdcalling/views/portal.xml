@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="portal_layout_inherit" inherit_id="portal.portal_layout">
+        <xpath expr="//div[@class='o_portal_wrap']" position="before">
+            <style>
+            .container, .container-lg, .container-md, .container-sm{
+                max-width: 100% !important;
+            }
+            </style>
+        </xpath>
+        <xpath expr="//div[1]" position="replace">
+
+        </xpath>
+    </template>
+    <template id="template_header_mobile_custom" inherit_id="website.template_header_mobile">
+        <xpath expr="//div[1]//ul[1]" position="attributes">
+           display none to activate
+            <attribute name="class">o_header_mobile_buttons_wrap</attribute> 
+        </xpath>
+    </template>
+</odoo>
+
+
+
+<!-- <template id="portal_bd" inherit_id="portal.portal_layout">
+
+        <xpath expr="//div[1]" position="replace">
+
+        </xpath>
+
+        <xpath expr="//div[@class='o_portal_wrap']" position="before">
+            <style>
+                .custom-sidebar {
+                    min-height: 100vh;
+                    width: 250px;
+                    background: white;
+                    position: fixed;
+                    left: 0;
+                    top: 0;
+                    z-index: 1000;
+                    transition: all 0.3s;
+                }
+                
+                .nav-item:hover {
+                    background-color: #1A5EED;
+                    border-radius: 4px;
+                }
+                
+                .nav-item:hover .nav-link,
+                .nav-item.active .nav-link {
+                    color: white !important;
+                }
+                
+                /* Main content wrapper */
+                .main-content-wrapper {
+                    margin-left: 250px;
+                    min-height: 100vh;
+                    transition: all 0.3s;
+                }
+                
+                /* Header styles */
+                .custom-header {
+                    background: white;
+                    border-bottom: 1px solid #dee2e6;
+                    padding: 0.75rem 1.5rem;
+                }
+                
+                .search-container {
+                    position: relative;
+                    max-width: 400px;
+                }
+                
+                .search-container i {
+                    position: absolute;
+                    left: 15px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    color: #aaa;
+                }
+                
+                .search-container input {
+                    padding-left: 40px;
+                }
+                
+                /* Responsive styles */
+                @media (max-width: 768px) {
+                    .custom-sidebar {
+                        left: -250px;
+                    }
+                    
+                    .custom-sidebar.active {
+                        left: 0;
+                    }
+                    
+                    .main-content-wrapper {
+                        margin-left: 0;
+                    }
+                    
+                    .main-content-wrapper.sidebar-active {
+                        margin-left: 250px;
+                    }
+                }
+            </style>
+        </xpath>
+            <xpath expr="//div[@id='wrap']" position="replace">
+                    <div id="wrap">
+                        <main>
+                            <div class="d-flex">
+                                <div class="custom-sidebar border-right">
+                                    <div class="text-center py-3">
+                                        <img src="/sales_portal_bdcalling/static/img/navigation-image-2.png" alt="Logo" class="img-fluid" style="max-width: 185px;" />
+                                    </div>
+                                    <ul class="nav flex-column pl-4 pt-4">
+                                        <li class="nav-item">
+                                            <a class="nav-link text-dark" href="/my/dashboard">
+                                                <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link text-dark" href="/my/todo">
+                                                <i class="fas fa-list-alt mr-2"></i> To-Do List
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link text-dark" href="/sale/dashboard">
+                                                <i class="fas fa-chart-line mr-2"></i> Sales
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link text-dark" href="/operation_dashboard">
+                                                <i class="fas fa-cogs mr-2"></i> Operation
+                                            </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link text-dark" href="/my/requisition">
+                                                <i class="fas fa-clipboard-list mr-2"></i> Requisition
+                                            </a>
+                                        </li>
+                                        <hr style="border: 1px solid #000; margin: 10px 0; width: 90%; background-color: #000;" />
+                                        <li class="nav-item">
+                                            <a class="nav-link text-dark" href="/web/session/logout">
+                                                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="main-content-wrapper">
+                                    <nav class="custom-header">
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <button class="navbar-toggler d-md-none" type="button" onclick="toggleSidebar()">
+                                                <span class="navbar-toggler-icon"></span>
+                                            </button>
+                                            <div class="search-container">
+                                                <i class="fas fa-search"></i>
+                                                <input type="text" class="form-control" placeholder="Search" />
+                                            </div>
+                                            <div class="d-flex align-items-center">
+                                                <div class="d-flex align-items-center mr-4">
+                                                    <img src="/sales_portal_bdcalling/static/img/notification.png" alt="Notification" class="img-fluid" style="width: 30px;" />
+                                                    <span class="ml-2 badge badge-primary">12</span>
+                                                </div>
+                                                <div class="d-flex align-items-center">
+                                                    <img src="/sales_portal_bdcalling/static/img/header-frame-5518.png" alt="User Profile" class="rounded-circle" style="width: 32px; height: 32px;" />
+                                                    <span class="ml-2" t-esc="user_id.name" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </nav>
+
+                                    <div class="p-4">
+                                        <t t-raw="0" />
+                                    </div>
+                                </div>
+                            </div>
+                        </main>
+                    </div>
+
+                    <script>
+                function toggleSidebar() {
+                    document.querySelector('.custom-sidebar').classList.toggle('active');
+                    document.querySelector('.main-content-wrapper').classList.toggle('sidebar-active');
+                }
+                    </script>
+                </xpath>
+        </template> -->

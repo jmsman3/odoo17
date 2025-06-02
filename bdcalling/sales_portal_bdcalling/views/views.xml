@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="sale_order_form_inherit_custom" model="ir.ui.view">
+        <field name="name">sale.order</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <field name="special_remarks" position="after">
+                <field name="deadline" />
+                <field name="assign_team_id" />
+                <field name="delivered_assign_team_id" />
+            </field>
+        </field>
+    </record>
+
+
+    <record id="view_operation_order_form" model="ir.ui.view">
+        <field name="name">Project Operation</field>
+        <field name="model">project.operation</field>
+        <field name="arch" type="xml">
+            <form string="Employee Order">
+                <group>
+                    <group>
+                        <field name="employee_id_barcode" />
+                        <field name="employee_name" />
+                        <field name="user_id" />
+                    </group>
+                    <group>
+                        <field name="company_name" />
+                    </group>
+                </group>
+                <group string="Details">
+                    <group>
+                        <field name="date" />
+                        <field name="order_id" />
+                        <field name="project" />
+                        <field name="assigned_team_id" />
+                        <field name="percentage" />
+                        <field name="special_remarks" />
+                        <field name="revision_count" />
+
+                    </group>
+                    <group>
+                        <field name="so_id" />
+                        <field name="partner_id" />
+                        <field name="order_link" />
+                        <field name="order_status" />
+                        <field name="instruction_sheet_link" />
+                        <field name="delivery_amount" />
+                        <field name="monetary_value" />
+                    </group>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="view_operation_order_tree" model="ir.ui.view">
+        <field name="name">Project Operation</field>
+        <field name="model">project.operation</field>
+        <field name="arch" type="xml">
+            <tree string="Employee Orders">
+                <field name="employee_id_barcode" />
+                <field name="employee_name" />
+                <field name="company_name" />
+                <field name="date" />
+                <field name="order_status" />
+                <field name="order_link" />
+                <field name="order_id" />
+                <field name="project" />
+                <field name="assigned_team_id" />
+                <field name="delivery_amount" />
+                <field name="monetary_value" />
+                <field name="revision_count" />
+            </tree>
+        </field>
+    </record>
+    <record id="view_operation_order_search" model="ir.ui.view">
+        <field name="name">Project Operation Search</field>
+        <field name="model">project.operation</field>
+        <field name="arch" type="xml">
+            <search string="Search Project Operation">
+                <field name="employee_id_barcode" string="Employee Barcode" />
+                <field name="employee_name" string="Employee Name" />
+                <field name="company_name" string="Company" />
+                <field name="order_status" string="Order Status" />
+                <field name="order_id" string="Order ID" />
+                <field name="project" string="Project" />
+                <field name="assigned_team_id" string="Assigned Team" />
+                <field name="date" string="Date" />
+                <filter name="filter_draft" string="Complete"
+                    domain="[('order_status', '=', 'complete')]" />
+                <filter name="filter_confirmed" string="NRA"
+                    domain="[('order_status', '=', 'nra')]" />
+                <filter name="filter_done" string="Cancelled"
+                    domain="[('order_status', '=', 'cancelled')]" />
+                <group expand="1" string="Group By">
+                    <filter name="group_project" string="Project" context="{'group_by': 'project'}" />
+                    <filter name="group_team" string="Assigned Team"
+                        context="{'group_by': 'assigned_team_id'}" />
+                    <filter name="group_date" string="Date" context="{'group_by': 'date'}" />
+                    <filter name="group_status" string="Order Status"
+                        context="{'group_by': 'order_status'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_operation_order" model="ir.actions.act_window">
+        <field name="name">Operation</field>
+        <field name="res_model">project.operation</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_operation_order_tree" />
+    </record>
+    <menuitem id="menu_operation_root" name="Operation" />
+    <menuitem id="menu_operation_order" parent="menu_operation_root" action="action_operation_order"
+        name="Manage Orders" />
+
+
+</odoo>

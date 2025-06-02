@@ -1,0 +1,147 @@
+<odoo>
+    <template id="create_new_customer">
+        <t t-call="bd_portal.base">
+            <t t-set="header">
+                <title>Add New Customer | bdCalling</title>
+                <link rel="stylesheet" href="/bd_portal/static/css/create_sale.css?v=2"/>
+                <link rel="stylesheet" href="/bd_portal/static/css/create_new_customer.css?v=create_new_customer_2"/>
+            </t>
+            <t t-set="footer">
+                <script src="/bd_portal/static/js/create_new_customer.js?v=create_new_customer_2"></script>
+            </t>
+            <t t-set="page_code" t-value="'sales'"/>
+
+            <!-- Contents -->
+            <div class="db_home_content container-fluid mt-3 mb-5 mx-1">
+
+                <!-- breadcrumbs -->
+                <div class="detail_breadcrumbs">
+                    <div>
+                        <a href="/portal/dashboard">Dashboard</a>
+                    </div>
+                    <div class="mx-2">/</div>
+                    <div>
+                        <a href="/portal/sales">Sales</a>
+                    </div>
+                    <div class="mx-2">/</div>
+                    <div class="font-weight-bold">Add New Customer</div>
+                </div>
+
+                <form id="form_create_new_customer"
+                      action="/portal/sales/create_new_customer/status"
+                      method="post"
+                      enctype="multipart/form-data">
+
+                    <inupt type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                    <!-- Details -->
+                    <div class="dt_box mt-3">
+                        <div class="font-weight-bold mb-4">Customer Details</div>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="field_group">
+                                    <input id="name" class="input_field" type="text" name="mp_customer_fullname" required="1"/>
+                                    <div class="field_label">Customer Full Name</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="field_group">
+                                    <input id="client_user_name" class="input_field" type="text"
+                                           name="name"/>
+                                    <div class="field_label">Client User Name</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="field_group">
+                                    <input id="street" class="input_field" type="text" name="street"/>
+                                    <div class="field_label">Address</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="field_group">
+                                    <input id="city" class="input_field" type="text" name="city"/>
+                                    <div class="field_label">City</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="field_group">
+                                    <input id="zip" class="input_field" type="number" name="zip"/>
+                                    <div class="field_label">Zip</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="field_group">
+                                    <t t-set="countries" t-value="request.env['res.country'].sudo().search([])"/>
+                                    <select id="country_id" class="input_field" name="country_id">
+                                        <option value="">Please Choose An Option</option>
+                                        <t t-foreach="countries" t-as="country">
+                                            <option t-att-value="country.id"
+                                                    t-att-selected="country.code == 'BD'"
+                                                    t-esc="country.name">
+                                                Bid
+                                            </option>
+                                        </t>
+                                    </select>
+                                    <div class="field_label">Country</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="field_group">
+                                    <input id="phone" class="input_field" type="text" name="phone"/>
+                                    <div class="field_label">Mobile</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="field_group">
+                                    <input id="email" class="input_field" type="email" name="email"/>
+                                    <div class="field_label">Email</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="field_group">
+                                    <input id="website" class="input_field" type="text" name="website"/>
+                                    <div class="field_label">Website</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="input-group input-group-file">
+                                    <input id="image_1920" class="input_field" type="file" name="image_1920"/>
+                                    <label for="image_1920" class="input-file">Add/Change Photo</label>
+                                </div>
+
+                                <img class="mt-2" id="preview_image" style="display: none; width: 100px; object-fit: cover;"/>
+
+                            </div>
+                        </div>
+
+                        <!-- End Details -->
+
+                    </div>
+
+                    <!-- Save button -->
+                    <div class="mt-3">
+                        <button class="button button-primary px-5 py-2" type="submit">Add Customer</button>
+                    </div>
+
+                </form>
+                <!-- End form -->
+
+            </div>
+
+
+        </t>
+    </template>
+</odoo>

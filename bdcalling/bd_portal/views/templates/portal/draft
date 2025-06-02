@@ -1,0 +1,43 @@
+                <!-- Pagination -->
+                <div class="pagination">
+                    <div>
+                        <a class="disable2" href="#"> <!-- dynamic: class="disable" -->
+                            <!--<svg class="vertical_align_middle" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 19L8 12L15 5" stroke="gray" stroke-width="2" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                            </svg>-->
+                           Previous
+                        </a>
+                    </div>
+                    <div>
+                        <a class="active" href="#">1</a>
+                    </div>
+                    <div>
+                        <a href="#">2</a>
+                    </div>
+                    <div>
+                        <a href="#">3</a>
+                    </div>
+                    <div>
+                        <a href="#">4</a>
+                    </div>
+                    <div>
+                        <a href="#">5</a>
+                    </div>
+                    <div>...</div>
+                    <div>
+                        <a href="#">11</a>
+                    </div>
+                    <div>
+                        <a href="#">
+                            Next
+                            <!--<svg class="vertical_align_middle" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 5L16 12L9 19" stroke="#1D1D1F" stroke-width="2" stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                            </svg>-->
+                        </a>
+                    </div>
+                </div>
+                <!-- End Pagination -->

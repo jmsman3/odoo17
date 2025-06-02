@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+
+    <!-- Portal Customer Create and update form
+    Developed by Rufaida Jaman Rayta -->
+    <!-- ___________________________________________________Order Create Form_____________________________________________________ -->
+
+    <template id="customer_form_template" name="Customer Form">
+        <t t-call="portal.portal_layout">
+            <t t-set="user" t-value="request.env.user" />
+            <t t-set="fin_not_count" t-value="0" />
+
+            <t t-if="user.scm_department">
+                <t t-set="fin_not_count" t-value="request.env['bd.notification'].sudo().search_count([
+                    ('department', '=', 'finance'),
+                    ('mark_as_read', '=', False),
+                ])" />
+            </t>
+
+            <title>Add New Customer</title>
+
+            <!-- Bootstrap CSS -->
+            <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+            <link href="/sales_portal_bdcalling/static/css/create_new_customer.css?v=1" rel="stylesheet" />
+
+
+            <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+            <div class="d-flex" id="create_customer">
+                <!-- Sidebar -->
+                <div class="sidebar d-flex flex-column bg-light border-right" id="sidebar">
+                    <div class="text-center py-3" id="logoContainer" style="display: none;">
+                        <img src="/sales_portal_bdcalling/static/img/navigation-image-2.png" alt="Logo" class="img-fluid" style="max-width: 185px;" />
+                    </div>
+                    <ul class="nav flex-column pl-4 pt-4">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/bdcalling/dashboard">
+                                <i class="fas fa-tachometer-alt mr-2"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a class="nav-link text-dark" href="/portal/to_do_list">
+                                <i class="fas fa-list-alt mr-2"></i>
+                                To-Do List
+                            </a>
+                        </li> -->
+                        <t t-if="user.operation_man == False">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/sale/dashboard">
+                                    <i class="fas fa-chart-line mr-2"></i>
+                                    Sales
+                                </a>
+                            </li>
+                        </t>
+                        <t t-if="not user.sale_leader and not user.sales_man">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/operation_dashboard">
+                                    <i class="fas fa-cogs mr-2"></i>
+                                    Operation
+                                </a>
+                            </li>
+                        </t>
+                        <t t-if="not user.operation_man and not user.sales_man">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/portal/requisition/dashboard">
+                                    <i class="fas fa-clipboard-list mr-2"></i>
+                                    Requisition
+                                </a>
+                            </li>
+                        </t>
+                        <hr style="border: 1px solid #000; margin: 10px 0; width: 90%; background-color: #000;" />
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/web/session/logout">
+                                <i class="fas fa-sign-out-alt mr-2"></i>
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Main Content -->
+                <div class="flex-grow-1 main-content">
+                    <nav class="navbar navbar-light bg-white border-bottom">
+                        <div class="container-fluid px-2">
+                            <div class="d-flex align-items-center w-100">
+
+                                <div class="d-flex align-items-center flex-grow-1 mx-2">
+                                    <a href="javascript:void(0);" onclick="window.history.back();">
+                                        <img src="/sales_portal_bdcalling/static/img/header-icon-arrow-left.png" alt="" class="img-fluid" style="width: 20px; height: 20px;" />
+                                    </a>
+                                    <h1 class="h4 text-dark mb-0 ml-2">Add Customer</h1>
+                                </div>
+
+                                <div class="d-flex align-items-center ml-auto">
+                                    <div class="position-relative ml-3 mt-2">
+                                        <a href="/portal/notifications" class="text-decoration-none ">
+                                            <i class="far fa-bell text-muted" style="font-size: 24px;"></i>
+                                            <span class="position-absolute badge badge-danger rounded-circle" style="top: -5px; right: -5px; font-size: 10px; min-width: 18px; height: 18px; line-height: 14px; padding: 2px;" t-esc="fin_not_count if fin_not_count else '0'">0</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <button class="navbar-toggler border-0 p-0 ml-3 d-md-none" type="button" onclick="toggleSidebar()">
+                                    <span class="navbar-toggler-icon"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </nav>
+                    <div class="p-3">
+                        <!-- <div class="mt-4 bg-white border-bottom">
+                            <div class="d-flex align-items-center px-3 py-2">
+                                <a href="javascript:void(0);" onclick="window.history.back();" class="mr-2">
+                                    <img src="/sales_portal_bdcalling/static/img/header-icon-arrow-left.png" alt="" class="img-fluid" style="width: 20px; height: 20px;" />
+                                </a>
+                                <h1 class="h4 text-dark mb-0">Add New Customer</h1>
+                            </div>
+                        </div> -->
+
+                        <div class="form-container p-3 p-md-4 mt-4">
+                            <h2 class="mb-4 h5">Customer Details</h2>
+                            <form id="customerForm">
+                                <div class="row">
+                                    <div class="col-12 col-md-6 mb-3">
+                                        <label for="partner_id">Customer Full Name</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" data-model="res.partner" id="partner_id" autocomplete="off" />
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 mb-3">
+                                        <label for="partner_name">Client User Name</label>
+                                        <input type="text" class="form-control" id="partner_name" />
+                                    </div>
+                                </div>
+
+                                <!-- <div class="row">
+                                    <div class="col-12 col-md-6 mb-3">
+                                        <label for="partner_email">Email</label>
+                                        <input type="email" class="form-control" id="partner_email" />
+                                    </div>
+                                    <div class="col-12 col-md-6 mb-3">
+                                        <label for="partner_phone">Phone</label>
+                                        <input type="text" class="form-control" id="partner_phone" />
+                                    </div>
+                                </div> -->
+
+                                <!-- <div class="row">
+                                    <div class="col-12 col-md-6 mb-3">
+                                        <label for="partner_address">Address</label>
+                                        <input type="text" class="form-control" id="partner_address" />
+                                    </div>
+                                    <div class="col-12 col-md-6 mb-3">
+                                        <label for="partner_city">City</label>
+                                        <input type="text" class="form-control" id="partner_city" />
+                                    </div>
+                                </div> -->
+
+                                <div class="row">
+                                    <div class="col-12 col-md-6 mb-3">
+                                        <label for="partner_zip">Zip</label>
+                                        <input type="text" class="form-control" id="partner_zip" />
+                                    </div>
+                                    <div class="col-12 col-md-6 mb-3">
+                                        <label for="partner_country">Country</label>
+                                        <input type="text" class="form-control" id="partner_country" />
+                                    </div>
+                                </div>
+                                <!-- # added only country field -->
+                                <!-- <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <label for="partner_country">Country</label>
+                                        <input type="text" class="form-control" id="partner_country" />
+                                    </div>
+                                </div> -->
+                                
+
+                                <!-- <div class="row">
+                                    <div class="col-12 col-md-6 mb-3">
+                                        <label for="partner_website">Website</label>
+                                        <input type="text" class="form-control" id="partner_website" />
+                                    </div>
+                                    <div class="col-12 col-md-6 mb-3">
+                                        <label for="image_1920">Upload Image</label>
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="image_1920" accept="image/*" required="1" />
+                                            <label class="custom-file-label" for="image_1920">Choose file</label>
+                                        </div>
+                                    </div>
+                                </div> -->
+
+                                <div class="row mt-4">
+                                    <div class="col-12 text-right">
+                                        <button type="submit" id="btn_sbmt" class="btn btn-dark px-4 py-2">
+                                            <img src="/sales_portal_bdcalling/static/img/iconly-light-upload.png" alt="" class="mr-2" style="width: 16px; height: 16px;" />
+                                            Create Contact
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                function toggleSidebar() {
+                    document.getElementById('sidebar').classList.toggle('active');
+                    document.getElementById('sidebarOverlay').classList.toggle('active');
+                    const logo = document.getElementById('logoContainer');
+                    if (logo.style.display === "none") {
+                        logo.style.display = "block";
+                    } else {
+                        logo.style.display = "none";
+                    }
+                    }
+                </script>
+
+
+
+        </t>
+
+    </template>
+</odoo>

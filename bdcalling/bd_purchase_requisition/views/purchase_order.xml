@@ -1,0 +1,77 @@
+<odoo>
+    <data>
+        <record id="purchase_order_form_inherit_bd" model="ir.ui.view">
+            <field name="name">purchase.order.form.bd</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form" />
+            <field name="arch" type="xml">
+                  <xpath expr="//field[@name='date_order']" position="after">
+                    <field name="pur_req_id" options="{'no_create':True, 'no_create_edit':True}" readonly="state != 'draft'" />
+        		  </xpath>
+
+
+                <xpath expr="//button[@id='draft_confirm']" position="replace">
+                    <button name="button_confirm" type="object" invisible="state != 'draft'"
+                            string="Confirm Order" id="draft_confirm"
+                            groups="purchase.group_purchase_manager"
+                    />
+                </xpath>
+
+                <xpath expr="//button[@id='bid_confirm']" position="replace">
+                    <button name="button_confirm" type="object" invisible="state != 'sent'"
+                            string="Confirm Order" class="oe_highlight" id="bid_confirm"
+                            groups="purchase.group_purchase_manager"
+                    />
+                </xpath>
+
+                <xpath expr="//field[@name='order_line']/tree/field[@name='product_id']" position="before">
+		            <field name="pur_req_id" column_invisible="True"/>
+                    <field name="parent_state" column_invisible="True"/>
+		       </xpath>
+            </field>
+        </record>
+
+        <record id="purchase_order_view_tree_requisition_bd" model="ir.ui.view">
+            <field name="name">purchase.order.tree.requisition.bd</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_view_tree" />
+            <field name="arch" type="xml">
+                  <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="pur_req_id"/>
+        		  </xpath>
+            </field>
+        </record>
+
+        <record id="purchase_order_tree_requisition_bd" model="ir.ui.view">
+            <field name="name">purchase.order.tree.bd2</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_tree" />
+            <field name="arch" type="xml">
+                  <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="pur_req_id"/>
+        		  </xpath>
+            </field>
+        </record>
+
+        <record id="view_picking_form_bd" model="ir.ui.view">
+            <field name="name">stock.picking.form.bd</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='button_validate'][1]" position="replace">
+                    <button name="button_validate"
+                            invisible="state in ('draft', 'confirmed', 'done', 'cancel')" string="Validate" type="object" class="oe_highlight"
+                            groups="stock.group_stock_manager"
+                            data-hotkey="v"/>
+                </xpath>
+
+                <xpath expr="//button[@name='button_validate'][2]" position="replace">
+                    <button name="button_validate"
+                            invisible="state in ('waiting', 'assigned', 'done', 'cancel')" string="Validate" type="object"
+                            groups="stock.group_stock_manager" class="o_btn_validate" data-hotkey="v"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

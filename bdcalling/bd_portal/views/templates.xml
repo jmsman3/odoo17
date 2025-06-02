@@ -1,0 +1,89 @@
+<odoo>
+    <data>
+        <!-- <template id="portal_layout_inherit" name="Portal Layout" inherit_id="portal.portal_layout">
+            <xpath expr="//div[@class='o_portal_wrap']" position="after">
+                <div class="container mb-5">
+
+                    <div class="row justify-content-between">
+                        <div class="o_portal_content col-12 col-lg-8 mb-5">
+
+                            <div class="o_portal_category g-2">
+                                <div class="o_portal_index_card">
+                                    <a href="/portal/dashboard" title="Portal Dashboard"
+                                       class="d-flex justify-content-start gap-2 gap-md-3 align-items-center py-3 pe-2 px-md-3 h-100 rounded text-decoration-none text-reset alert alert-primary">
+                                        <div>
+                                            <h5 class="mt-0 mb-1 d-flex gap-2">
+                                                <span>Portal Dashboard</span>
+                                            </h5>
+                                        </div>
+                                    </a>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="d-none d-lg-flex justify-content-end col-lg-4"></div>
+                    </div>
+                </div>
+            </xpath>
+        </template> -->
+    </data>
+
+    <template id="notifications">
+        <t t-call="bd_portal.base">
+            <t t-set="header">
+                <title>Notifications | bdCalling</title>
+                <link rel="stylesheet" href="/bd_portal/static/css/notifications.css?v=notifications=1"/>
+            </t>
+            <t t-set="footer">
+                <!--<script src="/bd_portal/static/js/sales_portal_details.js"></script>-->
+            </t>
+
+            <!-- Contents -->
+            <div class="" style="padding: 20px 20px 20px 20px">
+
+                <ul t-if="fin_not" class="list-group">
+
+                    <t t-foreach="fin_not" t-as="nt">
+
+                        <li class="list-group-item">
+                            <div t-esc="'%s, %s' % (nt.name, nt.req_id.name if nt.req_id else '')"
+                                 class="font-weight-bold"></div>
+                            <div>
+                                <a href="/portal/requisition/approval?filter_requisition_id=&amp;filter_department=finance_department&amp;filter_status=cancelled&amp;filter_company_id=">
+                                    Go to approval page</a>
+                            </div>
+                            <div class="text-muted" t-esc="'%s' % nt.create_date.strftime('%d %B, %Y')"></div>
+                        </li>
+
+                    </t>
+
+                </ul>
+                <div t-else="" class="alert alert-light">
+                    <div>No Notifications</div>
+                </div>
+
+            </div>
+
+        </t>
+    </template>
+
+    <template id="test">
+        <t t-call="bd_portal.base">
+            <t t-set="header">
+                <title>Test | bdCalling</title>
+                <!--<link rel="stylesheet" href="/bd_portal/static/css/test.css?v=test"/>-->
+            </t>
+            <t t-set="footer">
+                <script src="/bd_portal/static/js/test.js?v=test"></script>
+            </t>
+
+            <div class="container pt-3">
+                <button id="btn1" class="btn btn-dark">Button 1</button>
+            </div>
+
+        </t>
+    </template>
+
+</odoo>

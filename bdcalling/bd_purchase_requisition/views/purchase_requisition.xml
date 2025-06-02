@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- cus.purchase.requisition, generated on May 13, 2024 -->
+        <!-- Tree view of cus.purchase.requisition -->
+        <record model="ir.ui.view" id="cus_purchase_requisition_tree_id">
+            <field name="name">CusPurchaseRequisition</field>
+            <field name="model">cus.purchase.requisition</field>
+            <field name="arch" type="xml">
+                <tree string="Purchase Requisitions">
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="company_id"/>
+                    <field name="item_name"/>
+                    <field name="req_from"/>
+                    <field name="app_state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form view of cus.purchase.requisition -->
+        <record model="ir.ui.view" id="cus_purchase_requisition_form_id">
+            <field name="name">CusPurchaseRequisition</field>
+            <field name="model">cus.purchase.requisition</field>
+            <field name="arch" type="xml">
+                <form string="Purchase Requisitions">
+                    <header>
+
+                        <button name="action_create_purchase" string="Create PO" type="object"
+                                invisible="app_state in ('draft', 'cancel_dh', 'cancel_it', 'cancel_admin', 'cancel_scm', 'cancel_finance', 'cancel_ceo', 'cancel')"/>
+                        <button name="action_approve_dh" string="Approve Dept." type="object"
+                                groups="bd_purchase_requisition.group_gm_dept"/>
+                        <button name="action_cancel_dh" string="Cancel Dept." type="object"
+                                groups="bd_purchase_requisition.group_gm_dept"/>
+                        <button name="action_approve_it" string="Approve IT" type="object"
+                                groups="bd_purchase_requisition.group_gm_it"/>
+                        <button name="action_cancel_it" string="Cancel IT" type="object"
+                                groups="bd_purchase_requisition.group_gm_it"/>
+                        <button name="action_approve_admin" string="Approve Admin" type="object"
+                                groups="bd_purchase_requisition.group_agm_hr"/>
+                        <button name="action_cancel_admin" string="Cancel Admin" type="object"
+                                groups="bd_purchase_requisition.group_agm_hr"/>
+                        <button name="action_approve_scm" string="Approve SCM" type="object"
+                                groups="bd_purchase_requisition.group_gm_scm"/>
+                        <button name="action_cancel_scm" string="Cancel SCM" type="object"
+                                groups="bd_purchase_requisition.group_gm_scm"/>
+                        <button name="action_approve_finance" string="Approve Finance" type="object"
+                                groups="bd_purchase_requisition.group_agm_finance"/>
+                        <button name="action_cancel_finance" string="Cancel Finance" type="object"
+                                groups="bd_purchase_requisition.group_agm_finance"/>
+                        <button name="action_approve_ceo" string="Approve CEO" type="object"
+                                groups="bd_purchase_requisition.group_gm_ceo"/>
+                        <button name="action_cancel_ceo" string="Cancel CEO" type="object"
+                                groups="bd_purchase_requisition.group_gm_ceo"/>
+                        <button name="action_done" string="Done" type="object"/>
+                        <button name="action_cancel" string="Cancel" type="object"/>
+                        <button name="action_draft" string="Draft" type="object"/>
+                        <field name="app_state" widget="statusbar"/>
+
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button type="object" class="oe_stat_button" name="action_view_purchase"
+                                    id="action_view_purchase"
+                                    icon="fa-files-o" invisible="purchase_count == 0">
+                                <field name="purchase_count" widget="statinfo" string="Purchase order"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <span class="o_form_label">Purchase Requisitions</span>
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="req_from"/>
+                                <field name="employee_id"/>
+                                <field name="team_id"/>
+                                <field name="priority"/>
+                                <field name="budget"/>
+                                <field name="budget_pass_date"/>
+                            </group>
+                            <group>
+                                <field name="req_date"/>
+                                <field name="deadline"/>
+                                <field name="company_id"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <page string="Order Lines">
+                                <field name="order_line_ids" widget="one2many_list">
+                                    <tree editable="bottom">
+                                        <field name="product_id"/>
+                                        <field name="name"/>
+                                        <field name="quantity"/>
+                                        <field name="purchase_qty"/>
+                                        <field name="pur_remaining_qty"/>
+                                        <field name="uom_id"/>
+                                        <field name="purpose_of_use"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="State">
+                                <group>
+                                    <group>
+                                        <field name="department_head_state"/>
+                                        <field name="approval_date_department_head"/>
+                                        <field name="it_department_state" invisible="req_from != 'it'"/>
+                                        <field name="approval_date_it_department" invisible="req_from != 'it'"/>
+                                        <field name="admin_department_state"/>
+                                        <field name="approval_date_admin_department"/>
+                                    </group>
+                                    <group>
+                                        <field name="scm_department_state"/>
+                                        <field name="approval_date_scm_department"/>
+                                        <field name="finance_department_state"/>
+                                        <field name="approval_date_finance_department"/>
+                                        <field name="ceo_state"/>
+                                        <field name="approval_date_ceo"/>
+                                    </group>
+
+                                </group>
+
+                            </page>
+                            <page string="Product (Old Style)">
+                                <group>
+                                    <group>
+                                        <field name="item_name"/>
+                                        <field name="item_description"/>
+                                    </group>
+                                    <group>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+
+                    </sheet>
+
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                    </div>
+
+                </form>
+            </field>
+        </record>
+
+        <!-- Action view of cus.purchase.requisition -->
+        <record model="ir.actions.act_window" id="cus_purchase_requisition_action_id">
+            <field name="name">CusPurchaseRequisition</field>
+            <field name="res_model">cus.purchase.requisition</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- bd.file, generated on May 5, 2024 -->
+        <!-- Tree view of bd.file -->
+        <record model="ir.ui.view" id="bd_file_tree_id">
+            <field name="name">BdFile</field>
+            <field name="model">bd.file</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="file"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form view of bd.file -->
+        <record model="ir.ui.view" id="bd_file_form_id">
+            <field name="name">BdFile</field>
+            <field name="model">bd.file</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="file"/>
+                                <field name="res_model"/>
+                                <field name="res_id"/>
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action view of bd.file -->
+        <record model="ir.actions.act_window" id="bd_file_action_id">
+            <field name="name">BdFile</field>
+            <field name="res_model">bd.file</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- bd.req.attachment, generated on May 5, 2024 -->
+        <!-- Tree view of bd.req.attachment -->
+        <record model="ir.ui.view" id="bd_req_attachment_tree_id">
+            <field name="name">BdReqAttachment</field>
+            <field name="model">bd.req.attachment</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="file"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Form view of bd.req.attachment -->
+        <record model="ir.ui.view" id="bd_req_attachment_form_id">
+            <field name="name">BdReqAttachment</field>
+            <field name="model">bd.req.attachment</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="file"/>
+                                <field name="res_model"/>
+                                <field name="res_id"/>
+                            </group>
+                            <group>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action view of bd.req.attachment -->
+        <record model="ir.actions.act_window" id="bd_req_attachment_action_id">
+            <field name="name">BdReqAttachment</field>
+            <field name="res_model">bd.req.attachment</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Purchase Requisition"
+                  id="purchase_req_root"
+                  sequence="7"/>
+
+        <menuitem name="Purchase Requisition"
+                  id="purchase_req_main"
+                  parent="purchase_req_root"
+                  sequence="1"/>
+
+        <!-- Menu item of cus.purchase.requisition -->
+        <menuitem id="cus_purchase_requisition_menu_id"
+                  name="Purchase Requisition"
+                  parent="purchase_req_main"
+                  sequence="2"
+                  action="cus_purchase_requisition_action_id"/>
+
+        <!-- Menu item of bd.req.attachment -->
+        <menuitem id="bd_req_attachment_menu_id"
+                  name="Requisition Attachments"
+                  parent="purchase_req_main"
+                  sequence="3"
+                  action="bd_req_attachment_action_id"/>
+
+        <!-- Menu item of bd.file -->
+        <menuitem id="bd_file_menu_id"
+                  name="Alternative Product Attachments"
+                  parent="purchase_req_main"
+                  sequence="4"
+                  action="bd_file_action_id"/>
+
+        <!-- Menu item of bd.notification -->
+        <menuitem id="bd_notification_menu_id"
+                  name="Notification"
+                  parent="purchase_req_main"
+                  sequence="5"
+                  action="bd_notification_action_id"/>
+
+
+    </data>
+</odoo>

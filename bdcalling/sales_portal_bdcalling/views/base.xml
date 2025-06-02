@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="portal_my_home" inherit_id="portal.portal_my_home">
+            <xpath expr="//div[@id='portal_common_category']" position="after">
+                <div class="o_portal_category row g-2 mt-3" id="portal_bdcalling_category">
+                    <t t-call="portal.portal_docs_entry">
+                        <t t-set="icon" t-value="'/sales_portal_bdcalling/static/img/sales.png'"/>
+                        <t t-set="title">Sales Portal</t>
+                        <t t-set="text">Sales Portal</t>
+                        <t t-set="url" t-value="'/bdcalling/dashboard'"/>
+                        <t t-set="config_card" t-value="True"/>
+                    </t>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

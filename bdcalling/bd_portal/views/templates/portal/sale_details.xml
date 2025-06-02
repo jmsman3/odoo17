@@ -1,0 +1,774 @@
+<odoo>
+    <template id="sale_details">
+        <t t-call="bd_portal.base">
+            <t t-set="header">
+                <title>Sale Details | bdCalling</title>
+                <link rel="stylesheet" href="/bd_portal/static/css/order_details.css?v=5000"/>
+            </t>
+            <t t-set="footer">
+                <script src="/bd_portal/static/js/sales_portal_details.js?v=sales_portal_details4"></script>
+            </t>
+
+            <t t-set="page_code" t-value="'sales'"/>
+            <t t-set="order_status" t-value="order.order_status"/>
+            <t t-set="edit" t-value="True if order_status in ['nra', 'wip'] else False"/>
+
+            <!-- Contents -->
+            <div class="db_home_content container-fluid mt-3 mb-5 mx-1">
+
+                <input id="js_employees" type="hidden" t-att-value="js_employees"/>
+                <input id="js_server_data" type="hidden" t-att-value="js_server_data"/>
+
+                <!-- Create new client modal -->
+                <div class="modal" id="modal_create_new_client">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">Create New Client</h4>
+                                <button type="button" class="close"
+                                        data-dismiss="modal">x</button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <div class="dt_box">
+
+                                    <div id="alert" class="alert alert-danger mb-5"
+                                         style="display: none;"></div>
+
+                                    <div id="alert_success" class="alert alert-success mb-5"
+                                         style="display: none;"></div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="field_group">
+                                                <input id="a_client_user_name"
+                                                       class="input_field"
+                                                       type="text"/>
+                                                <div class="field_label">Client User Name</div>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="field_group">
+                                                <input id="a_mp_customer_fullname"
+                                                       class="input_field" type="text"
+                                                       required="1"/>
+                                                <div class="field_label">Customer Full
+                                                    Name</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="field_group">
+                                                <input id="a_street" class="input_field"
+                                                       type="text"/>
+                                                <div class="field_label">Address</div>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="field_group">
+                                                <input id="a_city" class="input_field"
+                                                       type="text"/>
+                                                <div class="field_label">City</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="field_group">
+                                                <input id="a_zip" class="input_field"
+                                                       type="number"/>
+                                                <div class="field_label">Zip</div>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="field_group">
+                                                <t t-set="countries"
+                                                   t-value="request.env['res.country'].sudo().search([])"/>
+                                                <select id="a_country_id" class="input_field">
+                                                    <option value="">Please Choose An
+                                                        Option</option>
+                                                    <t t-foreach="countries" t-as="country">
+                                                        <option t-att-value="country.id"
+                                                                t-att-selected="country.code == 'BD'"
+                                                                t-esc="country.name">
+                                                            Bid
+                                                        </option>
+                                                    </t>
+                                                </select>
+                                                <div class="field_label">Country</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="field_group">
+                                                <input id="a_phone" class="input_field"
+                                                       type="text"/>
+                                                <div class="field_label">Mobile</div>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="field_group">
+                                                <input id="a_email" class="input_field"
+                                                       type="email"/>
+                                                <div class="field_label">Email</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col">
+                                            <div class="field_group">
+                                                <input id="a_website" class="input_field"
+                                                       type="text"/>
+                                                <div class="field_label">Website</div>
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <!--<div class="input-group input-group-file">
+                                                <input id="image_1920" class="input_field"
+                                                       type="file" name="image_1920"/>
+                                                <label for="image_1920" class="input-file">
+                                                    Add/Change Photo</label>
+                                            </div>
+
+                                            <img class="mt-2" id="preview_image"
+                                                 style="display: none; width: 100px; object-fit: cover;"/>-->
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- End form -->
+
+                            </div>
+
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                                    Close</button>
+                                <button id="btn_create_new_client" type="submit"
+                                        form="form_ajax_create_client"
+                                        class="button button-primary py-2">
+                                    Create Client
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- End Create new client modal -->
+
+                <!-- breadcrumbs -->
+                <div class="detail_breadcrumbs">
+                    <div>
+                        <a href="/portal/dashboard">Dashboard</a>
+                    </div>
+                    <div class="mx-2">/</div>
+                    <div>
+                        <a href="/portal/sales?page=1">Sales</a>
+                    </div>
+                    <div class="mx-2">/</div>
+                    <div class="font-weight-bold">Order Details</div>
+                </div>
+
+                <!-- See all details -->
+                <div class="my-3 font-weight-bold text-muted">See all details about order id#<t
+                        t-esc="order.name"/></div>
+
+                <form t-att-action="'/portal/sales/update?order_id=%s' % order.id" method="post" autocomplete="off">
+                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                    <!-- Employee Details -->
+                    <div class="dt_box">
+                        <div class="d-flex justify-content-between">
+                            <div class="font-weight-bold">Employee Details</div>
+                            <div>
+                                <!--<label class="switch">
+                                    <input type="checkbox"/>
+                                    <span class="slider round"></span>
+                                </label>-->
+                            </div>
+                        </div>
+                        <div class="field_group mt-4">
+                            <input id="employee_id"
+                                   class="input_field"
+                                   type="hidden"
+                                   t-att-value="employee_id.barcode"/>
+                            <select class="input_field" disabled="1">
+                                <option t-att-value="order.employee_id.id if order.employee_id else ''"
+                                        t-esc="order.employee_id.barcode if order.employee_id else ''"></option>
+                            </select>
+                            <div class="field_label">Employee ID</div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="field_group">
+                                    <input class="input_field" type="text"
+                                           t-att-value="order.employee_id.name if order.employee_id else ''"
+                                           disabled="1"/>
+                                    <div class="field_label">Employee Name</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="field_group">
+                                    <input class="input_field" type="text"
+                                           t-att-value="company_id.name if company_id else None" disabled=""/>
+                                    <div class="field_label">Company Name</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sales Employee Details -->
+                    <div class="dt_box mt-3">
+                        <div class="d-flex justify-content-between">
+                            <div class="font-weight-bold">Sales Employee Details <t t-esc="order.sales_employee_id.barcode"/>  </div>
+                            <div>
+                                <label id="employee_switch" class="switch">
+                                    <input type="checkbox"/>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="field_group mt-4">
+                            <input type="hidden" id="js_employees" t-att-value="js_employees"/>
+                            <!--<select id="sales_employee_id" class="input_field" name="sales_employee_id">
+                                <t t-set="employees" t-value='request.env["hr.employee"].sudo().search([])'/>
+                                <option value="">Please Choose An Option</option>
+                                <t t-foreach="employees" t-as="item">
+                                    <option t-att-value="item.id" t-att-selected="item.user_id.id == user_id"
+                                            t-att-data-barcode="item.barcode if item.barcode else ''"
+                                            t-esc="'%s (%s)' % (item.name, item.barcode if item.barcode else '')">
+                                    </option>
+                                </t>
+                            </select>-->
+                            <input type="hidden"
+                                   id="hidden_sales_employee_id"
+                                   t-att-value="order.sales_employee_id.id if order.sales_employee_id else None"
+                                   name="sales_employee_id"/>
+                            <input id="sales_employee_id"
+                                   class="input_field group_sales_employee_text"
+                                   t-att-value="order.sales_employee_id.barcode if order.sales_employee_id else None"
+                                   t-att-disabled="not edit"
+                                   type="text"/>
+
+                            <div class="field_label">Sales Employee ID</div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <div class="field_group">
+                                    <input id="sales_employee_name"
+                                           class="input_field group_sales_employee group_sales_employee_text"
+                                           type="text"
+                                           t-att-value="order.sales_employee_id.name if order.sales_employee_id else ''"
+                                           t-att-disabled="not edit"
+                                           disabled="1"/>
+                                    <div class="field_label">Sales Employee Name</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="field_group">
+                                    <input id="sales_employee_company_name"
+                                           class="input_field group_sales_employee group_sales_employee_text"
+                                           type="text"
+                                           t-att-value="order.sales_employee_id.company_id.name if order.sales_employee_id else ''"
+                                           t-att-disabled="not edit"
+                                           disabled="1"/>
+                                    <div class="field_label">Company Name</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Employee details -->
+
+                    <!-- Details -->
+                    <div class="dt_box mt-3">
+                        <div class="font-weight-bold">Order Details</div>
+                        <input type="hidden" id="json_all_profiles" t-att-value="json_all_profiles"/>
+                        <div class="row mt-4">
+                            <div class="col">
+
+                                <div class="field_group">
+                                    <!-- name="platform_source" -->
+
+                                    <select id="platform_source"
+                                            class="input_field"
+                                            name="platform_source_id"
+                                            t-att-disabled="not edit"
+                                            required="1">
+                                        <option value="">Please Choose An Option</option>
+
+                                        <t t-foreach="platform_sources" t-as="source">
+
+                                            <option t-att-value="source.id"
+                                                    t-att-selected="source.id == order.platform_source_id.id"
+                                                    t-esc="source.name"></option>
+                                        </t>
+                                    </select>
+                                    <div class="field_label">Platform Source</div>
+                                </div>
+
+                            </div>
+                            <div class="col">
+                                <div class="field_group">
+                                    <select class="input_field"
+                                            t-att-disabled="not edit"
+                                            name="order_source_id">
+                                        <t t-set="order_sources"
+                                           t-value="request.env['bd.order_source'].sudo().search([])"/>
+                                        <t t-foreach="order_sources" t-as="source">
+                                            <option t-att-value="source.id"
+                                                    t-att-selected="source.id == order.order_source_id.id"
+                                                    t-esc="source.name"></option>
+                                        </t>
+                                    </select>
+                                    <div class="field_label">Order Source</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field_group">
+                            <select id="profile_name"
+                                    class="input_field"
+                                    name="profile_id"
+                                    t-att-disabled="not edit"
+                                    required="1">
+
+                                <t t-if="order.platform_source_id">
+                                    <t t-set="profiles"
+                                       t-value="request.env['bd.profile'].sudo().search([('platform_source_id', '=', order.platform_source_id.id)])"/>
+                                    <t t-foreach="profiles" t-as="pf">
+                                        <option t-att-value="pf.id"
+                                                t-att-selected="pf.id == order.profile_id.id"
+                                                t-esc="pf.name"></option>
+                                    </t>
+                                </t>
+                            </select>
+                            <div class="field_label">Profile Name</div>
+                        </div>
+
+                        <t t-set="client" t-value="order.client_user_id"/>
+                        <div class="row">
+                            <div class="col">
+                                <div class="field_group">
+                                    <input id="js_clients" type="hidden" t-att-value="js_clients"/>
+                                    <input type="hidden"
+                                           id="hidden_client_user_id"
+                                           t-att-value="client.id if client else None"
+                                           name="client_user_id"/>
+                                    <input id="client_user_id"
+                                           class="input_field"
+                                           t-att-value="client.name if client else None"
+                                           t-att-disabled="not edit"
+                                           type="text" required="1"/>
+                                    <div class="field_label">Client User ID</div>
+                                </div>
+
+                            </div>
+                            <div class="col">
+                                <div class="field_group">
+                                    <input id="client_name"
+                                           class="input_field group_client"
+                                           t-att-value="client.mp_customer_fullname if client else None"
+                                           name="client_name"
+                                           t-att-disabled="not edit"
+                                           type="text"/>
+                                    <div class="field_label">Client Name</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="field_group">
+                                    <input id="client_email" class="input_field group_client"
+                                           t-att-value="client.email if client else None"
+                                           name="client_email"
+                                           t-att-disabled="not edit"
+                                           type="email"/>
+                                    <div class="field_label">Client Email</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="field_group">
+                                    <input id="client_phone" class="input_field group_client"
+                                           t-att-value="client.phone if client else None"
+                                           name="client_phone"
+                                           t-att-disabled="not edit"
+                                           type="text"/>
+                                    <div class="field_label">Client Phone Number</div>
+                                </div>
+                            </div>
+
+                            <div class="col">
+                                <div>
+                                    <button id="btn_add_new_client"
+                                            type="button"
+                                            data-toggle="modal" data-target="#modal_create_new_client"
+                                            t-att-disabled="not edit"
+                                            class="button button-primary py-2">
+                                        + Add New Client
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-4">
+                                <div class="field_group">
+                                    <input class="input_field" type="text"
+                                           name="order_number"
+                                           t-att-disabled="not edit"
+                                           t-att-value="order.order_number"/>
+                                    <div class="field_label">Order Number</div>
+                                </div>
+                            </div>
+                            <div class="col-8">
+                                <div class="field_group">
+                                    <input id="order_link"
+                                           class="input_field"
+                                           type="text"
+                                           t-att-value="order.order_link"
+                                           t-att-disabled="not edit"
+                                           name="order_link"/>
+                                    <div class="field_label">Order Link</div>
+                                    <div class="right_icon">
+                                        <svg id="svg_copy" class="svg_copy" data-toggle="modal"
+                                             data-target="#clipboardCopyModal"
+                                             style="vertical-align: middle;" width="20" height="20" viewBox="0 0 24 24"
+                                             fill="none"
+                                             xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                    d="M8 16H6C4.89543 16 4 15.1046 4 14V6C4 4.89543 4.89543 4 6 4H14C15.1046 4 16 4.89543 16 6V8M10 20H18C19.1046 20 20 19.1046 20 18V10C20 8.89543 19.1046 8 18 8H10C8.89543 8 8 8.89543 8 10V18C8 19.1046 8.89543 20 10 20Z"
+                                                    stroke="#1D1D1F" stroke-width="2" stroke-linecap="round"
+                                                    stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <!-- The Modal -->
+                                <div class="modal" id="clipboardCopyModal">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+
+                                            <!-- Modal Header -->
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Copied</h5>
+                                                <button type="button" class="close"
+                                                        data-dismiss="modal">x</button>
+                                            </div>
+
+                                            <!-- Modal body -->
+                                            <div class="modal-body">
+                                                Link copied to clipboard
+                                            </div>
+
+                                            <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                                                    Close</button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="field_group">
+                                    <input class="input_field" type="text"
+                                           name="instruction_sheet_link"
+                                           t-att-value="order.instruction_sheet_link"
+                                           t-att-disabled="not edit"
+                                           required="1"/>
+                                    <div class="field_label">Instruction Sheet Link</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="field_group">
+                                    <select id="service_type_id"
+                                            class="input_field"
+                                            name="service_type_id"
+                                            t-att-disabled="not edit"
+                                            required="1">
+                                        <option value="">Please Choose An Option</option>
+                                        <t t-foreach="service_types" t-as="s_type" required="1">
+                                            <option t-att-value="s_type.id"
+                                                    t-att-selected="s_type.id == order.service_type_id.id if order.service_type_id else '---'"
+                                                    t-esc="s_type.name"></option>
+                                        </t>
+                                    </select>
+                                    <div class="field_label">Service Type</div>'
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="field_group">
+                                    <input class="input_field" type="date"
+                                           name="incoming_date"
+                                           t-att-value="order.incoming_date"
+                                           t-att-disabled="not edit"
+                                           required="1"/>
+                                    <div class="field_label">Incoming Date</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="field_group">
+                                    <input id="delivery_last_date"
+                                           class="input_field"
+                                           type="datetime-local"
+                                           name="delivery_last_date"
+                                           t-att-value="dld_plus_6_hour"
+                                           t-att-disabled="not edit"
+                                           required="1"/>
+                                    <div class="field_label">Delivery Last Time</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="field_group">
+                                    <div class="input_field">
+                                        <div id="remaining_time"></div>
+                                    </div>
+                                    <div class="field_label">Deadline</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="field_group">
+                                    <div class="input_field">
+                                        <div class="d-flex">
+                                            <div>$</div>
+                                            <div>
+                                                <input id="amount" class="input_field_prepend" type="number"
+                                                       name="amount"
+                                                       required="1"
+                                                       t-att-value="'%.2f' % order.amount"
+                                                       t-att-disabled="not edit"
+                                                       step="any"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field_label">Amount</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="field_group">
+                                    <input class="input_field" type="text"/>
+                                    <select id="percentage"
+                                            name="percentage"
+                                            class="input_field"
+                                            t-att-disabled="not edit"
+                                            required="1">
+                                        <t t-foreach="request.env['sale.order']._fields['percentage'].selection"
+                                           t-as="item">
+                                            <option t-att-value="item[0]"
+                                                    t-att-selected="item[0] == order.percentage"
+                                                    t-esc="item[1]"></option>
+                                        </t>
+                                    </select>
+                                    <div class="field_label">Percentages</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="field_group">
+                                    <div class="input_field">
+                                        <div class="d-flex">
+                                            <div>$</div>
+                                            <div>
+                                                <input id="charges_amount"
+                                                       class="input_field_prepend"
+                                                       type="number"
+                                                       name="charges_amount"
+                                                       t-att-value="'%.2f' % order.charges_amount"
+                                                       t-att-disabled="not edit"
+                                                       readonly="1"
+                                                       required="1"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field_label">Charges Amount</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="field_group">
+                                    <div class="input_field">
+                                        <div class="d-flex">
+                                            <div>$</div>
+                                            <div>
+                                                <input id="delivery_amount" class="input_field_prepend" type="number"
+                                                       name="delivery_amount" readonly="1"
+                                                       t-att-value="'%.2f' % order.delivery_amount"
+                                                       step="any"
+                                                       t-att-disabled="not edit"
+                                                       required="1"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="field_label">Delivery Amount</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field_group" style="min-height: 100px;">
+                            <textarea class="input_textarea_field"
+                                      t-att-disabled="not edit"
+                                      name="special_remarks"><t
+                                    t-esc="order.special_remarks"/></textarea>
+                            <div class="field_label">Special Remarks</div>
+                        </div>
+
+                        <div t-if="env_user and not env_user.is_project_manager" class="field_group">
+                            <select class="input_field" name="order_status"
+                                    t-att-disabled="not edit"
+                                    required="1">
+                                <t t-foreach="request.env['sale.order']._fields['order_status'].selection" t-as="item">
+                                    <option t-att-value="item[0]"
+                                            t-att-selected="item[0] == order.order_status"
+                                            t-esc="item[1]">
+
+                                    </option>
+                                </t>
+                            </select>
+                            <div class="field_label">Order Status</div>
+                        </div>
+
+                        <!-- End Details -->
+
+                    </div>
+
+                    <!-- Project Information -->
+                    <div t-if="env_user and env_user.is_project_manager" class="dt_box mt-3">
+                        <div class="d-flex justify-content-between">
+                            <div class="font-weight-bold">Project Information</div>
+                            <div>
+                                <label id="project_info_switch" class="switch">
+                                    <input type="checkbox"/>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col">
+                                <div class="field_group">
+                                    <input id="operation_employee_id" type="hidden" name="operation_employee_id"
+                                           t-att-value="order.operation_employee_id.id if order.operation_employee_id else ''"/>
+
+                                    <input id="operation_employee_id_barcode"
+                                           class="input_field"
+                                           type="text"
+                                           t-att-value="order.operation_employee_id.barcode if order.operation_employee_id else None"
+                                           t-att-disabled="not edit"
+                                           placeholder="Enter ID To Search"/>
+
+                                    <div class="field_label">Operation Employee ID</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="field_group">
+                                    <input id="operation_employee_name"
+                                           class="input_field" type="text"
+                                           placeholder="Autofill From Employee ID"
+                                           t-att-disabled="not edit"
+                                           t-att-value="order.operation_employee_id.name if order.operation_employee_id else None"/>
+                                    <div class="field_label">Employee Name</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="field_group">
+                                    <select class="input_field"
+                                            t-att-disabled="not edit"
+                                            name="assigned_team_id">
+                                        <option value="">Please choose an option</option>
+                                        <t t-set="teams" t-value="request.env['bd.team'].sudo().search([])"/>
+                                        <t t-foreach="teams" t-as="item">
+                                            <option t-att-value="item.id"
+                                                    t-att-selected="order.assigned_team_id and order.assigned_team_id.id == item.id"
+                                                    t-esc="item.name"></option>
+                                        </t>
+                                    </select>
+                                    <div class="field_label">Assigned Team</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="field_group">
+                                    <select class="input_field"
+                                            t-att-disabled="not edit"
+                                            name="delivered_team_id">
+                                        <option value="">Please choose an option</option>
+                                        <t t-set="teams" t-value="request.env['bd.team'].sudo().search([])"/>
+                                        <t t-foreach="teams" t-as="item">
+                                            <option t-att-value="item.id"
+                                                    t-att-selected="order.delivered_team_id and order.delivered_team_id.id == item.id"
+                                                    t-esc="item.name"></option>
+                                        </t>
+                                    </select>
+                                    <div class="field_label">Delivered By Team</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <div class="field_group">
+                                    <select class="input_field"
+                                            t-att-disabled="not edit"
+                                            name="order_status">
+                                        <option value="">Please choose an option</option>
+                                        <t t-foreach="order._fields['order_status'].selection" t-as="item">
+                                            <option t-att-value="item[0]"
+                                                    t-att-selected="order.order_status and order.order_status == item[0]"
+                                                    t-esc="item[1]"></option>
+                                        </t>
+                                    </select>
+                                    <div class="field_label">Order Status</div>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="field_group">
+                                    <input class="input_field" type="date" name="teams_delivery_date"
+                                           t-att-disabled="not edit"
+                                           t-att-value="order.teams_delivery_date"/>
+                                    <div class="field_label">Team's Delivery Date</div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- End Project Information -->
+
+                    <!-- Update button -->
+                    <div class="mt-3">
+                        <button class="button button-primary px-5 py-2"
+                                t-att-disabled="not edit"
+                                type="submit">Update</button>
+                    </div>
+
+                </form>
+                <!-- End form -->
+
+            </div>
+
+
+        </t>
+    </template>
+</odoo>

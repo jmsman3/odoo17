@@ -1,0 +1,125 @@
+<odoo>
+
+    <!-- finance_department -->
+    <div class="step">
+        <div class="step_circle v_line">
+            <div class="circle_inner">
+                <t t-if="req.finance_department_state == 'accepted'">
+                    <t t-call="bd_portal.svg_accepted"/>
+                </t>
+                <t t-else="">
+                    <t t-call="bd_portal.svg_received"/>
+                </t>
+            </div>
+        </div>
+        <div class="step_text">
+            <div>
+                <div>Finance Department</div>
+            </div>
+            <div>
+
+                <t t-if="state == 'approve_admin'">
+                    <div class="step_received">
+                        Received
+                    </div>
+                </t>
+
+                <t t-else="">
+
+                    <t t-if="req.finance_department_state == 'canceled'">
+                        <div class="step_cancelled">
+                            Canceled
+                        </div>
+                    </t>
+                    <t t-if="req.finance_department_state == 'accepted'">
+                        <div class="step_accepted">
+                            Accepted
+                        </div>
+                    </t>
+
+                </t>
+            </div>
+        </div>
+    </div>
+    <!-- End finance_department -->
+
+    <!-- scm_department -->
+    <div class="step">
+        <div class="step_circle v_line">
+            <div class="circle_inner">
+                <t t-if="req.scm_department_state == 'accepted'">
+                    <t t-call="bd_portal.svg_accepted"/>
+                </t>
+                <t t-else="">
+                    <t t-call="bd_portal.svg_received"/>
+                </t>
+            </div>
+        </div>
+        <div class="step_text">
+            <div>
+                <div>SCM Department</div>
+            </div>
+            <div>
+
+                <t t-if="state == 'approve_finance'">
+                    <div class="step_received">
+                        Received
+                    </div>
+                </t>
+
+                <t t-else="">
+
+                    <t t-if="req.scm_department_state == 'canceled'">
+                        <div class="step_cancelled">
+                            Canceled
+                        </div>
+                    </t>
+                    <t t-if="req.scm_department_state == 'accepted'">
+                        <div class="step_accepted">
+                            Accepted
+                        </div>
+                    </t>
+
+                </t>
+            </div>
+        </div>
+    </div>
+    <!-- End scm_department -->
+
+    <div class="dt_box mt-3">
+        <div class="d-flex justify-content-between">
+            <div class="font-weight-bold">Sales Employee Details</div>
+            <div>
+                <!--<label class="switch">
+                    <input type="checkbox"/>
+                    <span class="slider round"></span>
+                </label>-->
+            </div>
+        </div>
+        <div class="field_group mt-4">
+            <select class="input_field" disabled="1">
+                <option t-esc="order.sales_employee_id.barcode if order.sales_employee_id else ''"></option>
+            </select>
+            <div class="field_label">Sales Employee ID</div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="field_group">
+                    <input class="input_field" type="text" t-att-value="order.sales_employee_id.name"
+                           disabled="1"/>
+                    <div class="field_label">Sales Employee Name</div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="field_group">
+                    <input class="input_field" type="text"
+                           t-att-value="order.company_id.name if order.company_id else None"
+                           disabled="1"/>
+                    <div class="field_label">Company Name</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Employee details -->
+
+</odoo>

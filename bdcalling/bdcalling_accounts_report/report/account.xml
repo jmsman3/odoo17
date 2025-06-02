@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <template id="report_journal_document">
+            <t t-call="web.external_layout">
+                <div class="row">
+                    <div class="col-6">
+                        <div>
+                            <strong>Entry No:</strong>
+                            <span t-field="o.name"/>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-start">
+                            <strong>Date:</strong>
+                            <span t-field="o.date"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div>
+                            <strong>Journal:</strong>
+                            <span t-field="o.journal_id"/>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="text-start">
+                            <strong>Reference:</strong>
+                            <span t-field="o.ref"/>
+                        </div>
+                    </div>
+                </div>
+                <br/>
+                <table class="table table-sm o_main_table table-border">
+                    <thead>
+                        <tr style="width:100%">
+                            <th style="width:10%" name="th_quantity" class="text-start">
+                                <span>SL No.</span>
+                            </th>
+                            <th style="width:20%" name="th_description" class="text-center">
+                                <span>Account</span>
+                            </th>
+                            <th style="width:20%" name="th_description" class="text-center">
+                                <span>Partner</span>
+                            </th>
+                            <th style="width:20%" name="th_description" class="text-center">
+                                <span>Label</span>
+                            </th>
+
+                            <th style="width:15%" name="th_subtotal" class="text-end">
+                                <span>Debit</span>
+                            </th>
+                            <th style="width:15%" name="th_subtotal" class="text-end">
+                                <span>Credit</span>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-set="i" t-value="0"/>
+                        <t t-set="total_debit" t-value="0"/>
+                        <t t-set="total_credit" t-value="0"/>
+                        <t t-foreach="o.line_ids" t-as="line">
+                            <t t-set="i" t-value="i+1"/>
+                            <tr>
+                                <td class="text-center">
+                                    <span t-esc="i"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.account_id"/>
+                                </td>
+                                <td>
+                                    <span t-field="line.partner_id"/>
+                                </td>
+                                <td class="text-start">
+                                    <span t-field="line.name"/>
+                                </td>
+                                <td class="text-end">
+                                    <t t-set="total_debit" t-value="total_debit + line.debit"/>
+                                    <span  t-esc="'%.2f' % line.debit"/>
+                                </td>
+                                <td class="text-end">
+                                    <t t-set="total_credit" t-value="total_credit + line.credit"/>
+                                    <span t-esc="'%.2f' % line.credit"/>
+                                </td>
+                            </tr>
+                        </t>
+                        <tr style="border:1 solid black;">
+                            <td colspan="4" class="text-center">
+                                Total
+                            </td>
+                            <td class="text-end">
+                                <span t-esc="'%.2f' % total_debit"/>
+                            </td>
+                            <td class="text-end">
+                                <span t-esc="'%.2f' % total_credit"/>
+                            </td>
+                        </tr>
+
+
+                    </tbody>
+
+                </table>
+                <div>
+                    Inwords: <span t-esc="request.env['account.move'].amount_to_text(total_credit)"/>
+                </div>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
+                <div class="row">
+                    <div class="col-3">
+                        <div class="text-center">
+                            <div class="signature-line">
+                                <div class="signature">
+                                    <span class="text-start" t-field="o.create_uid"/>
+                                </div>
+                            </div>
+                            <strong>Prepared By</strong>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="text-center">
+                            <div class="signature-line">
+                                <div class="signature"></div>
+                            </div>
+                            <strong>Checked By</strong>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="text-center">
+                            <div class="signature-line">
+                                <div class="signature"></div>
+                            </div>
+                            <strong>Received By</strong>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="text-center">
+                            <div class="signature-line">
+                                <div class="signature"></div>
+                            </div>
+                            <strong>Approved By</strong>
+                        </div>
+                    </div>
+                </div>
+                <style>
+                    .signature-line {
+                    display: block;
+                    margin-top: 50px;
+                    border-top: 1px solid black;
+                    width: 200px;
+                    margin-left: auto;
+                    margin-right: auto;
+                    position: relative;
+                    }
+                    .signature {
+                    position: absolute;
+                    top: -30px;
+                    left: 25%;
+                    transform: translateX(-50%);
+                    }
+                </style>
+
+            </t>
+        </template>
+
+        <template id="report_journal_entry">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="bdcalling_accounts_report.report_journal_document"/>
+                </t>
+            </t>
+        </template>
+
+    </data>
+</odoo>

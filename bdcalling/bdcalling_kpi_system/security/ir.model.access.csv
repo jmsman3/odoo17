@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_kpi_role_user,kpi.role.user,model_kpi_role,base.group_user,1,1,1,1
+access_kpi_role_manager,kpi.role.manager,model_kpi_role,hr.group_hr_manager,1,1,1,1
+access_kpi_grade_user,kpi.grade.user,model_kpi_grade,base.group_user,1,0,0,0
+access_kpi_grade_manager,kpi.grade.manager,model_kpi_grade,hr.group_hr_manager,1,1,1,1
+access_kpi_level_user,kpi.level.user,model_kpi_level,base.group_user,1,0,0,0
+access_kpi_level_manager,kpi.level.manager,model_kpi_level,hr.group_hr_manager,1,1,1,1
+access_employee_kpi_user,employee.kpi.user,model_employee_kpi,base.group_user,1,0,0,0
+access_employee_kpi_manager,employee.kpi.manager,model_employee_kpi,hr.group_hr_manager,1,1,1,1

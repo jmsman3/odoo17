@@ -1,0 +1,1198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Portal Operation form, dashboard and update form
+                                                Developed by Rufaida Jaman Rayta -->
+
+    <!-- ___________________________________________Create
+    Form____________________________________________________ -->
+
+
+    <template id="operation_form_template" name="Operation Form">
+        <t t-call="portal.portal_layout">
+            <t t-set="user" t-value="request.env.user" />
+            <t t-set="fin_not_count" t-value="0" />
+
+            <t t-if="user.scm_department">
+                <t t-set="fin_not_count"
+                    t-value="request.env['bd.notification'].sudo().search_count([
+            ('department', '=', 'finance'),
+            ('mark_as_read', '=', False),
+            ])" />
+            </t>
+            <title>Sales Section</title>
+
+            <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+                rel="stylesheet" />
+            <link
+                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+                rel="stylesheet" />
+            <style>
+                /* Base styles */
+                body {
+                overflow-x: hidden;
+                }
+
+                /* Sidebar styles */
+                .sidebar {
+                min-height: 100vh;
+                width: 250px;
+                transition: all 0.3s;
+                z-index: 1000;
+                }
+
+                /* Mobile sidebar */
+                @media (max-width: 767.98px) {
+                .sidebar {
+                position: fixed;
+                top: 0;
+                left: -250px;
+                height: 100%;
+                z-index: 1050;
+                box-shadow: 0 0 15px rgba(0,0,0,0.2);
+                }
+
+                .sidebar.active {
+                left: 0;
+                }
+
+                /* Overlay when sidebar is active */
+                .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: rgba(0,0,0,0.5);
+                z-index: 1040;
+                }
+
+                .sidebar-overlay.active {
+                display: block;
+                }
+
+                /* Form responsiveness */
+                .form-row {
+                margin-left: -10px;
+                margin-right: -10px;
+                }
+
+                .form-group {
+                padding-left: 10px;
+                padding-right: 10px;
+                }
+
+                /* Adjust spacing for mobile */
+                .mb-3 {
+                margin-bottom: 1rem !important;
+                }
+
+                .p-4 {
+                padding: 1rem !important;
+                }
+                }
+
+                /* Improve form layout on small screens */
+                @media (max-width: 575.98px) {
+                .form-row {
+                flex-direction: column;
+                }
+
+                .form-group.col {
+                flex: 0 0 100%;
+                max-width: 100%;
+                margin-bottom: 1rem;
+                }
+
+                .form-control {
+                font-size: 14px;
+                }
+
+                .btn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+                }
+                }
+            </style>
+            <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+            <div class="d-flex" id="add_operation">
+                <!-- Sidebar -->
+                <div class="sidebar d-flex flex-column bg-light border-right" id="sidebar"
+                    style="min-height: 100vh; width: 250px;">
+                    <div class="text-center py-3" id="logoContainer" style="display: none;">
+                        <img src="/sales_portal_bdcalling/static/img/navigation-image-2.png"
+                            alt="Logo" class="img-fluid" style="max-width: 185px;" />
+                    </div>
+                    <ul class="nav flex-column pl-4 pt-4">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/bdcalling/dashboard">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard </a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a class="nav-link text-dark" href="/portal/to_do_list">
+                                <i class="fas fa-list-alt"></i>
+                                To-Do List
+                            </a>
+                        </li> -->
+                        <t t-if="user.operation_man == False">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/sale/dashboard">
+                                    <i class="fas fa-chart-line"></i> Sales </a>
+                            </li>
+                        </t>
+                        <t t-if="not user.sale_leader and not user.sales_man">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/operation_dashboard">
+                                    <i class="fas fa-cogs"></i> Operation </a>
+                            </li>
+                        </t>
+
+                        <t t-if="not user.operation_man and not user.sales_man">
+                            <li class="nav-item ">
+                                <a class="nav-link text-dark" href="/portal/requisition/dashboard">
+                                    <i class="fas fa-clipboard-list"></i> Requisition </a>
+                            </li>
+                        </t>
+                        <hr
+                            style="border: 1px solid #000; margin: 10px 0; width: 90%; background-color: #000;" />
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/web/session/logout">
+                                <i class="fas fa-sign-out-alt"></i> Logout </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Main Content -->
+                <div class="flex-grow-1 ">
+                    <nav class="navbar navbar-light bg-white border-bottom">
+                        <div class="container-fluid px-2">
+                            <div class="d-flex align-items-center w-100">
+
+                                <div class="d-flex align-items-center flex-grow-1 mx-2">
+                                    <a href="javascript:void(0);" onclick="window.history.back();">
+                                        <img
+                                            src="/sales_portal_bdcalling/static/img/header-icon-arrow-left.png"
+                                            alt="" class="img-fluid"
+                                            style="width: 20px; height: 20px;" />
+                                    </a>
+                                    <h1 class="h4 text-dark mb-0 ml-2">Create Order</h1>
+                                </div>
+
+                                <div class="d-flex align-items-center ml-auto">
+                                    <div class="position-relative ml-3 mt-2">
+                                        <a href="/portal/notifications"
+                                            class="text-decoration-none ">
+                                            <i class="far fa-bell text-muted"
+                                                style="font-size: 24px;"></i>
+                                            <span
+                                                class="position-absolute badge badge-danger rounded-circle"
+                                                style="top: -5px; right: -5px; font-size: 10px; min-width: 18px; height: 18px; line-height: 14px; padding: 2px;"
+                                                t-esc="fin_not_count if fin_not_count else '0'">0</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <button class="navbar-toggler border-0 p-0 ml-3 d-md-none"
+                                    type="button" onclick="toggleSidebar()">
+                                    <span class="navbar-toggler-icon"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <div class=" p-2 px-3">
+                        <div class="mt-4 bg-white border-bottom">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="d-flex align-items-center gap-3 px-1  ">
+                                    <h1 class="h4 text-dark ml-2">Add Order</h1>
+                                </div>
+                                <div>
+                                    <a href="/operation_dashboard">
+
+                                        <button
+                                            class="btn btn-dark d-flex align-items-center  gap-2 mr-3">
+                                            <img
+                                                src="/sales_portal_bdcalling/static/img/listicon.png"
+                                                alt="" class="img-fluid"
+                                                style="width: 16px; height: 16px;" />
+                                            <span class="text-white small">View list</span>
+                                        </button>
+                                    </a>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class=" mt-4">
+                            <div class=" p-4  rounded shadow-sm" style="background: #FAFAFA;">
+                                <h2 class="h4">Employee Details</h2>
+                                <form>
+
+                                    <div class="form-row">
+                                        <div class="form-group col">
+                                            <label for="employee_id">Employee ID</label>
+                                            <input type="text" class="form-control" id="employee_id" />
+                                            <input type="hidden" id="employee_id_hidden" />
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col">
+                                            <label for="employee_name" class="form-label">Employee
+                                                Name</label>
+                                            <input type="text" class="form-control"
+                                                id="employee_name" />
+                                        </div>
+                                        <div class="form-group col">
+                                            <label for="company_name">Company Name</label>
+                                            <input type="text" class="form-control"
+                                                id="company_name" />
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="order-details p-4  rounded shadow-sm mt-4"
+                                style="background: #FAFAFA;">
+                                <h1 class="h4">Details</h1>
+                                <form>
+                                    <input type="hidden" id="so_id" />
+
+                                    <div class="form-row">
+                                        <div class="form-group col">
+                                            <label for="date">Date</label>
+                                            <input type="date" id="date" name="date"
+                                                t-att-value="today or ''" class="form-control" />
+                                        </div>
+                                        <div class="form-group col">
+                                            <label for="order_status">Order Status</label>
+                                            <select class="form-select form-control"
+                                                id="order_status" required="1">
+                                                <option value="nra">NRA</option>
+                                                <option value="wip">WIP</option>
+                                                <option value="delivered">Delivered</option>
+                                                <option value="complete">Complete</option>
+                                                <option value="cancelled">Cancelled</option>
+                                                <option value="revisions">Revisions</option>
+                                                <option value="issues">Issues</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group col">
+                                            <label for="order_id">Order ID</label>
+                                            <input type="text" class="form-control" id="order_id"
+                                                name="order_id" placeholder="" />
+                                        </div>
+                                        <div class="form-group col">
+                                            <label for="team_id">Assign Name</label>
+                                            <select class="form-control" name="team_id" id="team_id">
+                                                <option value="">Select Team...</option>
+                                                <t t-foreach="team_id" t-as="team">
+                                                    <option t-att-value="team.id">
+                                                        <t t-esc="team.name" />
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group col">
+                                            <label for="partner_id">Client ID</label>
+                                            <input type="text" class="form-control" id="partner_id"
+                                                name="partner_id" placeholder="" />
+                                        </div>
+                                        <div class="form-group col">
+                                            <label for="order_link">Order Link</label>
+                                            <input type="url" class="form-control" id="order_link"
+                                                name="order_link" placeholder="" />
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col">
+                                            <label for="project">Project</label>
+                                            <input type="text" class="form-control" id="project"
+                                                name="project" placeholder="App_Cake" />
+                                        </div>
+                                        <div class="form-group col">
+                                            <label for="instruction_sheet_link">Instructions Sheet
+                                                List</label>
+                                            <input type="url" class="form-control"
+                                                id="instruction_sheet_link"
+                                                name="instruction_sheet_link" placeholder="" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group col">
+                                            <label for="delivery_amount">Delivery Amount</label>
+                                            <input type="number" class="form-control"
+                                                id="delivery_amount" name="delivery_amount"
+                                                placeholder="500" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group col">
+                                            <label for="percentage">Percentage</label>
+                                            <input type="number" class="form-control" id="percentage" name="percentage" />
+                                        </div>                                        
+                                        <!-- <div class="form-group col">
+                                            <label for="percentage">Percentage</label>
+                                            <select class="form-select form-control" id="percentage">
+                                                <option value="0">0</option>
+                                                <option value="3">3</option>
+                                                <option value="5">5</option>
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                            </select>
+                                        </div> -->
+                                        <div class="form-group col">
+                                            <label for="monetary_value">Monetary Value</label>
+                                            <input type="number" class="form-control"
+                                                id="monetary_value" name="monetary_value"
+                                                placeholder="" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-row">
+                                        <div class="form-group col">
+                                            <label for="special_remarks">Special Remarks</label>
+                                            <textarea class="form-control" rows="3"
+                                                id="special_remarks" name="special_remarks"
+                                                placeholder="Tell us about your use case..."></textarea>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="mt-3">
+                                <button type="submit" id="btn_sbmt"
+                                    class="btn btn-primary btn-block">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                function toggleSidebar() {
+                document.getElementById('sidebar').classList.toggle('active');
+                document.getElementById('sidebarOverlay').classList.toggle('active');
+                const logo = document.getElementById('logoContainer');
+                if (logo.style.display === "none") {
+                logo.style.display = "block";
+                } else {
+                logo.style.display = "none";
+                }
+                }
+            </script>
+        </t>
+    </template>
+
+
+    <!--
+    _____________________________________________Dashboard____________________________________________________ -->
+
+
+    <template id="operation_dash_template" name="Operation Portal">
+        <t t-call="portal.portal_layout">
+            <t t-set="user" t-value="request.env.user" />
+            <t t-set="fin_not_count" t-value="0" />
+
+            <t t-if="user.scm_department">
+                <t t-set="fin_not_count"
+                    t-value="request.env['bd.notification'].sudo().search_count([
+            ('department', '=', 'finance'),
+            ('mark_as_read', '=', False),
+            ])" />
+            </t>
+            <title>Operation Portal</title>
+            <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+                rel="stylesheet" />
+            <link
+                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+                rel="stylesheet" />
+            <link href="/sales_portal_bdcalling/static/css/operation.css"
+                rel="stylesheet" />
+
+            <!-- Sidebar overlay for mobile -->
+            <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+            <div class="d-flex" id="operation_dashboard">
+                <!-- Sidebar -->
+                <div class="sidebar d-flex flex-column bg-light border-right" id="sidebar"
+                    style="min-height: 100vh; width: 250px;">
+                    <div class="text-center py-3" id="logoContainer" style="display: none;">
+                        <img src="/sales_portal_bdcalling/static/img/navigation-image-2.png"
+                            alt="Logo" class="img-fluid" style="max-width: 185px;" />
+                    </div>
+                    <ul class="nav flex-column pl-4 pt-4">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/bdcalling/dashboard">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard </a>
+                        </li>
+                        <t t-if="user.operation_man == False">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/sale/dashboard">
+                                    <i class="fas fa-chart-line"></i> Sales </a>
+                            </li>
+                        </t>
+                        <t t-if="not user.sale_leader and not user.sales_man">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/operation_dashboard">
+                                    <i class="fas fa-cogs"></i> Operation </a>
+                            </li>
+                        </t>
+                        <t t-if="not user.operation_man and not user.sales_man">
+                            <li class="nav-item ">
+                                <a class="nav-link text-dark" href="/portal/requisition/dashboard">
+                                    <i class="fas fa-clipboard-list"></i> Requisition </a>
+                            </li>
+                        </t>
+                        <hr
+                            style="border: 1px solid #000; margin: 10px 0; width: 90%; background-color: #000;" />
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/web/session/logout">
+                                <i class="fas fa-sign-out-alt"></i> Logout </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Main Content -->
+                <div class="flex-grow-1">
+                    <nav class="navbar navbar-light bg-white border-bottom">
+                        <div class="container-fluid px-2">
+                            <div class="d-flex align-items-center w-100">
+                                <!-- Hamburger Menu Icon -->
+
+                                <!-- Search Bar -->
+                                <a href="javascript:void(0);" onclick="window.history.back();">
+                                    <img
+                                        src="/sales_portal_bdcalling/static/img/header-icon-arrow-left.png"
+                                        alt="" class="img-fluid mr-3"
+                                        style="width: 20px; height: 20px;" />
+                                </a>
+                                <div class="position-relative flex-grow-1 mx-2 search-container">
+                                    <form method="get">
+                                        <input type="text" name="search_value"
+                                            class="form-control pl-5" placeholder="Search"
+                                            t-att-value="search_value" />
+                                        <i class="fas fa-search position-absolute"
+                                            style="top: 55%; left: 20px; transform: translateY(-50%); color: #aaa;"></i>
+
+                                    </form>
+                                </div>
+
+                                <!-- Notification and User Profile -->
+                                <div class="d-flex align-items-center">
+                                    <!-- Notification Icon -->
+                                    <div class="position-relative ml-3">
+                                        <a href="/portal/notifications" class="text-decoration-none">
+                                            <i class="far fa-bell text-muted"
+                                                style="font-size: 20px;"></i>
+                                            <span
+                                                class="position-absolute badge badge-danger rounded-circle"
+                                                style="top: -5px; right: -5px; font-size: 10px; min-width: 18px; height: 18px; line-height: 14px; padding: 2px;"
+                                                t-esc="fin_not_count if fin_not_count else '0'">0</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <button class="navbar-toggler border-0 p-0 ml-3 d-md-none"
+                                    type="button" onclick="toggleSidebar()">
+                                    <span class="navbar-toggler-icon"></span>
+                                </button>
+
+                            </div>
+                        </div>
+                    </nav>
+
+                    <div class="p-3">
+                        <div class="bg-white border rounded shadow-sm p-3 mb-4">
+                            <div class="mt-2 mb-4">
+                                <div
+                                    class="d-flex justify-content-between align-items-center flex-wrap">
+                                    <div class="d-flex align-items-center mb-3 mb-md-0">
+                                        <!-- <a href="#" onclick="window.history.back(); return
+                                        false;">
+                                            <img src="/sales_portal_bdcalling/static/img/header-icon-arrow-left.png" alt="" class="img-fluid"
+                                        style="width: 20px; height: 20px;" />
+                                        </a> -->
+                                        <h1 class="h4 text-dark mb-0">All Order Information</h1>
+                                    </div>
+                                    <div class="d-flex flex-column flex-md-row gap-2">
+                                        <a href="/sale/operation" class="mb-2 mb-md-0 mr-md-3">
+                                            <button class="btn btn-dark">
+                                                <img
+                                                    src="/sales_portal_bdcalling/static/img/icon-plus.png"
+                                                    alt="" class="img-fluid"
+                                                    style="width: 16px; height: 16px;" />
+                                                <span>Add New Order</span>
+                                            </button>
+                                        </a>
+                                        <a href="/customer/form">
+                                            <button class="btn btn-dark">
+                                                <img
+                                                    src="/sales_portal_bdcalling/static/img/icon-plus.png"
+                                                    alt="" class="img-fluid"
+                                                    style="width: 16px; height: 16px;" />
+                                                <span>Add New Customer</span>
+                                            </button>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="d-flex align-items-center gap-3 mb-4 mt-4">
+                                <div
+                                    class="d-flex align-items-center gap-2 border p-2 rounded cursor-pointer filter-container"
+                                    style="width: 220px; position: relative;">
+                                    <img src="/sales_portal_bdcalling/static/img/icon-funnel.png"
+                                        alt="" class="img-fluid" style="width: 16px; height: 16px;" />
+                                    <h6 class="text-muted small mb-0">Select Month/Year</h6>
+
+                                    <div class="filter-dropdown"
+                                        style="display: none; position: absolute; top: 100%; left: 0; background: white; border: 1px solid #ddd; padding: 10px; z-index: 10;">
+                                        <form method="get" action="/operation_dashboard">
+                                            <select name="year" id="filter-year"
+                                                class="form-control mb-2">
+                                                <option value="">Select Year</option>
+                                            </select>
+                                            <select name="month" id="filter-month"
+                                                class="form-control">
+                                                <option value="">Select Month</option>
+                                                <option value="01">January</option>
+                                                <option value="02">February</option>
+                                                <option value="03">March</option>
+                                                <option value="04">April</option>
+                                                <option value="05">May</option>
+                                                <option value="06">June</option>
+                                                <option value="07">July</option>
+                                                <option value="08">August</option>
+                                                <option value="09">September</option>
+                                                <option value="10">October</option>
+                                                <option value="11">November</option>
+                                                <option value="12">December</option>
+                                            </select>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div
+                                    class="d-flex align-items-center gap-2 border p-2 rounded cursor-pointer filter-container2"
+                                    style="width: 220px; position: relative;">
+                                    <img src="/sales_portal_bdcalling/static/img/icon-funnel.png"
+                                        alt="" class="img-fluid" style="width: 16px; height: 16px;" />
+                                    <h6 class="text-muted small mb-0">Select status</h6>
+                                    <div class="filter-dropdown2"
+                                        style="display: none; position: absolute; top: 100%; left: 0; background: white; border: 1px solid #ddd; padding: 10px; z-index: 10;">
+                                        <form method="get" action="/sale/dashboard">
+                                            <select name="assign_team_id" id="assign_team_id"
+                                                class="form-control mb-2">
+                                                <option value="">Select Team</option>
+                                                <t
+                                                    t-foreach="request.env['assign.team'].sudo().search([])"
+                                                    t-as="team">
+                                                    <option t-att-value="team.id">
+                                                        <t t-esc="team.name" />
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Stats cards -->
+                            <div class="row mb-4">
+                                <div class="col-12 col-sm-6 col-md-3 mb-3 mb-md-0">
+                                    <div class="card shadow-sm border-0">
+                                        <div
+                                            class="card-body d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="text-secondary small">Minimum Goal</h6>
+                                                <h4 class="mb-1">
+                                                    <t t-esc="minimum_target" />
+                                                </h4>
+                                                <p class="text-muted small mb-0">This Month</p>
+                                            </div>
+                                            <img
+                                                src="/sales_portal_bdcalling/static/img/team-goals-bro.png"
+                                                alt="" class="img-fluid" style="width: 63px;" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3 mb-3 mb-md-0">
+                                    <div class="card shadow-sm border-0">
+                                        <div
+                                            class="card-body d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="text-secondary small">Achieve</h6>
+                                                <h4 class="mb-1">
+                                                    <t t-esc="achieved_sales" />
+                                                </h4>
+                                                <p class="text-muted small mb-0">This Month</p>
+                                            </div>
+                                            <img
+                                                src="/sales_portal_bdcalling/static/img/shared-goals-pana.png"
+                                                alt="" class="img-fluid" style="width: 63px;" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3 mb-3 mb-md-0">
+                                    <div class="card shadow-sm border-0">
+                                        <div
+                                            class="card-body d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="text-secondary small">Balance</h6>
+                                                <h4 class="mb-1">
+                                                    <t t-esc="balance_amount" />
+                                                </h4>
+                                                <p class="text-muted small mb-0">This Month</p>
+                                            </div>
+                                            <img
+                                                src="/sales_portal_bdcalling/static/img/finance-app-bro.png"
+                                                alt="" class="img-fluid" style="width: 63px;" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-sm-6 col-md-3 mb-3 mb-md-0">
+                                    <div class="card shadow-sm border-0">
+                                        <div
+                                            class="card-body d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="text-secondary small">Bonus</h6>
+                                                <h4 class="mb-1">
+                                                    <t t-esc="bonus_amount" />
+                                                </h4>
+                                                <p class="text-muted small mb-0">This Month</p>
+                                            </div>
+                                            <img
+                                                src="/sales_portal_bdcalling/static/img/money-stress-amico.png"
+                                                alt="" class="img-fluid" style="width: 63px;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Table section -->
+                            <div class="bg-white rounded shadow-sm mb-4">
+                                <div class="table-container">
+                                    <table class="table table-bordered table-hover text-center">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="sortable" data-sort-type="date">Date</th>
+                                                <th class="sortable" data-sort-type="numeric">Employee
+                                                    ID</th>
+                                                <th class="sortable" data-sort-type="text">Employee
+                                                    Name</th>
+                                                <th class="sortable" data-sort-type="text">Assign
+                                                    Team</th>
+                                                <th class="sortable" data-sort-type="text">Project</th>
+                                                <th class="sortable" data-sort-type="numeric">Order
+                                                    ID</th>
+                                                <th class="sortable" data-sort-type="numeric">Monetary
+                                                    Value</th>
+                                                <th class="sortable" data-sort-type="text">Client ID</th>
+                                                <th class="sortable" data-sort-type="text"
+                                                    width="20%">Order Link</th>
+                                                <th class="sortable" data-sort-type="numeric">
+                                                    Revision</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody style="font-size: 14px;">
+                                            <t t-foreach="orders" t-as="order">
+                                                <tr>
+                                                    <td>
+                                                        <t t-esc="order.date" />
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="order.employee_id.barcode" />
+                                                    </td>
+                                                    <td>
+                                                        <div
+                                                            class="d-flex align-items-center justify-content-center">
+                                                            <t t-esc="order.employee_id.name" />
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="order.assigned_team_id.name" />
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="order.project" />
+                                                    </td>
+                                                    <td>
+                                                        <a
+                                                            t-att-href="'/operation/details?order_id=%s' % order.id">
+                                                            <t t-esc="order.order_id" />
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="order.monetary_value" />
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="order.partner_id.name" />
+                                                    </td>
+                                                    <td width="20%">
+                                                        <a t-att-href="order.order_link"
+                                                            target="_blank"
+                                                            class="text-truncate d-inline-block"
+                                                            style="max-width: 150px;">
+                                                            <t t-esc="order.order_link" />
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <t t-esc="order.revision_count" />
+
+                                                    </td>
+
+                                                </tr>
+                                            </t>
+                                            <!-- Show message if no orders -->
+                                            <t t-if="not orders or len(orders) == 0">
+                                                <tr>
+                                                    <td colspan="10" class="text-center py-4">
+                                                        <div class="text-muted">No orders found</div>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <!-- Pagination -->
+                            <div class="o_portal_pager text-center mt-3 mb-3"
+                                t-if="pager and pager.get('page_count', 0) > 1">
+                                <t t-call="portal.pager">
+                                    <t t-set="classname" t-value="'float'" />
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+                function toggleSidebar() {
+                document.getElementById('sidebar').classList.toggle('active');
+                document.getElementById('sidebarOverlay').classList.toggle('active');
+                const logo = document.getElementById('logoContainer');
+                if (logo.style.display === "none") {
+                logo.style.display = "block";
+                } else {
+                logo.style.display = "none";
+                }
+                }
+            </script>
+        </t>
+    </template>
+
+
+    <!-- _____________________________________________Update
+    Form____________________________________________________ -->
+
+
+    <template id="operation_update_form_template" name="Operation Update Form">
+        <t t-call="portal.portal_layout">
+            <t t-set="user" t-value="request.env.user" />
+            <t t-set="fin_not_count" t-value="0" />
+
+            <t t-if="user.scm_department">
+                <t t-set="fin_not_count"
+                    t-value="request.env['bd.notification'].sudo().search_count([
+            ('department', '=', 'finance'),
+            ('mark_as_read', '=', False),
+            ])" />
+            </t>
+            <title>Sales Section</title>
+
+            <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+                rel="stylesheet" />
+            <link
+                href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+                rel="stylesheet" />
+            <style>
+                .avatar-sm {
+                width: 32px;
+                height: 32px;
+                }
+                /* Base styles */
+                body {
+                overflow-x: hidden;
+                }
+
+                /* Sidebar styles */
+                .sidebar {
+                min-height: 100vh;
+                width: 250px;
+                transition: all 0.3s;
+                z-index: 1000;
+                }
+
+                .nav-item:hover {
+                background-color: #1A5EED;
+                border-radius: 4px;
+                }
+
+                .nav-item:hover .nav-link,
+                .nav-item.active .nav-link {
+                color: white !important;
+                }
+
+                /* Search results */
+                .search-results {
+                position: absolute;
+                top: calc(100% + 5px);
+                left: 0;
+                right: 0;
+                background: white;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                max-height: 200px;
+                overflow-y: auto;
+                z-index: 1050;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                }
+
+                /* Responsive styles */
+                @media (max-width: 767.98px) {
+                .sidebar {
+                position: fixed;
+                top: 0;
+                left: -250px;
+                height: 100%;
+                z-index: 1050;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                }
+
+                .sidebar.active {
+                left: 0;
+                }
+
+                .sidebar-overlay {
+                display: none;
+                position: fixed;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0,0,0,0.4);
+                z-index: 1040;
+                opacity: 0;
+                transition: all 0.5s ease-in-out;
+                }
+
+                .sidebar-overlay.active {
+                display: block;
+                opacity: 1;
+                }
+
+                /* Form responsiveness */
+                .row {
+                margin-left: -10px;
+                margin-right: -10px;
+                }
+
+                .col, .col-md-3, .col-md-6, .col-md-12 {
+                padding-left: 10px;
+                padding-right: 10px;
+                }
+
+                /* Adjust spacing for mobile */
+                .mb-3 {
+                margin-bottom: 1rem !important;
+                }
+
+                .p-4 {
+                padding: 1rem !important;
+                }
+                }
+
+                /* Improve form layout on small screens */
+                @media (max-width: 575.98px) {
+                .row > .col {
+                flex: 0 0 100%;
+                max-width: 100%;
+                margin-bottom: 1rem;
+                }
+
+                .form-control {
+                font-size: 14px;
+                }
+
+                .btn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+                }
+                }
+            </style>
+            <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+            <div class="d-flex" id="update_operation">
+                <!-- Sidebar -->
+                <div class="sidebar d-flex flex-column bg-light border-right" id="sidebar">
+                    <div class="text-center py-3" id="logoContainer" style="display: none;">
+                        <img src="/sales_portal_bdcalling/static/img/navigation-image-2.png"
+                            alt="Logo" class="img-fluid" style="max-width: 185px;" />
+                    </div>
+                    <ul class="nav flex-column pl-4 pt-4">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/bdcalling/dashboard">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard </a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a class="nav-link text-dark" href="/portal/to_do_list">
+                                <i class="fas fa-list-alt"></i>
+                                To-Do List
+                            </a>
+                        </li> -->
+                        <t t-if="user.operation_man == False">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/sale/dashboard">
+                                    <i class="fas fa-chart-line"></i> Sales </a>
+                            </li>
+                        </t>
+                        <t t-if="not user.sale_leader and not user.sales_man">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/operation_dashboard">
+                                    <i class="fas fa-cogs"></i> Operation </a>
+                            </li>
+                        </t>
+                        <t t-if="not user.operation_man and not user.sales_man">
+                            <li class="nav-item ">
+                                <a class="nav-link text-dark" href="/portal/requisition/dashboard">
+                                    <i class="fas fa-clipboard-list"></i> Requisition </a>
+                            </li>
+                        </t>
+                        <hr
+                            style="border: 1px solid #000; margin: 10px 0; width: 90%; background-color: #000;" />
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/web/session/logout">
+                                <i class="fas fa-sign-out-alt"></i> Logout </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Main Content -->
+                <div class="flex-grow-1">
+                    <nav class="navbar navbar-light bg-white border-bottom">
+                        <div class="container-fluid px-2">
+                            <div class="d-flex align-items-center w-100">
+
+                                <div class="d-flex align-items-center flex-grow-1 mx-2">
+                                    <a href="javascript:void(0);" onclick="window.history.back();">
+                                        <img
+                                            src="/sales_portal_bdcalling/static/img/header-icon-arrow-left.png"
+                                            alt="" class="img-fluid"
+                                            style="width: 20px; height: 20px;" />
+                                    </a>
+                                    <h1 class="h4 text-dark mb-0 ml-2">View Order</h1>
+                                </div>
+
+                                <div class="d-flex align-items-center ml-auto">
+                                    <div class="position-relative ml-3 mt-2">
+                                        <a href="/portal/notifications"
+                                            class="text-decoration-none ">
+                                            <i class="far fa-bell text-muted"
+                                                style="font-size: 24px;"></i>
+                                            <span
+                                                class="position-absolute badge badge-danger rounded-circle"
+                                                style="top: -5px; right: -5px; font-size: 10px; min-width: 18px; height: 18px; line-height: 14px; padding: 2px;"
+                                                t-esc="fin_not_count if fin_not_count else '0'">0</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <button class="navbar-toggler border-0 p-0 ml-3 d-md-none"
+                                    type="button" onclick="toggleSidebar()">
+                                    <span class="navbar-toggler-icon"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <div class="p-2 p-md-3">
+                        <div class=" mt-4">
+                            <form t-att-action="'/operation/update?order_id=%s' % order.id"
+                                method="post" autocomplete="off">
+                                <input type="hidden" name="csrf_token"
+                                    t-att-value="request.csrf_token()" />
+                                <div class="employee-details p-3 p-md-4 rounded shadow-sm mt-4"
+                                    style="background: #FAFAFA;">
+                                    <h2 class="h5 mb-4">Employee Details</h2>
+                                    <div class="row">
+                                        <div class="col-12 mb-3">
+                                            <label for="employee_barc">Employee ID</label>
+                                            <input type="text" class="form-control"
+                                                id="employee_barc"
+                                                t-att-value="order.employee_id_barcode if order.employee_id else ''"
+                                                readonly="1" />
+                                        </div>
+                                        <div class="col-12 col-md-6 mb-3">
+                                            <label for="employee_id">Employee Name</label>
+                                            <input type="text" class="form-control"
+                                                id="employee_name"
+                                                t-att-value="order.employee_name or ''" readonly="1" />
+                                            <!-- <select class="form-control" name="employee_id"
+                                            id="employee_id">
+                                                <t t-foreach="team_members" t-as="team">
+                                                    <option t-att-value="team.id" t-att-selected="order.employee_id.id == team.id">
+                                                        <t t-esc="team.name" />
+                                                    </option>
+                                                </t>
+                                            </select> -->
+                                        </div>
+                                        <div class="form-group col-12 col-md-6 mb-3">
+                                            <label for="company_name">Company Name</label>
+                                            <input type="text" class="form-control"
+                                                id="company_name"
+                                                t-att-value="order.company_name or ''" readonly="1" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="order-details p-3 p-md-4 rounded shadow-sm mt-4"
+                                    style="background: #FAFAFA;">
+                                    <h1 class="h5 mb-4">Details</h1>
+                                    <div class="row mb-3">
+                                        <div class="form-group col-12 col-md-6 mb-3">
+                                            <label for="date">Date</label>
+                                            <input type="date" id="date" name="date"
+                                                t-att-value="order.date or ''" class="form-control" />
+                                        </div>
+                                        <div class="form-group col-12 col-md-6 mb-3">
+                                            <label for="order_status">Order Status</label>
+                                            <select class="form-select form-control"
+                                                id="order_status" required="1">
+                                                <t
+                                                    t-foreach="request.env['project.operation']._fields['order_status'].selection"
+                                                    t-as="item">
+                                                    <option t-att-value="item[0]"
+                                                        t-att-selected="item[0] == order.order_status"
+                                                        t-esc="item[1]"></option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="form-group col-12 col-md-6 mb-3">
+                                            <label for="order_id">Order ID</label>
+                                            <input type="text" class="form-control" id="order_id"
+                                                name="order_id" t-att-value="order.order_id or ''"
+                                                placeholder="" />
+                                        </div>
+                                        <div class="form-group col-12 col-md-6 mb-3">
+                                            <label for="team_id">Assign Name</label>
+                                            <select class="form-control" name="team_id" id="team_id">
+                                                <t t-foreach="team_id" t-as="team">
+                                                    <option t-att-value="team.id"
+                                                        t-att-selected="order.assigned_team_id.id == team.id">
+                                                        <t t-esc="team.name" />
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="form-group col-12 col-md-6 mb-3">
+                                            <label for="partner_id">Client ID</label>
+                                            <input type="text" class="form-control" id="partner_id"
+                                                name="partner_id" placeholder="" />
+                                        </div>
+                                        <div class="form-group col-12 col-md-6 mb-3">
+                                            <label for="order_link">Order Link</label>
+                                            <input type="url" class="form-control" id="order_link"
+                                                name="order_link" placeholder="" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="form-group col-12 col-md-6 mb-3">
+                                            <label for="project">Project</label>
+                                            <input type="text" class="form-control" id="project"
+                                                name="project" t-att-value="order.project or ''"
+                                                placeholder="App_Cake" />
+                                        </div>
+                                        <div class="form-group col-12 col-md-6 mb-3">
+                                            <label for="instruction_sheet_link">Instructions Sheet
+                                                List</label>
+                                            <input type="url" class="form-control"
+                                                id="instruction_sheet_link"
+                                                name="instruction_sheet_link"
+                                                t-att-value="order.instruction_sheet_link or ''"
+                                                placeholder="" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="form-group col-12 col-md-6 mb-3">
+                                            <label for="delivery_amount">Delivery Amount</label>
+                                            <input type="number" class="form-control"
+                                                id="delivery_amount" name="delivery_amount"
+                                                t-att-value="order.delivery_amount or ''"
+                                                placeholder="500" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="form-group col-12 col-md-6 mb-3">
+                                            <label for="percentage">Percentage</label>
+                                            <select class="form-select form-control" id="percentage">
+                                                <input type="number" class="form-control" id="percentage" name="percentage" t-att-value="order.percentage" />
+                                                <!-- <t
+                                                    t-foreach="request.env['project.operation']._fields['percentage'].selection"
+                                                    t-as="item">
+                                                    <option t-att-value="item[0]"
+                                                        t-att-selected="item[0] == order.percentage"
+                                                        t-esc="item[1]"></option>
+                                                </t> -->
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-12 col-md-6 mb-3">
+                                            <label for="monetary_value">Monetary Value</label>
+                                            <input type="number" class="form-control"
+                                                id="monetary_value" name="monetary_value"
+                                                t-att-value="order.monetary_value or ''"
+                                                placeholder="" />
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="form-group col-12 mb-3">
+                                            <label for="special_remarks">Special Remarks</label>
+                                            <textarea class="form-control" rows="3"
+                                                id="special_remarks" name="special_remarks"
+                                                t-att-value="order.special_remarks or ''"
+                                                placeholder="Tell us about your use case..."></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="mt-4">
+                                    <button type="submit" id="btn_update" class="btn btn-dark w-100">
+                                        Update</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                function toggleSidebar() {
+                document.getElementById('sidebar').classList.toggle('active');
+                document.getElementById('sidebarOverlay').classList.toggle('active');
+                const logo = document.getElementById('logoContainer');
+                if (logo.style.display === "none") {
+                logo.style.display = "block";
+                } else {
+                logo.style.display = "none";
+                }
+                }
+            </script>
+        </t>
+    </template>
+
+
+</odoo>

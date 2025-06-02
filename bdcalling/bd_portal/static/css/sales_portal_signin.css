@@ -1,0 +1,26 @@
+/* ****************************************
+ * Sign in page
+ * ****************************************/
+
+.container-signin {
+    display: flex;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.signin {
+    min-width: 310px;
+}
+
+#login_toggle_password {
+    font-size: 14px;
+}
+
+.forgot_password {
+    font-size: 18px;
+}
+
+input[type='checkbox'] {
+    accent-color: gray;
+}

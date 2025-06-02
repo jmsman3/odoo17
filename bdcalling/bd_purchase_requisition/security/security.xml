@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+
+        <record model="ir.module.category" id="bdcalling_portal_category">
+            <field name="name">BaCalling Portal Access</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="group_agm_hr" model="res.groups">
+            <field name="name">Admin</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="category_id" ref="bd_purchase_requisition.bdcalling_portal_category"/>
+
+        </record>
+
+        <record id="group_agm_finance" model="res.groups">
+            <field name="name">Finance</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="category_id" ref="bd_purchase_requisition.bdcalling_portal_category"/>
+        </record>
+
+        <record id="group_gm_scm" model="res.groups">
+            <field name="name">SCM</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="category_id" ref="bd_purchase_requisition.bdcalling_portal_category"/>
+        </record>
+
+        <record id="group_gm_it" model="res.groups">
+            <field name="name">IT</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="category_id" ref="bd_purchase_requisition.bdcalling_portal_category"/>
+        </record>
+
+        <record id="group_gm_dept" model="res.groups">
+            <field name="name">Department</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="category_id" ref="bd_purchase_requisition.bdcalling_portal_category"/>
+        </record>
+
+        <record id="group_gm_ceo" model="res.groups">
+            <field name="name">CEO</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="category_id" ref="bd_purchase_requisition.bdcalling_portal_category"/>
+        </record>
+    </data>
+</odoo>

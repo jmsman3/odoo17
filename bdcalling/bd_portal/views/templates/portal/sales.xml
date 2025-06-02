@@ -1,0 +1,335 @@
+<odoo>
+    <template id="sales">
+        <t t-call="bd_portal.base">
+            <t t-set="header">
+                <title>Sales | bdCalling</title>
+                <link rel="stylesheet" href="/bd_portal/static/css/sales_dashboard.css?portal_sales=5"/>
+                <link rel="stylesheet" href="/bd_portal/static/css/sales_filter.css?sales_filter=4"/>
+            </t>
+            <t t-set="footer">
+                <script src="/bd_portal/static/js/filter.js?filter=1"></script>
+            </t>
+            <t t-set="page_code" t-value="'sales'"/>
+
+            <!-- Contents -->
+            <div class="db_home_content">
+
+                <!-- breadcrumbs -->
+                <div class="breadcrumbs">
+                    <div>
+                        <a href="/portal/dashboard">Dashboard</a>
+                    </div>
+                    <div class="mx-2">/</div>
+                    <div class="font-weight-bold">Sales</div>
+                </div>
+
+                <!-- All Order Information -->
+                <div class="orders mt-3">
+                    <!-- top_bar -->
+                    <div class="top_bar">
+                        <div class="text-white">All Order Information</div>
+                        <div class="d-flex">
+
+                            <div class="ctl_button mr-2" data-toggle="collapse" data-target="#orders_filter">
+                                <svg class="vertical_align_middle" width="24" height="24" viewBox="0 0 24 24"
+                                     fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                            d="M3 4C3 3.44772 3.44772 3 4 3H20C20.5523 3 21 3.44772 21 4V6.58579C21 6.851 20.8946 7.10536 20.7071 7.29289L14.2929 13.7071C14.1054 13.8946 14 14.149 14 14.4142V17L10 21V14.4142C10 14.149 9.89464 13.8946 9.70711 13.7071L3.29289 7.29289C3.10536 7.10536 3 6.851 3 6.58579V4Z"
+                                            stroke="#1D1D1F" stroke-width="1" stroke-linecap="round"
+                                            stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+
+                            <t t-if="user_id">
+                                <div t-if="user_id.can_create_sale" class="ctl_button">
+                                    <a href="/portal/sales/create">+ Add New Order</a>
+                                </div>
+                            </t>
+
+                            <t t-if="user_id">
+                                <div t-if="user_id.can_create_sale" class="ctl_button ml-2">
+                                    <a href="/portal/sales/create_new_customer">+ Add New Customer</a>
+                                </div>
+                            </t>
+
+                        </div>
+                    </div>
+
+                    <!-- Filter -->
+                    <div id="orders_filter"
+                            t-att-class="'filter collapse %s' % 'show' if is_filter else 'filter collapse'">
+                        <form id="form_filter" action="" autocomplete="off">
+                            <div class="container-fluid mt-3">
+
+                                <div t-if="xxxxx" class="row">
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <input type="hidden" name="page" value="1"/>
+                                            <input class="input" type="text" placeholder="Order ID"
+                                                   t-att-value="kw.get('filter_order_id') if kw.get('filter_order_id') else ''"
+                                                   name="filter_order_id"/>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+
+                                            <a t-if="is_filter" class="btn btn-outline-danger btn-sm py-2"
+                                               href="/portal/sales?page=1">Clear Filter</a>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-group">
+                                            <button class="button button-primary btn-block py-2" type="submit">
+                                                Filter</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label>Status</label>
+                                            <select id="filter_order_status" class="input" name="filter_order_status">
+                                                <option value="">Order Status</option>
+                                                <option value="nra"
+                                                        t-att-selected="kw.get('filter_order_status') == 'nra'">
+                                                    NRA</option>
+                                                <option value="wip"
+                                                        t-att-selected="kw.get('filter_order_status') == 'wip'">
+                                                    WIP</option>
+                                                <option value="delivered"
+                                                        t-att-selected="kw.get('filter_order_status') == 'delivered'">
+                                                    Delivered</option>
+                                                <option value="complete"
+                                                        t-att-selected="kw.get('filter_order_status') == 'complete'">
+                                                    Complete</option>
+                                                <option value="cancelled"
+                                                        t-att-selected="kw.get('filter_order_status') == 'cancelled'">
+                                                    Cancelled</option>
+                                                <option value="revisions"
+                                                        t-att-selected="kw.get('filter_order_status') == 'revisions'">
+                                                    Revisions</option>
+                                                <option value="issues"
+                                                        t-att-selected="kw.get('filter_order_status') == 'issues'">
+                                                    Issues</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-group">
+                                            <label>Search For</label>
+                                            <select id="f_query_for" class="input">
+                                                <option value="order_id">Order Id</option>
+                                                <option value="sales_employee">Sales Employee</option>
+                                                <option value="platform_source">Platform Source</option>
+                                                <option value="order_source">Order Source</option>
+                                                <option value="profile_name">Profile Name</option>
+                                                <option value="client_name">Client Name</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="form-group">
+                                            <label>Search</label>
+                                            <input id="f_query" class="input" placeholder="Enter your query"/>
+
+                                            <div id="c_query_sugg">
+                                                <div id="query_sugg" class="w-100" style="display: none;">
+                                                    <div class="list-group">
+                                                        <a href="#" class="list-group-item list-group-item-action">Start
+                                                            Type To Search</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div class="form-group">
+                                            <label class="invisible">Clear</label>
+                                            <a t-if="is_filter" class="btn btn-outline-danger btn-sm py-2 d-block"
+                                               href="/portal/sales?page=1">Clear Filter</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- End Filter -->
+
+                    <!-- order table -->
+                    <div t-if="orders" class="table-container">
+                        <table>
+                            <tr class="tr_header">
+                                <td>Order Number</td>
+                                <td>Employee Id</td>
+                                <td>Employee Name</td>
+                                <td>Sales Employee ID</td>
+                                <td>Sales Employee Name</td>
+                                <td>Incoming Date</td>
+                                <td>Profile Name</td>
+                                <td>Order Status</td>
+                                <td>Deadline</td>
+                                <td>Service Types</td>
+                                <td>Instruction Sheet</td>
+                                <td>Client ID</td>
+                                <td>Client Full Name</td>
+                                <td>Client Phone</td>
+                                <td>Client Email</td>
+                                <td>Order Link</td>
+                                <td>Percentage</td>
+                                <td>Fiverr Charge</td>
+                                <td>Delivery Amount</td>
+                                <td>Platform Source</td>
+                                <td>Order Source</td>
+                                <td>Remarks</td>
+                            </tr>
+                            <t t-foreach="orders" t-as="order">
+                                <tr>
+                                    <!-- Order Number -->
+                                    <td>
+                                        <a t-att-href="'/portal/sales/details?order_id=%s' % order.id">
+                                            <t t-esc="order.order_number"/><!--, <t t-esc="order.id"/>, <t t-esc="order.order_status"/>-->
+                                        </a>
+                                    </td>
+
+                                    <!-- Employee Id -->
+                                    <td><t t-esc="order.employee_id.barcode if order.employee_id else None"/></td>
+
+                                    <!-- Employee Name -->
+                                    <td><t t-esc="order.employee_id.name if order.employee_id else None"/></td>
+
+                                    <!-- Sales Employee id -->
+                                    <td><t t-esc="order.sales_employee_id.barcode if order.sales_employee_id else None"/></td>
+
+                                    <!-- Sales Employee Name -->
+                                    <td><t t-esc="order.sales_employee_id.name if order.sales_employee_id else None"/></td>
+
+                                    <!-- Incoming date -->
+                                    <td><t t-esc="order.incoming_date"/></td>
+
+                                    <!-- Profile Name -->
+                                    <td><t t-esc="order.profile_id.name if order.profile_id else None"/></td>
+
+                                    <!-- Order Status -->
+                                    <td class="text-uppercase"><t t-esc="order.order_status"/></td>
+
+                                    <!-- Deadline -->
+                                    <td><t t-esc="order.delivery_last_date"/></td>
+
+                                    <!-- Service types -->
+                                    <td><t t-esc="order.service_type_id.name if order.service_type_id else None"/></td>
+
+                                    <!-- Instruction sheet -->
+                                    <td><t t-esc="order.instruction_sheet_link"/></td>
+
+                                    <!-- Client ID -->
+                                    <td><t t-esc="order.client_user_id.name if order.client_user_id else None"/></td>
+
+                                    <!-- Client name - mp_customer_fullname -->
+                                    <td><t t-esc="order.client_user_id.mp_customer_fullname if order.client_user_id else None"/></td>
+
+                                    <!-- Client Phone -->
+                                    <td><t t-esc="order.client_user_id.phone if order.client_user_id else None"/></td>
+
+                                    <!-- Client Email -->
+                                    <td><t t-esc="order.client_user_id.email if order.client_user_id else None"/></td>
+
+                                    <!-- Order link -->
+                                    <td><t t-esc="order.order_link"/></td>
+
+                                    <!-- Percentage -->
+                                    <td><t t-esc="order.percentage"/></td>
+
+                                    <!-- Fiverr Charge *** -->
+                                    <td><t t-esc="order.charges_amount"/></td>
+
+                                    <!-- Delivery amount -->
+                                    <td><t t-esc="order.delivery_amount"/></td>
+
+                                    <!-- Platform Source -->
+                                    <td><t t-esc="order.platform_source_id.name if order.platform_source_id else ''"/></td>
+
+                                    <!-- Order source -->
+                                    <td><t t-esc="order.order_source_id.name if order.order_source_id else ''"/></td>
+
+                                    <!-- special_remarks -->
+                                    <td><t t-esc="order.special_remarks"/></td>
+
+                                </tr>
+                            </t>
+                        </table>
+                    </div>
+                    <div t-else="" class="mt-3">
+                        <div>No Orders Found</div>
+                    </div>
+
+                </div>
+                <!-- End All Order Information -->
+
+                <!-- Pagination -->
+                <t t-if="not filter_order_id and orders">
+                    <div class="pagination">
+
+                        <div>
+                            <a t-att-class="'disable' if previous == 'disable' else ''"
+                               t-att-href="'/portal/sales?page=%s%s' % (previous_page, url_params) if previous == 'enable' else None"> <!-- dynamic: class="disable" -->
+                                <svg class="vertical_align_middle" width="20" height="20" viewBox="0 0 24 24"
+                                     fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M15 19L8 12L15 5" stroke="gray" stroke-width="2" stroke-linecap="round"
+                                          stroke-linejoin="round"/>
+                                </svg>
+                                Previous
+                            </a>
+                        </div>
+
+                        <div>
+                            <a class="active" t-att-href="'/portal/sales?page=%s%s' % (current_page, url_params)"
+                               t-esc="current_page"></a>
+                        </div>
+
+                        <t t-foreach="pages" t-as="page">
+                            <div>
+                                <a t-att-href="'/portal/sales?page=%s%s' % (page, url_params)" t-esc="page"></a>
+                            </div>
+                        </t>
+
+                        <t t-if="is_jumper_page">
+                            <div>...</div>
+                            <div>
+                                <a t-att-href="'/portal/sales?page=%s' % jumper_page" t-esc="jumper_page"></a>
+                            </div>
+                        </t>
+
+                        <div>
+                            <a t-att-class="'disable' if _next == 'disable' else ''"
+                               t-att-href="'/portal/sales?page=%s%s' % (next_page, url_params) if _next == 'enable' else None">
+                                Next
+                                <svg class="vertical_align_middle" width="20" height="20" viewBox="0 0 24 24"
+                                     fill="none"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M9 5L16 12L9 19" stroke="gray" stroke-width="2" stroke-linecap="round"
+                                          stroke-linejoin="round"/>
+                                </svg>
+                            </a>
+                        </div>
+
+                    </div>
+                </t>
+                <!-- End Pagination -->
+
+                <br/>
+                <br/>
+
+            </div>
+
+
+        </t>
+    </template>
+</odoo>

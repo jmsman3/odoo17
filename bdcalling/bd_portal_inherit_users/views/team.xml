@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_assign_team_form" model="ir.ui.view">
+        <field name="name">assign.team.form</field>
+        <field name="model">assign.team</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" />
+                        <h1>
+                            <field name="name" placeholder="e.g. BBS_Operations" />
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="team_leader" />
+                        <field name="team_members" widget="many2many_tags"/>
+                    </group>
+                    <group>
+                        <field name="company_id" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_assign_team_tree" model="ir.ui.view">
+        <field name="name">assign.team.tree</field>
+        <field name="model">assign.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="team_leader" />
+                <field name="team_members" />
+                <field name="company_id" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_assign_team" model="ir.actions.act_window">
+        <field name="name">Assign Team</field>
+        <field name="res_model">assign.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_assign_team" name="Assign Team" parent="hr.menu_human_resources_configuration" action="action_assign_team" sequence="10" />
+</odoo>

@@ -1,0 +1,222 @@
+/* ****************************************
+ * Header
+ * ****************************************/
+
+:root {
+    /* --button-bg-color: #757575; */
+    --button-bg-color: black;
+    --brand-color: #2492EB;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input {
+    border: 1px solid rgb(219 219 219);
+    outline: none;
+    padding: 9px 10px;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.input::placeholder {
+    font-size: 14px;
+}
+
+/* For icons */
+.input-group-icon {
+    position: relative;
+    display: inline-block;
+}
+
+.input-group-icon input {
+    padding-right: 30px;
+}
+
+.input-group-icon i {
+    position: absolute;
+    right: 8px;
+    /* Adjust based on desired position */
+    top: 50%;
+    transform: translateY(-50%);
+    /* pointer-events: none; */
+    cursor: pointer;
+    /* Ensures the icon doesn't interfere with input */
+}
+
+/* Button */
+.button {
+    outline: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px 50px;
+    border-radius: 4px;
+}
+
+.button:focus {
+    outline: none;
+}
+
+.button-primary {
+    background-color: var(--button-bg-color);
+    color: white;
+}
+
+.button-primary:disabled {
+    background-color: var(--button-bg-color);
+    color: white;
+    opacity: .5;
+}
+
+.link {
+    color: rgb(44, 44, 44);
+    text-decoration: none;
+}
+
+.link:hover {
+    color: black;
+    text-decoration: none;
+}
+
+.box {
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    border-radius: 6px;
+    background-color: white;
+}
+
+.box_padding {
+    padding: 10px 15px;
+}
+
+/* 
+    Base layout css
+*/
+.db_home {
+    display: flex;
+    background-color: #F4F4F4;
+    min-height: 100vh;
+}
+
+.db_home .db_home_nav {
+    width: 20%;
+    background-color: white;
+    padding: 20px 20px;
+}
+
+.db_home .db_home_nav img {
+    width: 50px;
+    object-fit: cover;
+}
+
+.db_home .db_home_content {
+    /* width: 80%; */
+}
+
+.nav_items svg {
+    width: 20px;
+}
+
+.nav_items>div {
+    margin: 10px 0px;
+}
+
+.nav_items_a {
+    text-decoration: none;
+    display: block;
+    margin: 10px 10px;
+    padding: 5px 15px;
+    color: black;
+    text-decoration: none;
+    /* transition: background-color .5s; */
+    font-size: 17px;
+}
+
+.nav_items_a:hover {
+    text-decoration: none;
+    background-color: black;
+    color: white;
+    border-radius: 3px;
+}
+
+.nav_items .active {
+    text-decoration: none;
+    background-color: black;
+    color: white;
+    border-radius: 3px;
+}
+
+.nav_items_a:hover svg path {
+    stroke: white;
+}
+
+.nav_items_a_logout {
+    color: red;
+}
+
+/* 
+    dt_box A solid box
+*/
+
+.dt_box {
+    background-color: white;
+    border-radius: 3px;
+    padding: 17px 16px;
+}
+
+/* --- */
+.breadcrumbs {
+    display: flex;
+}
+
+.breadcrumbs a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/*  */
+a.button {
+    text-decoration: none;
+    color: white;
+}
+
+a.button:hover {
+    text-decoration: none;
+    color: white;
+}
+
+/*  */
+.top_header {
+    padding: 20px 20px 0px 20px;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.body_content {
+    width: 79%;
+}
+
+.not_icon {
+    width: 1.5em;
+    height: 1.5em;
+    /* vertical-align: middle; */
+    fill: red;
+    /* overflow: hidden; */
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.con_not {
+    position: relative;
+    cursor: pointer;
+}
+
+#not_count {
+    position: absolute;
+    top: -3px;
+    right: 2px;
+}

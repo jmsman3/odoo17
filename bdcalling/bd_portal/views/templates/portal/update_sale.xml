@@ -1,0 +1,66 @@
+<odoo>
+    <template id="update_sale">
+        <t t-call="bd_portal.base">
+            <t t-set="header">
+                <title>Update Sale | bdCalling</title>
+                <link rel="stylesheet" href="/bd_portal/static/css/order_details.css?v=2"/>
+            </t>
+            <t t-set="footer">
+                <!--<script src="/bd_portal/static/js/sales_portal_details.js"></script>-->
+            </t>
+            <t t-set="page_code" t-value="'sales'"/>
+
+
+            <!-- Contents -->
+            <div class="db_home_content container-fluid mt-3 mb-5 mx-1">
+
+                <!-- breadcrumbs -->
+                <div class="detail_breadcrumbs">
+                    <div>
+                        <a href="/portal/dashboard">Dashboard</a>
+                    </div>
+                    <div class="mx-2">/</div>
+                    <div>
+                        <a href="/portal/sales?page=1">Sales</a>
+                    </div>
+                    <div class="mx-2">/</div>
+                    <div class="font-weight-bold">Update</div>
+                </div>
+
+                <div class="mt-3">
+                    <div class="row">
+                        <div class="col">
+
+                            <!-- Alert Info -->
+                            <div class="alert alert-info">
+                                <div>Sale <a class="link" t-att-href="'/portal/sales/details?order_id=%s' % order.id"><strong t-esc="order.name"></strong></a> has been updated</div>
+
+                                <div class="mt-2">
+                                    <a href="/portal/dashboard">Dashboard</a>
+                                </div>
+
+                                <div>
+                                    <a href="/portal/sales?page=1">View all sales</a>
+                                </div>
+                            </div>
+
+                            <!-- Alert Danger -->
+                            <div class="alert alert-danger d-none">
+                                <div>Sale <strong>SO001</strong> has been updated</div>
+                                <div>
+                                    <a href="/portal/sales?page=1">View all sales</a>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </t>
+    </template>
+</odoo>

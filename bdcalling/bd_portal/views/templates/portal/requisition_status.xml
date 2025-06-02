@@ -1,0 +1,51 @@
+<odoo>
+    <template id="requisition_status">
+        <t t-call="bd_portal.base">
+            <t t-set="header">
+                <title>Requisition Status | bdCalling</title>
+                <link rel="stylesheet" href="/bd_portal/static/css/requisition.css"/>
+            </t>
+            <t t-set="footer">
+                <!--<script src="/bd_portal/static/js/sales_portal_details.js"></script>-->
+            </t>
+            <t t-set="page_code" t-value="'requisition'"/>
+
+            <!-- Contents -->
+            <div class="db_home_content container-fluid mt-3 mb-5 mx-1">
+
+                <!-- breadcrumbs -->
+                <div class="detail_breadcrumbs">
+                    <div>
+                        <a class="font-weight-bold" href="/portal/requisition">Requisition Form</a>
+                    </div>
+                    <div class="mx-2">|</div>
+                    <div>
+                        <a href="/portal/requisition/approval">Approval</a>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <div class="row">
+                        <div class="col">
+
+                            <div t-if="new_req_id" class="alert alert-success">
+                                Requisition <strong t-esc="new_req_id.name"></strong> Successfully Created
+                            </div>
+                            <div t-else="" class="alert alert-danger">
+                                Requisition Not Create
+                            </div>
+
+                            <div>
+                                <a class="btn" href="/portal/requisition/">Back To Requisition</a>
+                            </div>
+
+                        </div>
+                        <div class="col"></div>
+                    </div>
+
+                </div>
+
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+bd_team,bd_team,model_bd_team,,1,1,1,1
+bd_profile,bd_profile,model_bd_profile,,1,1,1,1
+bd_order_source,bd_order_source,model_bd_order_source,,1,1,1,1
+bd_platform_source,bd_platform_source,model_bd_platform_source,,1,1,1,1

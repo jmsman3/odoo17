@@ -1,0 +1,1343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Portal sales form, dashboard and update form
+    Developed by Rufaida Jaman Rayta -->
+    <!-- ___________________________________________________Order Create Form_____________________________________________________ -->
+    <template id="portal_quotation_form" name="Sales Form">
+        <t t-call="portal.portal_layout">
+            <t t-set="user" t-value="request.env.user" />
+            <t t-set="fin_not_count" t-value="0" />
+
+            <t t-if="user.scm_department">
+                <t t-set="fin_not_count" t-value="request.env['bd.notification'].sudo().search_count([
+        ('department', '=', 'finance'),
+        ('mark_as_read', '=', False),
+        ])" />
+            </t>
+
+            <title>Sales Section</title>
+
+            <!-- Bootstrap CSS -->
+            <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+            <link href="/sales_portal_bdcalling/static/css/create_sale.css?v=1" rel="stylesheet" />
+
+            <!-- Sidebar Overlay for Mobile -->
+            <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+            <div class="d-flex" id="add_sale">
+                <!-- Sidebar -->
+                <div class="sidebar d-flex flex-column bg-light border-right" id="sidebar">
+                    <div class="text-center py-3" id="logoContainer" style="display: none;">
+                        <img src="/sales_portal_bdcalling/static/img/navigation-image-2.png" alt="Logo" class="img-fluid" style="max-width: 185px;" />
+                    </div>
+                    <ul class="nav flex-column pl-4 pt-4">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/bdcalling/dashboard">
+                                <i class="fas fa-tachometer-alt"></i>
+                            Dashboard
+                            </a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a class="nav-link text-dark" href="/portal/to_do_list">
+                                <i class="fas fa-list-alt"></i>
+                            To-Do List
+                            </a>
+                        </li> -->
+                        <t t-if="user.operation_man == False">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/sale/dashboard">
+                                    <i class="fas fa-chart-line"></i>
+                                Sales
+                                </a>
+                            </li>
+                        </t>
+                        <t t-if="not user.sale_leader and not user.sales_man">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/operation_dashboard">
+                                    <i class="fas fa-cogs"></i>
+                                Operation
+                                </a>
+                            </li>
+                        </t>
+                        <t t-if="not user.operation_man and not user.sales_man">
+                            <li class="nav-item ">
+                                <a class="nav-link text-dark" href="/portal/requisition/dashboard">
+                                    <i class="fas fa-clipboard-list"></i>
+                                Requisition
+                                </a>
+                            </li>
+                        </t>
+                        <hr style="border: 1px solid #000; margin: 10px 0; width: 90%; background-color: #000;" />
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/web/session/logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                            Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Main Content -->
+                <div class="flex-grow-1">
+                    <nav class="navbar navbar-light bg-white border-bottom">
+                        <div class="container-fluid px-2">
+                            <div class="d-flex align-items-center w-100">
+
+                                <div class="d-flex align-items-center flex-grow-1 mx-2">
+                                    <a href="javascript:void(0);" onclick="window.history.back();">
+                                        <img src="/sales_portal_bdcalling/static/img/header-icon-arrow-left.png" alt="" class="img-fluid" style="width: 20px; height: 20px;" />
+                                    </a>
+                                    <h1 class="h4 text-dark mb-0 ml-2">Create Order</h1>
+                                </div>
+
+                                <div class="d-flex align-items-center ml-auto">
+                                    <div class="position-relative ml-3 mt-2">
+                                        <a href="/portal/notifications" class="text-decoration-none ">
+                                            <i class="far fa-bell text-muted" style="font-size: 24px;"></i>
+                                            <span class="position-absolute badge badge-danger rounded-circle" style="top: -5px; right: -5px; font-size: 10px; min-width: 18px; height: 18px; line-height: 14px; padding: 2px;" t-esc="fin_not_count if fin_not_count else '0'">0</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <button class="navbar-toggler border-0 p-0 ml-3 d-md-none" type="button" onclick="toggleSidebar()">
+                                    <span class="navbar-toggler-icon"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <div class="p-2 p-md-3">
+                        <div class="mt-4">
+                            <div class="employee-details p-3 p-md-4 rounded shadow-sm mt-4" style="background: #FAFAFA;">
+                                <h2 class="h5 mb-4">Employee Details</h2>
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="employee_id" class="form-label">Employee ID</label>
+                                        <input type="text" class="form-control" id="employee_id" t-att-value="employee.barcode or ''" placeholder="" readonly="1" />
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-12 col-md-6 mb-3 mb-md-0">
+                                            <div class="mb-3">
+                                                <label for="employee_name" class="form-label">Employee Name</label>
+                                                <input type="text" class="form-control" id="employee_name" t-att-value="employee.name or ''" placeholder="Md Saifullah Mamon" readonly="1" />
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="mb-3">
+                                                <label for="company_name" class="form-label">Company Name</label>
+                                                <input type="text" class="form-control" id="company_name" t-att-value="employee.company_id.name or ''" placeholder="Data Insight LLC" readonly="1" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="employee-details p-3 p-md-4 rounded shadow-sm mt-4" style="background: #FAFAFA;">
+                                <h2 class="h5 mb-4">Sales Employee Details</h2>
+                                <form>
+                                    <div class="mb-3">
+                                        <label for="sales_employee_id" class="form-label">Sales Employee ID</label>
+                                        <input type="hidden" name="sales_employee_id_hidden" id="sales_employee_id_hidden"  />
+                                        <input type="text" class="form-control" id="sales_employee_id" t-att-value="employee.barcode or ''" placeholder="" readonly="1" />
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-12 col-md-6 mb-3 mb-md-0">
+                                            <div class="mb-3">
+                                                <label for="sales_employee_name" class="form-label">Sales Employee Name</label>
+                                                <input type="text" class="form-control" id="sales_employee_name" t-att-value="employee.name or ''" placeholder="Md Saifullah Mamon" readonly="1" />
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="mb-3">
+                                                <label for="sales_company_name" class="form-label">Company Name</label>
+                                                <input type="text" class="form-control" id="sales_company_name" t-att-value="employee.company_id.name or ''" placeholder="Data Insight LLC" readonly="1"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="order-details p-3 p-md-4 rounded shadow-sm mt-4" style="background: #FAFAFA;">
+                                <h1 class="h5 mb-4">Order Details</h1>
+                                <form>
+                                    <div class="row mb-3">
+                                        <div class="form-group col-12 col-md-6 mb-3 mb-md-0">
+                                            <label for="platform_source_id">Platform Source</label>
+                                            <select class="form-control" name="platform_source_id" id="platform_source_id">
+                                                <option value="">Select Source...</option>
+                                                <t t-foreach="mediums" t-as="medium">
+                                                    <option t-att-value="medium.id">
+                                                        <t t-esc="medium.name" />
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-12 col-md-6">
+                                            <label for="order_source_id">Order Source</label>
+                                            <select class="form-control" name="order_source_id" id="order_source_id">
+                                                <option value="">Select Source...</option>
+                                                <t t-foreach="sources" t-as="source">
+                                                    <option t-att-value="source.id">
+                                                        <t t-esc="source.name" />
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="form-group col-12 col-md-6 mb-3 mb-md-0">
+                                            <label for="profile_id">Profile Name</label>
+                                            <select class="form-control" name="profile_id" id="profile_id">
+                                                <option value="">Select Profile...</option>
+                                                <t t-foreach="profiles" t-as="profile">
+                                                    <option t-att-value="profile.id">
+                                                        <t t-esc="profile.name" />
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <label class="col-form-label" for="partner_id">Client Name</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control search-input" data-model="res.partner" placeholder="Search partner..." id="partner_id" name="partner_id" autocomplete="off" required="1" />
+                                                <div class="search-results position-absolute w-100 bg-white shadow-sm border rounded-bottom mt-12" style="display: none; z-index: 1000; max-height: 200px; overflow-y: auto;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="form-group col-12 col-md-6 mb-3 mb-md-0">
+                                            <label for="partner_email">Client Email</label>
+                                            <input type="email" class="form-control" id="partner_email" />
+                                        </div>
+                                        <div class="form-group col-12 col-md-6 mb-3 mb-md-0">
+                                            <label for="partner_phone">Client Phone</label>
+                                            <input type="text" class="form-control" id="partner_phone" />
+                                        </div>
+                                        <div class="col-12 mt-2">
+                                            <a href="/customer/form">
+                                                <button type="button" class="btn btn-dark">+ Add New Customer
+                                                </button>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-12 col-md-4 mb-3 mb-md-0">
+                                            <label class="form-label" for="order_number">Order Number</label>
+                                            <input type="text" class="form-control" placeholder="" for="order_number" id="order_number" required="1" />
+                                        </div>
+                                        <div class="form-group col-12 col-md-4 mb-3 mb-md-0">
+                                            <label for="team_id">Assign Team</label>
+                                            <select class="form-control" name="team_id" id="team_id">
+                                                <option value="">Select Team...</option>
+                                                <t t-foreach="team_id" t-as="team">
+                                                    <option t-att-value="team.id">
+                                                        <t t-esc="team.name" />
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <label class="form-label" for="order_link">Order Link</label>
+                                            <input type="url" class="form-control" placeholder="" id="order_link" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-12 col-md-4 mb-3 mb-md-0">
+                                            <label class="form-label" for="instruction_sheet_link">Instruction Sheet Link</label>
+                                            <input type="url" class="form-control" placeholder="" id="instruction_sheet_link" />
+                                        </div>
+                                        <div class="form-group col-12 col-md-4 mb-3 mb-md-0">
+                                            <label for="product_id">Service Type</label>
+                                            <select class="form-control" name="product_id" id="product_id" required="1">
+                                                <option value="">Select Service Type...</option>
+                                                <t t-foreach="products" t-as="product">
+                                                    <option t-att-value="product.id">
+                                                        <t t-esc="product.name" />
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <label class="form-label" for="incoming_date">Incoming Date</label>
+                                            <input type="date" class="form-control" id="incoming_date" t-att-value="today or ''" required="1" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-12 col-md-4 mb-3 mb-md-0">
+                                            <label class="form-label" for="delivery_last_date">Delivery Last Time</label>
+                                            <input type="datetime-local" class="form-control" id="delivery_last_date" required="1" />
+                                        </div>
+                                        <div class="col-12 col-md-4 mb-3 mb-md-0">
+                                            <label for="deadline">Deadline</label>
+                                            <div class="form-control">
+                                                <div id="remaining_time"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <label class="form-label" for="amount">Amount</label>
+                                            <input type="number" class="form-control" placeholder="" id="amount" required="1" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-12 col-md-4 mb-3 mb-md-0">
+                                            <label class="form-label" for="percentage">Percentage</label>
+                                            <select class="form-select form-control" id="percentage">
+                                                <option value="0">0</option>
+                                                <option value="3">3</option>
+                                                <option value="5">5</option>
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 col-md-4 mb-3 mb-md-0">
+                                            <label class="form-label" for="charges_amount">Charges Amount</label>
+                                            <input type="number" class="form-control" placeholder="" id="charges_amount" />
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <label for="delivery_amount">Delivery Amount</label>
+                                            <input type="text" class="form-control" id="delivery_amount" />
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label" for="special_remarks">Special Remarks</label>
+                                        <textarea class="form-control" placeholder="Tell us about your use case..." rows="3" id="special_remarks"></textarea>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-12 col-md-6 mb-3 mb-md-0">
+                                            <label class="form-label" for="crm_tag_ids">Tags</label>
+                                            <select class="form-control" name="crm_tag_ids" id="crm_tag_ids" data-placeholder="Select tags">
+                                                <option value="">Select Tag...</option>
+                                                <t t-foreach="tags" t-as="tag">
+                                                    <option t-att-value="tag.id">
+                                                        <t t-esc="tag.name" />
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <label class="form-label" for="order_status">Order Status</label>
+                                            <select class="form-select form-control" id="order_status" required="1">
+                                                <option value="nra">NRA</option>
+                                                <option value="wip">WIP</option>
+                                                <option value="delivered">Delivered</option>
+                                                <option value="complete">Complete</option>
+                                                <option value="cancelled">Cancelled</option>
+                                                <option value="revisions">Revisions</option>
+                                                <option value="issues">Issues</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="mt-4 mb-4">
+                                <button type="submit" id="btn_sbmt" class="btn btn-dark w-100">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- JavaScript for responsive sidebar -->
+            <script type="text/javascript">
+            function toggleSidebar() {
+                document.getElementById('sidebar').classList.toggle('active');
+                document.getElementById('sidebarOverlay').classList.toggle('active');
+                const logo = document.getElementById('logoContainer');
+                if (logo.style.display === "none") {
+                    logo.style.display = "block";
+                } else {
+                    logo.style.display = "none";
+                }
+                }
+            </script>
+        </t>
+    </template>
+
+
+
+    <!-- ____________________________________________Edit Form_________________________________________________ -->
+
+
+    <template id="portal_quotation_update_form" name="Sales Update Form">
+        <t t-call="portal.portal_layout">
+            <t t-set="user" t-value="request.env.user" />
+            <t t-set="fin_not_count" t-value="0" />
+
+            <t t-if="user.scm_department">
+                <t t-set="fin_not_count" t-value="request.env['bd.notification'].sudo().search_count([
+            ('department', '=', 'finance'),
+            ('mark_as_read', '=', False),
+            ])" />
+            </t>
+            <title>Sales Section</title>
+
+            <!-- Bootstrap CSS -->
+            <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+
+            <style>
+                .avatar-sm {
+                width: 32px;
+                height: 32px;
+                }
+                /* Base styles */
+                body {
+                overflow-x: hidden;
+                }
+
+                /* Sidebar styles */
+                .sidebar {
+                min-height: 100vh;
+                width: 250px;
+                transition: all 0.3s;
+                z-index: 1000;
+                }
+
+                .nav-item:hover {
+                background-color: #1A5EED;
+                border-radius: 4px;
+                }
+
+                .nav-item:hover .nav-link,
+                .nav-item.active .nav-link {
+                color: white !important;
+                }
+
+                /* Search results */
+                .search-results {
+                position: absolute;
+                top: calc(100% + 5px);
+                left: 0;
+                right: 0;
+                background: white;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                max-height: 200px;
+                overflow-y: auto;
+                z-index: 1050;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                }
+
+                /* Responsive styles */
+                @media (max-width: 767.98px) {
+                .sidebar {
+                position: fixed;
+                top: 0;
+                left: -250px;
+                height: 100%;
+                z-index: 1050;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+                }
+
+                .sidebar.active {
+                left: 0;
+                }
+
+                .sidebar-overlay {
+                display: none;
+                position: fixed;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0,0,0,0.4);
+                z-index: 1040;
+                opacity: 0;
+                transition: all 0.5s ease-in-out;
+                }
+
+                .sidebar-overlay.active {
+                display: block;
+                opacity: 1;
+                }
+
+                /* Form responsiveness */
+                .row {
+                margin-left: -10px;
+                margin-right: -10px;
+                }
+
+                .col, .col-md-3, .col-md-6, .col-md-12 {
+                padding-left: 10px;
+                padding-right: 10px;
+                }
+
+                /* Adjust spacing for mobile */
+                .mb-3 {
+                margin-bottom: 1rem !important;
+                }
+
+                .p-4 {
+                padding: 1rem !important;
+                }
+                }
+
+                /* Improve form layout on small screens */
+                @media (max-width: 575.98px) {
+                .row > .col {
+                flex: 0 0 100%;
+                max-width: 100%;
+                margin-bottom: 1rem;
+                }
+
+                .form-control {
+                font-size: 14px;
+                }
+
+                .btn {
+                width: 100%;
+                margin-bottom: 0.5rem;
+                }
+                }
+            </style>
+
+            <!-- Sidebar Overlay for Mobile -->
+            <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+            <div class="d-flex" id="update_sale">
+                <!-- Sidebar -->
+                <div class="sidebar d-flex flex-column bg-light border-right" id="sidebar">
+                    <div class="text-center py-3" id="logoContainer" style="display: none;">
+                        <img src="/sales_portal_bdcalling/static/img/navigation-image-2.png" alt="Logo" class="img-fluid" style="max-width: 185px;" />
+                    </div>
+                    <ul class="nav flex-column pl-4 pt-4">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/bdcalling/dashboard">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <!-- <li class="nav-item">
+                            <a class="nav-link text-dark" href="/portal/to_do_list">
+                                <i class="fas fa-list-alt"></i>
+                                To-Do List
+                            </a>
+                        </li> -->
+                        <t t-if="user.operation_man == False">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/sale/dashboard">
+                                    <i class="fas fa-chart-line"></i>
+                                    Sales
+                                </a>
+                            </li>
+                        </t>
+                        <t t-if="not user.sale_leader and not user.sales_man">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/operation_dashboard">
+                                    <i class="fas fa-cogs"></i>
+            Operation
+                                </a>
+                            </li>
+                        </t>
+                        <t t-if="not user.operation_man and not user.sales_man">
+                            <li class="nav-item ">
+                                <a class="nav-link text-dark" href="/portal/requisition/dashboard">
+                                    <i class="fas fa-clipboard-list"></i>
+                                    Requisition
+                                </a>
+                            </li>
+                        </t>
+                        <hr style="border: 1px solid #000; margin: 10px 0; width: 90%; background-color: #000;" />
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/web/session/logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Main Content -->
+                <div class="flex-grow-1">
+                    <nav class="navbar navbar-light bg-white border-bottom">
+                        <div class="container-fluid px-2">
+                            <div class="d-flex align-items-center w-100">
+
+                                <div class="d-flex align-items-center flex-grow-1 mx-2">
+                                    <a href="javascript:void(0);" onclick="window.history.back();">
+                                        <img src="/sales_portal_bdcalling/static/img/header-icon-arrow-left.png" alt="" class="img-fluid" style="width: 20px; height: 20px;" />
+                                    </a>
+                                    <h1 class="h4 text-dark mb-0 ml-2">View Order</h1>
+                                </div>
+
+                                <div class="d-flex align-items-center ml-auto">
+                                    <div class="position-relative ml-3 mt-2">
+                                        <a href="/portal/notifications" class="text-decoration-none ">
+                                            <i class="far fa-bell text-muted" style="font-size: 24px;"></i>
+                                            <span class="position-absolute badge badge-danger rounded-circle" style="top: -5px; right: -5px; font-size: 10px; min-width: 18px; height: 18px; line-height: 14px; padding: 2px;" t-esc="fin_not_count if fin_not_count else '0'">0</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <button class="navbar-toggler border-0 p-0 ml-3 d-md-none" type="button" onclick="toggleSidebar()">
+                                    <span class="navbar-toggler-icon"></span>
+                                </button>
+                            </div>
+                        </div>
+                    </nav>
+
+                    <div class="p-2 p-md-3">
+                        <!-- <div class="mt-4 bg-white border-bottom">
+                            <div>
+                                <div class="d-flex align-items-center gap-3 px-3">
+                                    <a href="javascript:void(0);" onclick="window.history.back();">
+                                        <img src="/sales_portal_bdcalling/static/img/header-icon-arrow-left.png" alt="" class="img-fluid" style="width: 20px; height: 20px;" />
+                                    </a>
+                                    <h1 class="h4 text-dark ml-2">View Order</h1>
+                                </div>
+                            </div>
+                        </div> -->
+
+                        <div class="mt-4">
+                            <div class="my-3 font-weight-bold text-muted">See all details about order id#
+                                <t t-esc="order.name" />
+                            </div>
+
+                            <form t-att-action="'/sale/update?order_id=%s' % order.id" method="post" autocomplete="off">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                <input type="hidden" id="order_id" t-att-value="order.id" />
+                                <input type="hidden" id="partner_id" t-att-value="order.partner_id.id" />
+
+                                <!-- Employee Details -->
+                                <div class="employee-details p-3 p-md-4 rounded shadow-sm mt-4" style="background: #FAFAFA;">
+                                    <h2 class="h5 mb-4">Employee Details</h2>
+                                    <div class="row">
+                                        <div class="col-12 mb-3">
+                                            <label for="employee_id" class="form-label">Employee ID</label>
+                                            <input type="text" class="form-control" id="employee_id" t-att-value="order.employee_id.barcode if order.employee_id else ''" />
+                                        </div>
+                                        <div class="col-12 col-md-6 mb-3">
+                                            <label for="employee_name" class="form-label">Employee Name</label>
+                                            <input type="text" class="form-control" id="employee_name" t-att-value="order.employee_id.name if order.employee_id else ''" />
+                                        </div>
+                                        <div class="col-12 col-md-6 mb-3">
+                                            <label for="company_name" class="form-label">Company Name</label>
+                                            <input type="text" class="form-control" id="company_name" t-att-value="order.employee_id.company_id.name or ''" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="employee-details p-4 rounded shadow-sm mt-4" style="background: #FAFAFA;">
+                                    <h2 class="h5 mb-4">Sales Employee Details</h2>
+                                    <div class="mb-3">
+                                        <label for="sales_employee_id" class="form-label">Sales Employee ID</label>
+                                        <input type="text" class="form-control" id="sales_employee_id" t-att-value="order.sales_employee_id.barcode if order.sales_employee_id else ''" />
+                                        <input type="hidden" id="sales_employee_id_hidden" t-att-value="order.sales_employee_id.id if order.sales_employee_id else ''" />
+
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col">
+                                            <div class="mb-3">
+                                                <label for="sales_employee_name" class="form-label">Sales Employee Name</label>
+                                                <input type="text" class="form-control" id="sales_employee_name" t-att-value="order.sales_employee_id.name if order.sales_employee_id else ''" />
+                                            </div>
+                                        </div>
+                                        <div class="col">
+                                            <div class="mb-3">
+                                                <label for="sales_company_name" class="form-label">Company Name</label>
+                                                <input type="text" class="form-control" id="sales_company_name" t-att-value="order.sales_employee_id.company_id.name or ''" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Order Details -->
+                                <div class="order-details p-3 p-md-4 rounded shadow-sm mt-4" style="background: #FAFAFA;">
+                                    <h1 class="h5 mb-4">Order Details</h1>
+
+                                    <!-- Platform and Order Source -->
+                                    <div class="row mb-3">
+                                        <div class="form-group col-12 col-md-6 mb-3">
+                                            <label for="platform_source_id">Platform Source</label>
+                                            <select class="form-control" name="platform_source_id" id="platform_source_id">
+                                                <t t-foreach="mediums" t-as="medium">
+                                                    <option t-att-value="medium.id" t-att-selected="order.platform_source_id.id == medium.id">
+                                                        <t t-esc="medium.name" />
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-12 col-md-6 mb-3">
+                                            <label for="order_source_id">Order Source</label>
+                                            <select class="form-control" name="order_source_id" id="order_source_id">
+                                                <t t-foreach="sources" t-as="source">
+                                                    <option t-att-value="source.id" t-att-selected="order.order_source_id.id == source.id">
+                                                        <t t-esc="source.name" />
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Profile and Client -->
+                                    <div class="row mb-3">
+                                        <div class="form-group col-12 col-md-6 mb-3">
+                                            <label for="profile_id">Profile Name</label>
+                                            <select class="form-control" name="profile_id" id="profile_id">
+                                                <t t-foreach="profiles" t-as="profile">
+                                                    <option t-att-value="profile.id" t-att-selected="order.profile_id.id == profile.id">
+                                                        <t t-esc="profile.name" />
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 col-md-6 mb-3">
+                                            <label class="col-form-label" for="partner_id">Client Name</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control search-input" data-model="res.partner" t-att-value="order.partner_id.name if order.partner_id else ''" placeholder="Search partner..." id="partner_id" name="partner_id" autocomplete="off" required="1" />
+                                                <div class="search-results position-absolute w-100 bg-white shadow-sm border rounded-bottom mt-12" style="display: none; z-index: 1000; max-height: 200px; overflow-y: auto;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Client Contact Info -->
+                                    <div class="row mb-3">
+                                        <div class="form-group col-12 col-md-6 mb-3">
+                                            <label for="partner_email">Client Email</label>
+                                            <input type="email" class="form-control" t-att-value="order.partner_id.email if order.partner_id else ''" id="partner_email" />
+                                        </div>
+                                        <div class="form-group col-12 col-md-6 mb-3">
+                                            <label for="partner_phone">Client Phone</label>
+                                            <input type="text" class="form-control" t-att-value="order.partner_id.phone if order.partner_id else ''" id="partner_phone" />
+                                        </div>
+                                        <div class="col-12 mb-3">
+                                            <a href="/customer/form">
+                                                <button type="button" class="btn btn-dark">+ Add New Customer</button>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <!-- Order Info -->
+                                    <div class="row mb-3">
+                                        <div class="col-12 col-md-4 mb-3">
+                                            <label class="form-label" for="order_number">Order Number</label>
+                                            <input type="text" class="form-control" placeholder="" t-att-value="order.order_number" for="order_number" id="order_number" required="1" />
+                                        </div>
+                                        <div class="form-group col-12 col-md-4 mb-3">
+                                            <label for="team_id">Assign Team</label>
+                                            <select class="form-control" name="team_id" id="team_id">
+                                                <t t-foreach="assign_team_id" t-as="team">
+                                                    <option t-att-value="team.id" t-att-selected="order.assign_team_id.id == team.id">
+                                                        <t t-esc="team.name" />
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 col-md-4 mb-3">
+                                            <label class="form-label" for="order_link">Order Link</label>
+                                            <input type="url" class="form-control" placeholder="" id="order_link" t-att-value="order.order_link" />
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-12 col-md-4 mb-3">
+                                            <label class="form-label" for="instruction_sheet_link">Instruction Sheet
+                                                Link
+                                            </label>
+                                            <input type="url" class="form-control" placeholder="" id="instruction_sheet_link" t-att-value="order.instruction_sheet_link" />
+                                        </div>
+                                        <div class="form-group col-12 col-md-4 mb-3">
+                                            <label for="product_id">Service Type</label>
+                                            <select class="form-control" name="product_id" id="product_id" required="1">
+                                                <t t-foreach="products" t-as="product">
+                                                    <option t-att-value="product.id" t-att-selected="order.service_type_id.id == product.id">
+                                                        <t t-esc="product.name" />
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+
+                                        <div class="col-12 col-md-4 mb-3">
+                                            <label class="form-label" for="incoming_date">Incoming Date</label>
+                                            <input type="date" class="form-control" id="incoming_date" t-att-value="order.incoming_date or ''" required="1" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-12 col-md-4 mb-3">
+                                            <label class="form-label" for="delivery_last_date">Delivery Last Time
+                                            </label>
+                                            <input type="datetime-local" class="form-control" id="delivery_last_date" t-att-value="order.delivery_last_date" required="1" />
+                                        </div>
+                                        <div class="col-12 col-md-4 mb-3">
+                                            <label for="deadline">Deadline</label>
+                                            <div class="form-control">
+                                                <div id="remaining_time"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-4 mb-3">
+                                            <label class="form-label" for="amount">Amount</label>
+                                            <input type="number" class="form-control" placeholder="" t-att-value="order.amount" id="amount" required="1" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-12 col-md-4 mb-3">
+                                            <label class="form-label" for="percentage">Percentage</label>
+                                            <select id="percentage" name="percentage" class="form-control">
+                                                <t t-foreach="request.env['sale.order']._fields['percentage'].selection" t-as="item">
+                                                    <option t-att-value="item[0]" t-att-selected="item[0] == order.percentage" t-esc="item[1]"></option>
+                                                </t>
+                                            </select>
+
+                                        </div>
+                                        <div class="col-12 col-md-4 mb-3">
+                                            <label class="form-label" for="charges_amount">Charges Amount</label>
+                                            <input type="number" class="form-control" placeholder="" id="charges_amount" t-att-value="order.charges_amount" />
+                                        </div>
+                                        <div class="col-12 col-md-4 mb-3">
+                                            <label for="delivery_amount">Delivery Amount</label>
+                                            <input type="text" class="form-control" id="delivery_amount" t-att-value="order.delivery_amount" />
+                                        </div>
+                                    </div>
+
+                                    <!-- Continue with the rest of your form fields in the same pattern -->
+                                    <!-- ... -->
+
+                                    <div class="mb-3">
+                                        <label class="form-label" for="special_remarks">Special Remarks</label>
+                                        <textarea class="form-control" placeholder="Tell us about your use case..." rows="3" id="special_remarks" t-att-value="order.special_remarks"></textarea>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-12 col-md-4 mb-3">
+                                            <label class="form-label" for="crm_tag_ids">Tags</label>
+                                            <select class="form-control" name="crm_tag_ids" id="crm_tag_ids" data-placeholder="Select tags">
+                                                <t t-foreach="tags" t-as="tag" t-att-selected="tag.id in order.crm_tag_ids.ids">
+                                                    <option t-att-value="tag.id">
+                                                        <t t-esc="tag.name" />
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 col-md-4 mb-3">
+                                            <label class="form-label" for="order_status">Order Status</label>
+                                            <select class="form-control" name="order_status" id="order_status">
+                                                <t t-foreach="order._fields['order_status'].selection" t-as="item">
+                                                    <option t-att-value="item[0]" t-att-selected="order.order_status and order.order_status == item[0]" t-esc="item[1]"></option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mt-4">
+                                    <button type="submit" id="btn_update" class="btn btn-dark w-100">Update</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                function toggleSidebar() {
+                document.getElementById('sidebar').classList.toggle('active');
+                document.getElementById('sidebarOverlay').classList.toggle('active');
+                const logo = document.getElementById('logoContainer');
+                if (logo.style.display === "none") {
+                    logo.style.display = "block";
+                } else {
+                    logo.style.display = "none";
+                }
+                }
+            </script>
+        </t>
+    </template>
+
+
+    <!-- ____________________________________________All Sale List_________________________________________________ -->
+
+
+    <template id="portal_sales_template" name="Sales Portal">
+        <t t-call="portal.portal_layout">
+            <t t-set="user" t-value="request.env.user" />
+            <t t-set="fin_not_count" t-value="0" />
+
+            <t t-if="user.scm_department">
+                <t t-set="fin_not_count" t-value="request.env['bd.notification'].sudo().search_count([
+            ('department', '=', 'finance'),
+            ('mark_as_read', '=', False),
+            ])" />
+            </t>
+            <title>Sale Dashboard</title>
+
+            <!-- Bootstrap CSS -->
+            <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+            <link href="/sales_portal_bdcalling/static/css/sales_dashboard.css?v=2" rel="stylesheet" />
+            <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+            <div class="d-flex" id="sale_dashboard">
+                <div class="sidebar d-flex flex-column bg-light border-right" id="sidebar" style="min-height: 100vh; width: 250px;">
+                    <div class="text-center py-3" id="logoContainer" style="display: none;">
+                        <img src="/sales_portal_bdcalling/static/img/navigation-image-2.png" alt="Logo" class="img-fluid" style="max-width: 185px;" />
+                    </div>
+                    <ul class="nav flex-column pl-4 pt-4">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/bdcalling/dashboard">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <t t-if="user.operation_man == False">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/sale/dashboard">
+                                    <i class="fas fa-chart-line"></i>
+                                    Sales
+                                </a>
+                            </li>
+                        </t>
+                        <t t-if="not user.sale_leader and not user.sales_man">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/operation_dashboard">
+                                    <i class="fas fa-cogs"></i>
+            Operation
+                                </a>
+                            </li>
+                        </t>
+                        <t t-if="not user.operation_man and not user.sales_man">
+                            <li class="nav-item ">
+                                <a class="nav-link text-dark" href="/portal/requisition/dashboard">
+                                    <i class="fas fa-clipboard-list"></i>
+                                    Requisition
+                                </a>
+                            </li>
+                        </t>
+                        <hr style="border: 1px solid #000; margin: 10px 0; width: 90%; background-color: #000;" />
+
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="/web/session/logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Main Content -->
+                <div class="main-content">
+
+                    <div class="flex-grow-1">
+                        <nav class="navbar navbar-light bg-white border-bottom">
+                            <div class="container-fluid px-2">
+                                <div class="d-flex align-items-center w-100">
+                                    <!-- Hamburger Menu Icon -->
+                                    <!-- Search Bar -->
+                                    <a href="javascript:void(0);" onclick="window.history.back();">
+                                        <img src="/sales_portal_bdcalling/static/img/header-icon-arrow-left.png" alt="" class="img-fluid mr-3" style="width: 20px; height: 20px;" />
+                                    </a>
+                                    <div class="position-relative flex-grow-1 mx-2 search-container">
+                                        <form method="get">
+                                            <input type="text" name="search_value" class="form-control pl-5" placeholder="Search" t-att-value="search_value" />
+                                            <i class="fas fa-search position-absolute" style="top: 55%; left: 20px; transform: translateY(-50%); color: #aaa;"></i>
+                                        </form>
+                                    </div>
+                                    <!-- Notification and User Profile -->
+                                    <div class="d-flex align-items-center">
+                                        <!-- Notification Icon -->
+                                        <div class="position-relative ml-3">
+                                            <a href="/portal/notifications" class="text-decoration-none">
+                                                <i class="far fa-bell text-muted" style="font-size: 20px;"></i>
+                                                <span class="position-absolute badge badge-danger rounded-circle" style="top: -5px; right: -5px; font-size: 10px; min-width: 18px; height: 18px; line-height: 14px; padding: 2px;" t-esc="fin_not_count if fin_not_count else '0'">0</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <button class="navbar-toggler border-0 p-0 ml-3 d-md-none" type="button" onclick="toggleSidebar()">
+                                        <span class="navbar-toggler-icon"></span>
+                                    </button>
+
+                                </div>
+                            </div>
+                        </nav>
+                        <div class="p-3">
+                            <div class="bg-white border rounded shadow-sm p-3 mb-4">
+                                <div class="mt-2 mb-4">
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <div class="d-flex align-items-center gap-1 px-1  ">
+
+                                            <h1 class="h4 text-dark ml-2">All Order Information</h1>
+                                        </div>
+                                        <div class="d-flex justify-content-between" t-if="user_id.operation_leader == False">
+                                            <a href="/sale/quotation">
+                                                <button class="btn btn-dark d-flex align-items-center gap-2 mr-3">
+                                                    <img src="/sales_portal_bdcalling/static/img/icon-plus.png" alt="" class="img-fluid" style="width: 16px; height: 16px;" />
+                                                    <span class="text-white small" style="height: 20px;">Add New Order
+                                                    </span>
+                                                </button>
+                                            </a>
+                                            <a href="/customer/form">
+                                                <button class="btn btn-dark d-flex align-items-center gap-2">
+                                                    <img src="/sales_portal_bdcalling/static/img/icon-plus.png" alt="" class="img-fluid" style="width: 16px; height: 16px;" />
+                                                    <span class="text-white small" style="height: 20px;">Add New
+                                                        Customer
+                                                    </span>
+                                                </button>
+                                            </a>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <t t-if="user_id.operation_leader == False">
+                                    <div class="d-flex align-items-center gap-3 mb-4 mt-4">
+                                        <div class="d-flex align-items-center gap-2 border p-2 rounded cursor-pointer filter-container" style="width: 220px; position: relative;">
+                                            <img src="/sales_portal_bdcalling/static/img/icon-funnel.png" alt="" class="img-fluid" style="width: 16px; height: 16px;" />
+                                            <h6 class="text-muted small mb-0">Select Month/Year</h6>
+
+                                            <div class="filter-dropdown" style="display: none; position: absolute; top: 100%; left: 0; background: white; border: 1px solid #ddd; padding: 10px; z-index: 10;">
+                                                <form method="get" action="/sale/dashboard">
+                                                    <select name="year" id="filter-year" class="form-control mb-2">
+                                                        <option value="">Select Year</option>
+                                                    </select>
+                                                    <select name="month" id="filter-month" class="form-control mb-2">
+                                                        <option value="">Select Month</option>
+                                                        <option value="01">January</option>
+                                                        <option value="02">February</option>
+                                                        <option value="03">March</option>
+                                                        <option value="04">April</option>
+                                                        <option value="05">May</option>
+                                                        <option value="06">June</option>
+                                                        <option value="07">July</option>
+                                                        <option value="08">August</option>
+                                                        <option value="09">September</option>
+                                                        <option value="10">October</option>
+                                                        <option value="11">November</option>
+                                                        <option value="12">December</option>
+                                                    </select>
+
+                                                </form>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="d-flex align-items-center gap-2 border p-2 rounded cursor-pointer filter-container2" style="width: 220px; position: relative;">
+                                            <img src="/sales_portal_bdcalling/static/img/icon-funnel.png" alt="" class="img-fluid" style="width: 16px; height: 16px;" />
+                                            <h6 class="text-muted small mb-0">Select status/Team</h6>
+
+                                            <div class="filter-dropdown2" style="display: none; position: absolute; top: 100%; left: 0; background: white; border: 1px solid #ddd; padding: 10px; z-index: 10;">
+                                                <form method="get" action="/sale/dashboard">
+                                                    <select name="status" id="status" class="form-control mb-2">
+                                                        <option value="">Select Status</option>
+                                                        <option value="nra">NRA</option>
+                                                        <option value="wip">WIP</option>
+                                                        <option value="delivered">Delivered</option>
+                                                        <option value="complete">Complete</option>
+                                                        <option value="cancelled">Cancelled</option>
+                                                        <option value="revisions">Revisions</option>
+                                                        <option value="issues">Issues</option>
+                                                    </select>
+                                    
+                                                    <select name="assign_team_id" id="assign_team_id" class="form-control mb-2">
+                                                        <option value="">Select Team</option>
+                                                        <t t-foreach="request.env['assign.team'].sudo().search([])" t-as="team">
+                                                            <option t-att-value="team.id"><t t-esc="team.name"/></option>
+                                                        </t>
+                                                    </select>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-4">
+                                        <div class="col-md-3">
+                                            <div class="card shadow-sm border-0">
+                                                <div class="card-body d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <h6 class="text-secondary small">Minimum Goal</h6>
+                                                        <h4 class="mb-1">
+                                                            <t t-esc="minimum_target" />
+                                                        </h4>
+                                                        <p class="text-muted small mb-0">This Month</p>
+                                                    </div>
+                                                    <img src="/sales_portal_bdcalling/static/img/team-goals-bro.png" alt="" class="img-fluid" style="width: 63px;" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="card shadow-sm border-0">
+                                                <div class="card-body d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <h6 class="text-secondary small">Achieve</h6>
+                                                        <h4 class="mb-1">
+                                                            <t t-esc="achieved_sales" />
+                                                        </h4>
+                                                        <p class="text-muted small mb-0">This Month</p>
+                                                    </div>
+                                                    <img src="/sales_portal_bdcalling/static/img/shared-goals-pana.png" alt="" class="img-fluid" style="width: 63px;" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="card shadow-sm border-0">
+                                                <div class="card-body d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <h6 class="text-secondary small">Balance</h6>
+                                                        <h4 class="mb-1">
+                                                            <t t-esc="balance_amount" />
+                                                        </h4>
+                                                        <p class="text-muted small mb-0">This Month</p>
+                                                    </div>
+                                                    <img src="/sales_portal_bdcalling/static/img/finance-app-bro.png" alt="" class="img-fluid" style="width: 63px;" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <div class="card shadow-sm border-0">
+                                                <div class="card-body d-flex justify-content-between align-items-center">
+                                                    <div>
+                                                        <h6 class="text-secondary small">Bonus</h6>
+                                                        <h4 class="mb-1">
+                                                            <t t-esc="bonus_amount" />
+                                                        </h4>
+                                                        <p class="text-muted small mb-0">This Month</p>
+                                                    </div>
+                                                    <img src="/sales_portal_bdcalling/static/img/money-stress-amico.png" alt="" class="img-fluid" style="width: 63px;" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </t>
+
+                                <div class="table-container ma">
+                                    <div class="table-responsive bg-white rounded shadow-sm">
+                                        <table class="table table-bordered table-hover text-center">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th class="sortable" data-sort-type="text">Order No.
+                                                    </th>
+                                                    <th class="sortable" data-sort-type="text">Employee ID
+                                                    </th>
+                                                    <th class="sortable" data-sort-type="text">Employee
+                                                                    Name
+                                                    </th>
+                                                    <th class="sortable" data-sort-type="date">Incoming
+                                                                    Date
+                                                    </th>
+                                                    <th class="sortable" data-sort-type="text">Profile
+                                                                    Name
+                                                    </th>
+                                                    <th class="sortable" data-sort-type="text">Order
+                                                                    Status
+                                                    </th>
+                                                    <th class="sortable" data-sort-type="text">Service
+                                                                    Type
+                                                    </th>
+                                                    <th class="sortable" data-sort-type="text">Inst. Sheet
+                                                    </th>
+                                                    <th class="sortable" data-sort-type="text">Client Name
+                                                    </th>
+                                                    <th class="sortable" data-sort-type="text">Order Link
+                                                    </th>
+                                                    <th class="sortable" data-sort-type="text">Assign Team
+                                                    </th>
+                                                    <th class="sortable" data-sort-type="numeric">Amount
+                                                    </th>
+                                                    <th class="sortable" data-sort-type="numeric">Delivery
+                                                                    Amount
+                                                    </th>
+                                                    <th class="sortable" data-sort-type="date">Deadline</th>
+                                                    <th class="sortable" data-sort-type="text">Platform
+                                                                    Source
+                                                    </th>
+                                                    <th class="sortable" data-sort-type="text">Order
+                                                                    Source
+                                                    </th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody style="font-size: 14px;">
+                                                <t t-foreach="orders" t-as="order">
+                                                    <tr>
+                                                        <td>
+                                                            <a t-att-href="'/sale/details?order_id=%s' % order.id">
+                                                                <t t-esc="order.order_number" />
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="order.employee_id.barcode" />
+                                                        </td>
+                                                        <td>
+                                                            <div class="d-flex align-items-center gap-2 justify-content-center">
+
+                                                                <t t-esc="order.employee_id.name" />
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="order.incoming_date" t-options='{"widget": "date"}' />
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="order.profile_id.name" />
+                                                        </td>
+                                                        <td>
+                                                            <t t-if="order.order_status == 'complete'">
+                                                                <span class="badge bg-primary">Complete</span>
+                                                            </t>
+                                                            <t t-elif="order.order_status == 'delivered'">
+                                                                <span class="badge bg-success">Delivered</span>
+                                                            </t>
+                                                            <t t-elif="order.order_status == 'cancelled'">
+                                                                <span class="badge bg-danger">Cancelled</span>
+                                                            </t>
+                                                            <t t-else="">
+                                                                <span class="badge bg-secondary">
+                                                                    <t t-esc="order.order_status" />
+                                                                </span>
+                                                            </t>
+                                                        </td>
+
+                                                        <td>
+                                                            <t t-esc="order.service_type_id.name" />
+                                                        </td>
+                                                        <td class="tab-width" style="width: 15px !important;">
+                                                            <a t-att-href="order.instruction_sheet_link" style="width: 15px !important;" target="_blank">
+                                                                <t t-esc="order.instruction_sheet_link" />
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="order.partner_id.name" />
+                                                        </td>
+                                                        <td class="tab-width" style="width: 15px !important;">
+                                                            <a t-att-href="order.order_link" style="width: 15px !important;" target="_blank">
+                                                                <t t-esc="order.order_link" />
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="order.assign_team_id.name" />
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="order.amount" />
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="order.delivery_amount" />
+                                                        </td>
+
+                                                        <td class="deadline-cell" t-att-data-delivery-date="order.delivery_last_date">
+                                                            <div class="countdown-display">
+                                                                <span class="loading-indicator">Calculating...</span>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="order.platform_source_id.name" />
+                                                        </td>
+                                                        <td>
+                                                            <t t-esc="order.order_source_id.name" />
+                                                        </td>
+
+                                                    </tr>
+                                                </t>
+                                                <t t-if="not orders or len(orders) == 0">
+                                                    <tr>
+                                                        <td colspan="16" class="text-center py-4">
+                                                            <div class="text-muted">No orders found</div>
+                                                        </td>
+                                                    </tr>
+                                                </t>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <!-- </div>
+                                </div> -->
+
+                                <div class="o_portal_pager text-center mt-3 mb-3" t-if="pager and pager.get('page_count', 0) > 1">
+                                    <t t-call="portal.pager">
+                                        <t t-set="classname" t-value="'float'" />
+                                    </t>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script type="text/javascript">
+                function toggleSidebar() {
+                document.getElementById('sidebar').classList.toggle('active');
+                document.getElementById('sidebarOverlay').classList.toggle('active');
+                const logo = document.getElementById('logoContainer');
+                if (logo.style.display === "none") {
+                    logo.style.display = "block";
+                } else {
+                    logo.style.display = "none";
+                }
+                }
+            </script>
+        </t>
+    </template>
+    <template id="portal_pager_inherite" inherit_id="portal.pager">
+        <xpath expr="//ul" position="before">
+            <style>
+                /* Pagination container */
+                ul.pagination {
+                display: flex !important;
+                justify-content: center !important;
+                gap: 0.5rem !important;
+                padding: 1rem 0 !important;
+                flex-wrap: wrap !important;
+                }
+
+                /* Pagination items */
+                .page-item {
+                margin: 0 !important;
+                width: auto !important;
+                }
+
+                /* Pagination links */
+                .page-link {
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                min-width: 2.5rem !important;
+                height: 2.5rem !important;
+                padding: 0.5rem 0.75rem !important;
+                font-size: 0.875rem !important;
+                font-weight: 500 !important;
+                border-radius: 0.375rem !important;
+                transition: all 0.2s !important;
+                border: 1px solid #e5e7eb !important;
+                color: #141517 !important;
+                }
+
+                /* Hover state */
+                .page-link:hover {
+                background-color: #f9fafb !important;
+                border-color: #e5e7eb !important;
+                color: #111827 !important;
+                z-index: 2 !important;
+                }
+
+                /* Active state */
+                .page-item.active .page-link {
+                background-color: #141517 !important;
+                border-color: #141517 !important;
+                color: white !important;
+                z-index: 3 !important;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important;
+                }
+
+                /* Disabled state */
+                .page-item.disabled .page-link {
+                background-color: #f3f4f6 !important;
+                color: #9ca3af !important;
+                cursor: not-allowed !important;
+                opacity: 0.7 !important;
+                }
+
+                /* Responsive adjustments */
+                @media (max-width: 640px) {
+                .page-link {
+                padding: 0.375rem 0.625rem !important;
+                font-size: 0.75rem !important;
+                min-width: 2rem !important;
+                height: 2rem !important;
+                }
+                }
+            </style>
+        </xpath>
+    </template>
+</odoo>

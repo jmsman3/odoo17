@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <!-- Inherit -->
+    <record id="account_move_view_inherit" model="ir.ui.view">
+        <field name="name">account.move</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Order Details" name="order_details">
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="employee_id_barcode"/>
+                            <field name="sales_employee_id"/>
+                            <field name="platform_source_id"/>
+                            <field name="profile_id"/>
+                            <field name="order_source_id"/>
+                            <field name="client_user_id"/>
+                            <field name="order_number"/>
+                            <field name="incoming_date"/>
+                            <field name="delivery_last_date"/>
+                            <field name="percentage"/>
+                            <field name="operation_employee_id"/>
+                            <field name="assigned_team_id"/>
+                            <field name="delivered_team_id"/>
+                            <field name="order_status"/>
+                            <field name="teams_delivery_date"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit sale order search view -->
+    <record id="sale_order_search_view_inherit" model="ir.ui.view">
+        <field name="name">sale.order</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_view_search_inherit_quotation"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="order_number"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit Search view -->
+    <record id="sale_order_form_inherit" model="ir.ui.view">
+        <field name="name">sale.order</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Order Details" name="order_details">
+                    <group>
+                        <group>
+                            <separator string="Employee Details"/>
+                            <field name="employee_id"/>
+                            <field name="employee_id_barcode"/>
+
+                            <separator string="Sales Employee Details"/>
+                            <field name="sales_employee_id"/>
+
+                            <separator string="Order Details"/>
+                            <field name="platform_source_id"/>
+                            <field name="profile_id"/>
+                            <field name="order_source_id"/>
+                            <field name="client_user_id"/>
+                            <field name="order_number"/>
+                            <field name="order_link"/>
+                            <field name="instruction_sheet_link"/>
+                            <field name="service_type_id"/>
+                            <field name="incoming_date"/>
+                            <field name="delivery_last_date"/>
+                            <field name="amount"/>
+                            <field name="percentage"/>
+                            <field name="charges_amount"/>
+                            <field name="delivery_amount"/>
+                        </group>
+                        <group>
+                            <!-- Some fields are not shown in the form view -->
+                            <separator string="Project Information"/>
+                            <field name="operation_employee_id" readonly="1"/>
+                            <field name="assigned_team_id" readonly="1"/>
+                            <field name="delivered_team_id" readonly="1"/>
+                            <field name="order_status"/>
+                            <field name="teams_delivery_date" readonly="1"/>
+                            <field name="crm_tag_ids" widget="many2many_tags"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="special_remarks"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_form_view_bd" model="ir.ui.view">
+        <field name="name">product.template.form.bd</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='options']" position="inside">
+                <span class="d-inline-block">
+                    <field name="is_purchase_requisition"/>
+                    <label for="is_purchase_requisition"/>
+                </span>
+                <span class="d-inline-block">
+                    <field name="portal_available"/>
+                    <label for="portal_available"/>
+                </span>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_normal_form_view_bd" model="ir.ui.view">
+        <field name="name">product.product.form.bd</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='options']" position="inside">
+                <span class="d-inline-block">
+                    <field name="is_purchase_requisition"/>
+                    <label for="is_purchase_requisition"/>
+                </span>
+                <span class="d-inline-block">
+                    <field name="portal_available"/>
+                    <label for="portal_available"/>
+                </span>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit product template -->
+    <!--    <record id="product_template_form_inherit" model="ir.ui.view">-->
+    <!--        <field name="name">product.template</field>-->
+    <!--        <field name="model">product.template</field>-->
+    <!--        <field name="inherit_id" ref="product.product_template_only_form_view"/>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <field name="detailed_type" position="before">-->
+    <!--                <separator string="Access"/>-->
+    <!--                <field name="portal_available"/>-->
+    <!--            </field>-->
+    <!--        </field>-->
+    <!--    </record>-->
+
+    <!-- Inherit partner -->
+    <record id="res_partner_inherit" model="ir.ui.view">
+        <field name="name">res.partner</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+
+            <!--            <field name="company_type" position="after">-->
+            <!--                <group>-->
+            <!--                    <group>-->
+            <!--                        <field name="is_mp_customer"/>-->
+            <!--                    </group>-->
+            <!--                    <group></group>-->
+            <!--                </group>-->
+            <!--            </field>-->
+
+            <field name="vat" position="after">
+                <field name="is_mp_customer"/>
+                <!--<field invisible="not is_mp_customer" name="client_user_name" placeholder="Client User ID"/>-->
+                <field invisible="not is_mp_customer" name="mp_customer_fullname"
+                       placeholder="Marketplace Customer Full Name"/>
+            </field>
+
+        </field>
+    </record>
+
+    <!-- Inherit hr.employee -->
+    <record id="hr_employee_inherit" model="ir.ui.view">
+        <field name="name">hr.employee</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <field name="pin" position="after">
+                <field name="user_id2"/>
+                <field name="is_all_sale"/>
+            </field>
+        </field>
+    </record>
+
+    <!--    &lt;!&ndash; Inherit user &ndash;&gt;-->
+    <!--        <record id="res_user_inherit" model="ir.ui.view">-->
+    <!--            <field name="name">res.users</field>-->
+    <!--            <field name="model">res.users</field>-->
+    <!--            <field name="inherit_id" ref="base.view_users_form"/>-->
+    <!--            <field name="arch" type="xml">-->
+    <!--                <field name="login" position="after">-->
+    <!--                    <field name="partner_id"/>-->
+    <!--                </field>-->
+    <!--            </field>-->
+    <!--        </record>-->
+
+    <!-- bd.team, generated on April 4, 2024 -->
+    <!-- Tree view of bd.team -->
+    <record model="ir.ui.view" id="bd_team_tree_id">
+        <field name="name">Team</field>
+        <field name="model">bd.team</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="company_id"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form view of bd.team -->
+    <record model="ir.ui.view" id="bd_team_form_id">
+        <field name="name">Team</field>
+        <field name="model">bd.team</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="active" invisible="1"/>
+                            <field name="company_id"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_bd_team_filter" model="ir.ui.view">
+        <field name="name">bd.team</field>
+        <field name="model">bd.team</field>
+        <field name="arch" type="xml">
+            <search string="Search">
+                <field name="name"/>
+                <filter string="Archived" name="archive"
+                        domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action view of bd.team -->
+    <record model="ir.actions.act_window" id="bd_team_action_id">
+        <field name="name">Team</field>
+        <field name="res_model">bd.team</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- bd.profile, generated on April 16, 2024 -->
+    <!-- Tree view of bd.profile -->
+    <record model="ir.ui.view" id="bd_profile_tree_id">
+        <field name="name">Profile Name</field>
+        <field name="model">bd.profile</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="company_id"/>
+                <field name="platform_source_id"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form view of bd.profile -->
+    <record model="ir.ui.view" id="bd_profile_form_id">
+        <field name="name">Profile Name</field>
+        <field name="model">bd.profile</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="platform_source_id"/>
+                            <field name="name"/>
+                            <field name="company_id" required="1"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_bd_profile_filter" model="ir.ui.view">
+        <field name="name">bd.profile</field>
+        <field name="model">bd.profile</field>
+        <field name="arch" type="xml">
+            <search string="Search">
+                <field name="name"/>
+                <filter string="Archived" name="archive"
+                        domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action view of bd.profile -->
+    <record model="ir.actions.act_window" id="bd_profile_action_id">
+        <field name="name">Profile Name</field>
+        <field name="res_model">bd.profile</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- bd.order_source, generated on June 22, 2024 -->
+    <!-- Tree view of bd.order_source -->
+    <record model="ir.ui.view" id="bd_order_source_tree_id">
+        <field name="name">Order Source</field>
+        <field name="model">bd.order_source</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form view of bd.order_source -->
+    <record model="ir.ui.view" id="bd_order_source_form_id">
+        <field name="name">Order Source</field>
+        <field name="model">bd.order_source</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_bd_order_source_filter" model="ir.ui.view">
+        <field name="name">bd.order_source</field>
+        <field name="model">bd.order_source</field>
+        <field name="arch" type="xml">
+            <search string="Search">
+                <field name="name"/>
+                <filter string="Archived" name="archive"
+                        domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action view of bd.order_source -->
+    <record model="ir.actions.act_window" id="bd_order_source_action_id">
+        <field name="name">Order Source</field>
+        <field name="res_model">bd.order_source</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- bd.platform_source, generated on June 22, 2024 -->
+    <!-- Tree view of bd.platform_source -->
+    <record model="ir.ui.view" id="bd_platform_source_tree_id">
+        <field name="name">Platform Source</field>
+        <field name="model">bd.platform_source</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form view of bd.platform_source -->
+    <record model="ir.ui.view" id="bd_platform_source_form_id">
+        <field name="name">Platform Source</field>
+        <field name="model">bd.platform_source</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="sale_platform_source_filter" model="ir.ui.view">
+        <field name="name">bd.platform_source</field>
+        <field name="model">bd.platform_source</field>
+        <field name="arch" type="xml">
+            <search string="Search">
+                <field name="name"/>
+                <filter string="Archived" name="archive"
+                        domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action view of bd.platform_source -->
+    <record model="ir.actions.act_window" id="bd_platform_source_action_id">
+        <field name="name">Platform Source</field>
+        <field name="res_model">bd.platform_source</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="record__rule_bd_profile" model="ir.rule">
+        <field name="name">Non Shared Records:model</field>
+        <field name="model_id" ref="bd_portal.model_bd_profile"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">
+            [('company_id', 'in', company_ids)]
+        </field>
+    </record>
+
+    <record id="record__rule_bd_team" model="ir.rule">
+        <field name="name">Non Shared Records:model</field>
+        <field name="model_id" ref="bd_portal.model_bd_team"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">
+            [('company_id', 'in', company_ids)]
+        </field>
+    </record>
+
+    <record id="view_quotation_tree_inherit_bd" model="ir.ui.view">
+        <field name="name">sale.order.tree.bd</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="order_status" optional="show"/>
+            </field>
+            <field name="partner_id" position="after">
+                <field name="sales_employee_id" optional="show"/>
+                <field name="invoice_date" optional="show"/>
+
+                <field name="delivery_last_date" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Menu item of bd.assigned_team -->
+    <menuitem id="bd_others_menu_id"
+              name="Others"
+              parent="sale.menu_sale_config"
+              sequence="500"
+    />
+
+    <menuitem id="bd_team_menu_id"
+              name="Team"
+              parent="bd_others_menu_id"
+              sequence="0"
+              action="bd_team_action_id"/>
+
+    <!-- Menu item of bd.platform_source -->
+    <menuitem id="bd_platform_source_menu_id"
+              name="Platform Source"
+              parent="bd_others_menu_id"
+              sequence="1"
+              action="bd_platform_source_action_id"/>
+
+    <!-- Menu item of bd.profile -->
+    <menuitem id="bd_profile_menu_id"
+              name="Profile Name"
+              parent="bd_others_menu_id"
+              sequence="2"
+              action="bd_profile_action_id"/>
+
+    <!-- Menu item of bd.order_source -->
+    <menuitem id="bd_order_source_menu_id"
+              name="Order Source"
+              parent="bd_others_menu_id"
+              sequence="3"
+              action="bd_order_source_action_id"/>
+</odoo>

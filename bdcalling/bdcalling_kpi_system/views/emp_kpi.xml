@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Employee KPI Form -->
+    <record id="view_employee_kpi_form" model="ir.ui.view">
+        <field name="name">employee.kpi.form</field>
+        <field name="model">employee.kpi</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_calculate_record" string="Calculate" type="object" invisible="state != 'draft'" class="oe_highlight" help="Recalculate this KPI record based on current sales data" />
+                    <button name="action_confirm" string="Confirm" type="object" invisible="state != 'draft'" class="oe_highlight" />
+                    <button name="action_mark_paid" string="Mark as Paid" type="object" invisible="state != 'confirmed'" class="oe_highlight" />
+                    <button name="action_reset_to_draft" string="Reset to Draft" type="object" invisible="state != 'confirmed'" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,paid" />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="employee_id" placeholder="Employee" />
+                        </h1>
+                        <h2 invisible = "not is_penalty">
+                            <span class="badge badge-danger">Penalty Record</span>
+                        </h2>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="role_id" />
+                            <field name="grade_id" />
+                            <field name="minimum_target" />
+                            <field name="is_penalty" invisible="1" />
+                        </group>
+                        <group>
+                            <field name="period_start" />
+                            <field name="period_end" />
+                            <field name="company_id" groups="base.group_multi_company" />
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="total_sales" />
+                            <field name="shortfall_amount" invisible="not is_penalty" />
+                        </group>
+                        <group>
+                            <field name="bonus_amount" invisible="is_penalty" widget="monetary" options="{'currency_field': 'company_currency_id'}" />
+                            <field name="bonus_amount" invisible="not is_penalty" string="Penalty Amount" widget="monetary" options="{'currency_field': 'company_currency_id'}" class="text-danger" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- Employee KPI Tree -->
+    <record id="view_employee_kpi_tree" model="ir.ui.view">
+        <field name="name">employee.kpi.tree</field>
+        <field name="model">employee.kpi</field>
+        <field name="arch" type="xml">
+            <tree decoration-info="state == 'draft'" decoration-success="state == 'confirmed' and not is_penalty" decoration-danger="is_penalty" decoration-muted="state == 'paid'">
+                <field name="employee_id" />
+                <field name="role_id" />
+                <field name="grade_id" />
+                <field name="period_start" />
+                <field name="period_end" />
+                <field name="minimum_target" />
+                <field name="total_sales" sum="Total Operations" />
+                <field name="shortfall_amount" sum="Total Shortfall" />
+                <field name="bonus_amount" sum="Total Bonus/Penalty" />
+                <field name="is_penalty" optional="hide" />
+                <field name="state" />
+            </tree>
+        </field>
+    </record>
+
+
+    <!-- Employee KPI Search -->
+    <record id="view_employee_kpi_search" model="ir.ui.view">
+        <field name="name">employee.kpi.search</field>
+        <field name="model">employee.kpi</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id" />
+                <field name="role_id" />
+                <field name="grade_id" />
+                <field name="period_start" />
+                <field name="period_end" />
+                <filter string="Bonus Records" name="bonus_records" domain="[('is_penalty', '=', False)]" />
+                <filter string="Penalty Records" name="penalty_records" domain="[('is_penalty', '=', True)]" />
+                <separator />
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]" />
+                <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]" />
+                <filter string="Paid" name="paid" domain="[('state', '=', 'paid')]" />
+                <separator />
+                <filter string="Current Month" name="current_month" domain="[('period_start', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')), ('period_end', '&lt;=', (context_today() + relativedelta(months=1, day=1, days=-1)).strftime('%Y-%m-%d'))]" />
+                <filter string="Previous Month" name="prev_month" domain="[('period_start', '&gt;=', (context_today() + relativedelta(months=-1, day=1)).strftime('%Y-%m-%d')), ('period_end', '&lt;=', (context_today() + relativedelta(day=1, days=-1)).strftime('%Y-%m-%d'))]" />
+                <group expand="0" string="Group By">
+                    <filter string="Employee" name="group_employee" context="{'group_by': 'employee_id'}" />
+                    <filter string="Role" name="group_role" context="{'group_by': 'role_id'}" />
+                    <filter string="Grade" name="group_grade" context="{'group_by': 'grade_id'}" />
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}" />
+                    <filter string="Period Start" name="group_period_start" context="{'group_by': 'period_start'}" />
+                    <filter string="Type" name="group_type" context="{'group_by': 'is_penalty'}" />
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+    <!-- <record id="action_employee_kpi_sale" model="ir.actions.act_window">
+        <field name="name">Sales KPI Records</field>
+        <field name="res_model">employee.kpi</field>
+        <field name="view_mode">tree,form</field>
+    </record> -->
+
+    <record id="action_employee_kpi_sales" model="ir.actions.act_window">
+        <field name="name">Sales KPI Records</field>
+        <field name="res_model">employee.kpi</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('role_id.role_type', '=', 'sale')]</field>
+        <field name="view_id" ref="view_employee_kpi_tree" />
+    </record>
+
+    <!-- Operation KPI Action -->
+    <record id="action_employee_kpi_operation" model="ir.actions.act_window">
+        <field name="name">Operation KPI Records</field>
+        <field name="res_model">employee.kpi</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('role_id.role_type', '=', 'operation')]</field>
+        <field name="view_id" ref="view_employee_kpi_tree" />
+    </record>
+
+    <!-- Employee Inherit -->
+    <record id="view_employee_form_inherit_kpi" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit.kpi</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='hr_settings']" position="inside">
+                <group string="KPI Settings" name="kpi_settings">
+                    <field name="role_id" options="{'no_create': True}" />
+                    <field name="salary" />
+                    <field name="grade_id" readonly="1" />
+                    <field name="minimum_target" readonly="1" />
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+
+    <!-- Employee KPI Bulk Actions -->
+    <record id="action_bulk_calculate_kpi" model="ir.actions.server">
+        <field name="name">Bulk Calculate KPI Records</field>
+        <field name="model_id" ref="model_employee_kpi" />
+        <field name="binding_model_id" ref="model_employee_kpi" />
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">action = model.action_bulk_calculate()</field>
+    </record>
+</odoo>

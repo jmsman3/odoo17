@@ -1,0 +1,45 @@
+<odoo>
+    <!-- bd.notification, generated on July 4, 2024 -->
+    <!-- Tree view of bd.notification -->
+    <record model="ir.ui.view" id="bd_notification_tree_id">
+        <field name="name">Notification</field>
+        <field name="model">bd.notification</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="department"/>
+                <field name="name"/>
+                <field name="mark_as_read"/>
+                <field name="req_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Form view of bd.notification -->
+    <record model="ir.ui.view" id="bd_notification_form_id">
+        <field name="name">Notification</field>
+        <field name="model">bd.notification</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="department"/>
+                            <field name="name"/>
+                            <field name="mark_as_read"/>
+                            <field name="req_id"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action view of bd.notification -->
+    <record model="ir.actions.act_window" id="bd_notification_action_id">
+        <field name="name">Notification</field>
+        <field name="res_model">bd.notification</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

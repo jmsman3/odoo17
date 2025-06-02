@@ -1,0 +1,236 @@
+<odoo>
+    <template id="portal_employees_template" name="Portal Employees Dashboard">
+        <t t-name="sales_portal_bdcalling.portal_employees_template">
+            <t t-call="website.layout">
+                <title>Requisition Section</title>
+
+                <!-- Bootstrap CSS -->
+                <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+                    rel="stylesheet" />
+                <link
+                    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+                    rel="stylesheet" />
+                <style>
+                    .avatar-sm {
+                    width: 32px;
+                    height: 32px;
+                    }
+                    /* Base styles */
+                    body {
+                    overflow-x: hidden;
+                    }
+                    .nav-item:hover {
+                    background-color: #1A5EED;
+                    border-radius: 4px;
+                    }
+    
+                    .nav-item:hover .nav-link,
+                    .nav-item.active .nav-link {
+                    color: white !important;
+                    background-color: #1c1c1c;
+                    }
+    
+                    /* Mobile sidebar */
+                    @media (max-width: 768px) {
+                    .sidebar {
+                    position: fixed;
+                    top: 0;
+                    left: -250px;
+                    height: 100vh;
+                    transition: left 0.3s ease;
+                    z-index: 1050;
+                    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+                    }
+    
+                    .sidebar.active {
+                    left: 0;
+                    }
+    
+                    /* Overlay when sidebar is active */
+                    .sidebar-overlay {
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-color: rgba(0,0,0,0.5);
+                    z-index: 1040;
+                    }
+    
+                    .sidebar-overlay.active {
+                    display: block;
+                    }
+    
+                    /* Adjust main content when sidebar is hidden */
+                    #requisition_dashboard > .flex-grow-1 {
+                    margin-left: 0;
+                    width: 100%;
+                    }
+                    }
+                    .table-container {
+                    overflow-x: auto !important;
+                    -webkit-overflow-scrolling: touch;
+                    scrollbar-width: thin;
+                    scrollbar-color: #AFAFAF transparent;
+                    max-width: 100%;
+                    display: block !important;
+                    width: 100% !important;
+                    border-radius: 0.25rem;
+                    }
+    
+                    .table-container::-webkit-scrollbar {
+                    width: 8px;
+                    height: 8px;
+                    }
+    
+                    .table-container::-webkit-scrollbar-track {
+                    background-color: transparent;
+                    }
+    
+                    .table-container::-webkit-scrollbar-thumb {
+                    background: #AFAFAF;
+                    border-radius: 4px;
+                    }
+    
+                    .table {
+                    width: auto;
+                    min-width: 100%;
+                    table-layout: auto;
+                    margin-bottom: 0 !important;
+                    }
+    
+                    .table th {
+                    white-space: nowrap;
+                    position: sticky;
+                    top: 0;
+                    background-color: #f8f9fa;
+                    z-index: 10;
+                    }
+    
+                    .table td {
+                    white-space: nowrap;
+                    vertical-align: middle;
+                    }
+                    .sidebar {
+                    min-height: auto;
+                    width: 250px;
+                    position: absolute;
+                    }
+                    .main-content {
+                    margin-left: 250px;
+                    overflow: hidden;
+                    min-height: 100vh;
+    
+                    }
+                    .table th,
+                    .table td {
+                    vertical-align: middle;
+                    }
+    
+                    /* Pagination responsiveness */
+                    @media (max-width: 576px) {
+                    .o_portal_pager {
+                    display: flex;
+                    justify-content: center;
+                    flex-wrap: wrap;
+                    }
+    
+                    .o_portal_pager .page-item {
+                    margin-bottom: 0.5rem;
+                    }
+                    }
+                    @media (max-width: 767px) {
+                    .main-content{
+                    margin-left: 0 !important;
+                    }
+    
+                    }
+                    @media (max-width: 768px) {
+                    /* Adjusting padding for better spacing */
+                    .p-4 {
+                    padding: 1rem !important;
+                    }
+                    /* Headings and Buttons: Centering and stacking properly */
+                    .d-flex.justify-content-between.align-items-center {
+                    flex-direction: column;
+                    align-items: center !important;
+                    text-align: center;
+                    gap: 10px;
+                    }
+                    h1 {
+                    font-size: 1rem;
+                    }
+                    .d-flex.justify-content-between .d-flex {
+                    flex-direction: column;
+    
+                    gap: 10px;
+                    }
+    
+                    .d-flex.justify-content-between button {
+                    width: 100%;
+                    }
+    
+    
+                    }
+    
+    
+                </style>
+
+                <div class="container my-5">
+                    <h2 class="mb-4">Welcome, <t t-esc="employee.name"/></h2>
+
+                    <form method="get" class="mb-4">
+                        <div class="input-group">
+                            <input type="text" name="search_value" class="form-control"
+                                   placeholder="Search employees..."
+                                   t-att-value="search_value"/>
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-primary">Search</button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    
+                    <table class="table table-hover table-bordered">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Name</th>
+                                <th>Job Title</th>
+                                <th>Work Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-if="employees">
+                                <t t-foreach="employees" t-as="emp">
+                                    <tr>
+                                        <td><t t-esc="emp.name"/></td>
+                                        <td><t t-esc="emp.job_title"/></td>
+                                        <td><t t-esc="emp.work_email"/></td>
+                                    </tr>
+                                </t>
+                            </t>
+                            <t t-if="not employees">
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted">No employees found.</td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                    <nav>
+                        <ul class="pagination justify-content-center">
+                            <t t-foreach="range(1, total_pages + 1)" t-as="p">
+                                <li t-attf-class="page-item #{'active' if p == page else ''}">
+                                    <a t-att-href="'?search_value=' + str(search_value or '') + '&amp;page=' + str(p)" class="page-link">
+                                        <t t-esc="p"/>
+                                    </a>
+                                </li>
+                            </t>
+                        </ul>
+                    </nav>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

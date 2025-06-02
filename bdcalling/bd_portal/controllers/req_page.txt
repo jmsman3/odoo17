@@ -1,0 +1,600 @@
+<odoo>
+    <template id="requisition">
+        <html>
+            <head>
+                <!-- Required meta tags -->
+                <title>Requisition form | bdCalling</title>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+                <link rel="icon" href="/bd_portal/static/image/logo/favicon.ico" type="image/x-icon"/>
+
+                <!-- Bootstrap CSS -->
+                <link rel="stylesheet" href="/bd_portal/static/css/bootstrap.min.css"/>
+
+                <!-- Custom stylesheet -->
+                <link rel="stylesheet" href="/bd_portal/static/css/short.css"/>
+                <link rel="stylesheet" href="/bd_portal/static/css/base.css"/>
+                <link rel="stylesheet" href="/bd_portal/static/css/requisition.css"/>
+            </head>
+
+            <body>
+
+                <div class="db_home">
+
+                    <!-- navigation -->
+                    <div class="db_home_nav">
+
+                        <div class="d-flex justify-content-center">
+                            <img src="/bd_portal/static/image/logo/logo.png" alt="bdCalling logo"/>
+                        </div>
+
+                        <div class="nav_items mt-4">
+                            <div class="">
+                                <a class="nav_items_a" href="#">
+                                    <div class="d-f">
+                                        <div class="mr-1">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                        d="M4 6C4 4.89543 4.89543 4 6 4H8C9.10457 4 10 4.89543 10 6V8C10 9.10457 9.10457 10 8 10H6C4.89543 10 4 9.10457 4 8V6Z"
+                                                        stroke="#1D1D1F" stroke-width="1" stroke-linecap="round"
+                                                        stroke-linejoin="round"/>
+                                                <path
+                                                        d="M14 6C14 4.89543 14.8954 4 16 4H18C19.1046 4 20 4.89543 20 6V8C20 9.10457 19.1046 10 18 10H16C14.8954 10 14 9.10457 14 8V6Z"
+                                                        stroke="#1D1D1F" stroke-width="1" stroke-linecap="round"
+                                                        stroke-linejoin="round"/>
+                                                <path
+                                                        d="M4 16C4 14.8954 4.89543 14 6 14H8C9.10457 14 10 14.8954 10 16V18C10 19.1046 9.10457 20 8 20H6C4.89543 20 4 19.1046 4 18V16Z"
+                                                        stroke="#1D1D1F" stroke-width="1" stroke-linecap="round"
+                                                        stroke-linejoin="round"/>
+                                                <path
+                                                        d="M14 16C14 14.8954 14.8954 14 16 14H18C19.1046 14 20 14.8954 20 16V18C20 19.1046 19.1046 20 18 20H16C14.8954 20 14 19.1046 14 18V16Z"
+                                                        stroke="#1D1D1F" stroke-width="1" stroke-linecap="round"
+                                                        stroke-linejoin="round"/>
+                                            </svg>
+                                        </div>
+                                        <div>Dashboard</div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div>
+                                <a class="nav_items_a" href="#">
+                                    <div class="d-f">
+                                        <div class="mr-1">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                        d="M17 20H22V18C22 16.3431 20.6569 15 19 15C18.0444 15 17.1931 15.4468 16.6438 16.1429M17 20H7M17 20V18C17 17.3438 16.8736 16.717 16.6438 16.1429M7 20H2V18C2 16.3431 3.34315 15 5 15C5.95561 15 6.80686 15.4468 7.35625 16.1429M7 20V18C7 17.3438 7.12642 16.717 7.35625 16.1429M7.35625 16.1429C8.0935 14.301 9.89482 13 12 13C14.1052 13 15.9065 14.301 16.6438 16.1429M15 7C15 8.65685 13.6569 10 12 10C10.3431 10 9 8.65685 9 7C9 5.34315 10.3431 4 12 4C13.6569 4 15 5.34315 15 7ZM21 10C21 11.1046 20.1046 12 19 12C17.8954 12 17 11.1046 17 10C17 8.89543 17.8954 8 19 8C20.1046 8 21 8.89543 21 10ZM7 10C7 11.1046 6.10457 12 5 12C3.89543 12 3 11.1046 3 10C3 8.89543 3.89543 8 5 8C6.10457 8 7 8.89543 7 10Z"
+                                                        stroke="#1D1D1F" stroke-width="1" stroke-linecap="round"
+                                                        stroke-linejoin="round"/>
+                                            </svg>
+                                        </div>
+                                        <div>Sales</div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div>
+                                <a class="nav_items_a active" href="#">
+                                    <div class="d-f">
+                                        <div class="mr-1">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                        d="M8.4 0.801561C8.16094 0.923437 7.95469 1.15781 7.87969 1.40156C7.84219 1.53281 7.82813 3.35625 7.82813 8.12812V14.6719L5.94844 14.6625L4.06875 14.6484L3.79688 13.9312C3.64688 13.5328 3.46406 13.1344 3.38906 13.0406C3.31406 12.9469 3.12656 12.8016 2.97656 12.7266C2.71875 12.5953 2.65781 12.5859 2.2125 12.5859C1.78594 12.5859 1.72031 12.5953 1.65938 12.675C1.62188 12.7266 1.59375 12.8203 1.59375 12.8859C1.59375 13.1156 1.65 13.1484 2.15156 13.1766C2.64844 13.2047 2.79375 13.2609 2.93438 13.4766C2.97656 13.5422 3.60938 15.1875 4.34063 17.1328L5.66719 20.6672L5.68125 21.3937C5.69531 22.0406 5.70469 22.1344 5.79375 22.2469C6.00469 22.5281 6.10313 22.5703 6.675 22.5844L7.2 22.6031L7.30781 22.8047C7.36875 22.9172 7.5 23.0672 7.60781 23.1422C7.77656 23.2594 7.8375 23.2734 8.18438 23.2734C8.53594 23.2734 8.5875 23.2594 8.77031 23.1328C8.88281 23.0531 9.01406 22.9078 9.06563 22.7953L9.16406 22.5984L9.62344 22.5938C10.0594 22.5938 10.0828 22.5984 10.1203 22.7016C10.2563 23.0578 10.6359 23.2969 11.0625 23.2969C11.4844 23.2969 11.775 23.1234 11.9578 22.7672L12.0469 22.5938H12.4594C12.9375 22.5938 13.0359 22.5469 13.0406 22.3172C13.05 22.0547 12.9141 21.9844 12.4172 21.9844C12.075 21.9844 12 21.9703 12 21.9141C12 21.8766 11.9016 21.7406 11.7797 21.6141C11.6203 21.45 11.4938 21.3656 11.3438 21.3281C10.9031 21.2109 10.4109 21.3984 10.1906 21.7734L10.0688 21.9844H9.60938H9.15L9.09375 21.8438C8.96719 21.5391 8.53125 21.2812 8.15156 21.2812C7.81406 21.2812 7.35938 21.5953 7.25156 21.9047C7.22813 21.9703 7.15781 21.9844 6.80625 21.9844C6.54844 21.9844 6.375 21.9656 6.3375 21.9281C6.3 21.8906 6.28125 21.7031 6.28125 21.3891V20.9062H9.6C11.4234 20.9062 12.9375 20.8875 12.9656 20.8687C13.05 20.8172 13.1344 20.6203 13.5 19.6312L13.8422 18.7031L17.7609 18.6937C21.3047 18.6797 21.6938 18.6703 21.8203 18.6C22.0312 18.4875 22.2188 18.2812 22.3172 18.0703C22.4016 17.8922 22.4062 17.5359 22.4062 9.68906C22.4062 2.38594 22.3969 1.47656 22.3313 1.32187C22.2422 1.10156 22.0594 0.909374 21.8344 0.792187C21.6656 0.707811 21.4641 0.703125 15.1313 0.703125H8.60156L8.4 0.801561ZM21.4313 1.3125C21.525 1.34062 21.6469 1.41562 21.7031 1.48594C21.7969 1.60781 21.7969 1.61719 21.7969 9.69844C21.7969 17.2922 21.7875 17.7937 21.7125 17.8875C21.6703 17.9437 21.5859 18.0141 21.5297 18.0422C21.4594 18.0797 20.3672 18.0938 17.7516 18.0938H14.0766L14.6297 16.6078C14.9391 15.7875 15.1875 15.0516 15.1875 14.9672C15.1875 14.6578 15.3328 14.6719 11.7094 14.6719H8.4375V8.1375C8.4375 1.6125 8.4375 1.60781 8.53594 1.48125C8.5875 1.41562 8.7 1.34062 8.77969 1.31719C8.99531 1.25625 21.2063 1.25156 21.4313 1.3125ZM14.4375 15.3141C14.4375 15.3375 14.0203 16.4625 13.5141 17.8266L12.5859 20.2969L9.37969 20.2875L6.17344 20.2734L5.24531 17.7891C4.73438 16.4203 4.3125 15.3 4.3125 15.2906C4.3125 15.2859 6.59063 15.2812 9.375 15.2812C12.1594 15.2812 14.4375 15.2953 14.4375 15.3141ZM8.44219 22.0266C8.61563 22.2047 8.625 22.4109 8.46094 22.5703C8.22188 22.8141 7.78125 22.6453 7.78125 22.3125C7.78125 22.125 8.00156 21.8906 8.17969 21.8906C8.25469 21.8906 8.35781 21.9469 8.44219 22.0266ZM11.25 21.9609C11.6016 22.1437 11.4563 22.6875 11.0578 22.6875C10.9219 22.6875 10.8563 22.6547 10.7625 22.5422C10.6219 22.3781 10.6125 22.3125 10.7156 22.1203C10.8281 21.9 11.025 21.8438 11.25 21.9609Z"
+                                                        fill="black"/>
+                                                <path
+                                                        d="M9.76875 2.46568C9.66563 2.61568 9.72188 2.80787 9.89063 2.89224C9.98438 2.93912 11.0859 2.94849 15.1688 2.93912C20.175 2.92974 20.3391 2.92505 20.4328 2.84068C20.5547 2.73287 20.5594 2.52662 20.4469 2.42349C20.3672 2.34849 19.9266 2.3438 15.1031 2.3438H9.84375L9.76875 2.46568Z"
+                                                        fill="black"/>
+                                                <path
+                                                        d="M9.82031 4.19531C9.67969 4.33125 9.67031 4.46719 9.79688 4.59375C9.89063 4.6875 9.95156 4.6875 15.1359 4.6875H20.3859L20.4563 4.58437C20.5594 4.43906 20.55 4.28437 20.4375 4.17188C20.3438 4.07812 20.2828 4.07812 15.1406 4.07812H9.93281L9.82031 4.19531Z"
+                                                        fill="black"/>
+                                                <path
+                                                        d="M9.79688 5.95312C9.675 6.075 9.67969 6.19219 9.80156 6.34687L9.89531 6.46875H15.1219C20.2828 6.46875 20.3438 6.46875 20.4375 6.375C20.4891 6.32344 20.5312 6.22969 20.5312 6.16406C20.5312 6.09844 20.4891 6.00469 20.4375 5.95312C20.3438 5.85938 20.2828 5.85938 15.1172 5.85938C9.95156 5.85938 9.89063 5.85938 9.79688 5.95312Z"
+                                                        fill="black"/>
+                                                <path
+                                                        d="M9.77812 7.74375C9.73594 7.8 9.70312 7.87969 9.70312 7.92188C9.70312 7.96406 9.73594 8.04375 9.77812 8.1L9.84844 8.20312H15.1125C20.1516 8.20312 20.3812 8.19844 20.4516 8.11875C20.5547 8.00625 20.55 7.81406 20.4469 7.72031C20.3672 7.64531 19.9266 7.64062 15.1031 7.64062H9.84844L9.77812 7.74375Z"
+                                                        fill="black"/>
+                                                <path
+                                                        d="M9.82031 9.49219C9.67969 9.62812 9.67031 9.76406 9.79688 9.89062C9.89063 9.98438 9.95156 9.98438 15.1359 9.98438H20.3859L20.4563 9.88125C20.5594 9.73594 20.55 9.58125 20.4375 9.46875C20.3438 9.375 20.2828 9.375 15.1406 9.375H9.93281L9.82031 9.49219Z"
+                                                        fill="black"/>
+                                                <path
+                                                        d="M9.79688 11.25C9.675 11.3719 9.67969 11.4891 9.80156 11.6437L9.89531 11.7656H15.1219C20.2828 11.7656 20.3438 11.7656 20.4375 11.6719C20.4891 11.6203 20.5312 11.5266 20.5312 11.4609C20.5312 11.3953 20.4891 11.3016 20.4375 11.25C20.3438 11.1562 20.2828 11.1562 15.1172 11.1562C9.95156 11.1562 9.89063 11.1562 9.79688 11.25Z"
+                                                        fill="black"/>
+                                                <path
+                                                        d="M9.77812 13.0406C9.73594 13.0969 9.70312 13.1766 9.70312 13.2188C9.70312 13.2609 9.73594 13.3406 9.77812 13.3969L9.84844 13.5H15.1125C20.1516 13.5 20.3812 13.4953 20.4516 13.4156C20.5547 13.3031 20.55 13.1109 20.4469 13.0172C20.3672 12.9422 19.9266 12.9375 15.1031 12.9375H9.84844L9.77812 13.0406Z"
+                                                        fill="black"/>
+                                                <path
+                                                        d="M15.8062 14.7469C15.675 14.8359 15.6656 15.0938 15.7875 15.2016C15.8672 15.2719 16.0969 15.2812 18.1312 15.2812H20.3859L20.4562 15.1781C20.5594 15.0328 20.55 14.8781 20.4375 14.7656C20.3484 14.6766 20.2828 14.6719 18.1266 14.6719C16.2 14.6719 15.9 14.6812 15.8062 14.7469Z"
+                                                        fill="black"/>
+                                                <path
+                                                        d="M15.1266 16.5375C15.0094 16.6641 15.0234 16.9031 15.15 16.9875C15.2437 17.0531 15.5719 17.0625 17.7984 17.0625C20.2828 17.0625 20.3437 17.0625 20.4375 16.9688C20.55 16.8562 20.5594 16.7016 20.4562 16.5562L20.3859 16.4531H17.7937C15.3422 16.4531 15.1969 16.4578 15.1266 16.5375Z"
+                                                        fill="black"/>
+                                            </svg>
+                                        </div>
+                                        <div>Requisition</div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div>
+                                <a class="nav_items_a" href="#">
+                                    <div class="d-f">
+                                        <div class="mr-1">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                        d="M10.3246 4.31731C10.751 2.5609 13.249 2.5609 13.6754 4.31731C13.9508 5.45193 15.2507 5.99038 16.2478 5.38285C17.7913 4.44239 19.5576 6.2087 18.6172 7.75218C18.0096 8.74925 18.5481 10.0492 19.6827 10.3246C21.4391 10.751 21.4391 13.249 19.6827 13.6754C18.5481 13.9508 18.0096 15.2507 18.6172 16.2478C19.5576 17.7913 17.7913 19.5576 16.2478 18.6172C15.2507 18.0096 13.9508 18.5481 13.6754 19.6827C13.249 21.4391 10.751 21.4391 10.3246 19.6827C10.0492 18.5481 8.74926 18.0096 7.75219 18.6172C6.2087 19.5576 4.44239 17.7913 5.38285 16.2478C5.99038 15.2507 5.45193 13.9508 4.31731 13.6754C2.5609 13.249 2.5609 10.751 4.31731 10.3246C5.45193 10.0492 5.99037 8.74926 5.38285 7.75218C4.44239 6.2087 6.2087 4.44239 7.75219 5.38285C8.74926 5.99037 10.0492 5.45193 10.3246 4.31731Z"
+                                                        stroke="#1D1D1F" stroke-width="1" stroke-linecap="round"
+                                                        stroke-linejoin="round"/>
+                                                <path
+                                                        d="M15 12C15 13.6569 13.6569 15 12 15C10.3431 15 9 13.6569 9 12C9 10.3431 10.3431 9 12 9C13.6569 9 15 10.3431 15 12Z"
+                                                        stroke="#1D1D1F" stroke-width="1" stroke-linecap="round"
+                                                        stroke-linejoin="round"/>
+                                            </svg>
+                                        </div>
+                                        <div>Setting</div>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div>
+                                <a class="nav_items_a nav_items_a_logout" href="#">
+                                    <div class="d-f">
+                                        <div class="mr-1">
+                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                                 xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                        d="M11 16L7 12M7 12L11 8M7 12L21 12M16 16V17C16 18.6569 14.6569 20 13 20H6C4.34315 20 3 18.6569 3 17V7C3 5.34315 4.34315 4 6 4H13C14.6569 4 16 5.34315 16 7V8"
+                                                        stroke="red" stroke-width="1" stroke-linecap="round"
+                                                        stroke-linejoin="round"/>
+                                            </svg>
+                                        </div>
+                                        <div>Logout</div>
+                                    </div>
+                                </a>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- Contents -->
+                    <div class="db_home_content container-fluid mt-3 mb-5 mx-1">
+
+                        <!-- breadcrumbs -->
+                        <!-- <div class="detail_breadcrumbs">
+                          <div>
+                            <a href="#">Dashboard</a>
+                          </div>
+                          <div class="mx-2">/</div>
+                          <div class="font-weight-bold">Order Details</div>
+                        </div> -->
+
+                        <!-- Requisition form -->
+                        <h5 class="mb-0 py-3">Requisition form</h5>
+
+                        <!-- Form -->
+                        <form action="#" method="post">
+                            <div class="dt_box mt-3">
+                                <h5 class="mb-3">Fill this form</h5>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="input-group">
+                                            <input class="input" type="number" placeholder="Employee id (autofill)"/>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-group">
+                                            <input class="input" type="text"
+                                                   placeholder="Select employee name (autofill)"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="input-group">
+                                            <input class="input" type="text" placeholder="Employee phone number"/>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-group">
+                                            <input class="input" type="text" placeholder="Designation (autofill)"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="input-group">
+                                            <input class="input" type="text" placeholder="Company name"/>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-group">
+                                            <select class="input">
+                                                <option value="">Team name</option>
+                                                <option value="aaa">aaa</option>
+                                                <option value="aaa">aaa</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="input-group">
+                                            <select class="input">
+                                                <option value="">Item Category</option>
+                                                <option value="sample">sample</option>
+                                                <option value="sample">sample</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-group">
+                                            <input class="input" type="text" placeholder="Item name"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="input-group">
+                                            <textarea class="input" rows="4" placeholder="Item description"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="input-group input-group-file">
+                                            <input id="req_att_files" type="file" multiple="1"/>
+                                            <label class="input-file" for="req_att_files">
+                                                <svg class="mr-2" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                            d="M4 16L4 17C4 18.6569 5.34315 20 7 20L17 20C18.6569 20 20 18.6569 20 17L20 16M16 8L12 4M12 4L8 8M12 4L12 16"
+                                                            stroke="#1D1D1F" stroke-width="2" stroke-linecap="round"
+                                                            stroke-linejoin="round"/>
+                                                </svg>
+                                                Attach files
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="input-group">
+                                            <select class="input">
+                                                <option value="">Select quantity</option>
+                                                <option value="sample">sample</option>
+                                                <option value="sample">sample</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-group">
+                                            <input class="input" type="date" placeholder="Select deadline"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="input-group">
+                                            <input class="input" type="text" placeholder="Purpose of use"/>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="input-group">
+                                            <input class="input" type="text"
+                                                   placeholder="Alternative products (optional)"/>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-group input-group-file">
+                                            <input id="req_ap_att_files" type="file" multiple="1"/>
+                                            <label class="input-file" for="req_ap_att_files">
+                                                <svg class="mr-2" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                                     xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                            d="M4 16L4 17C4 18.6569 5.34315 20 7 20L17 20C18.6569 20 20 18.6569 20 17L20 16M16 8L12 4M12 4L8 8M12 4L12 16"
+                                                            stroke="#1D1D1F" stroke-width="2" stroke-linecap="round"
+                                                            stroke-linejoin="round"/>
+                                                </svg>
+                                                Attach files
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Send request -->
+                                <div class="mt-3 d-flex flex-row-reverse">
+                                    <button class="button button-primary px-5 py-2" type="submit">Send request</button>
+                                </div>
+
+                            </div>
+                            <!-- End dt_box -->
+
+                        </form>
+                        <!-- End form -->
+
+                        <!-- Requisition Information -->
+                        <div class="req_info">
+                            <div class="my-4">
+                                <h5 data-toggle="modal" data-target="#req_modal">Requisition Information</h5>
+                            </div>
+
+                            <!-- order table -->
+                            <div class="table-container">
+                                <table class="">
+                                    <tr class="tr_header">
+                                        <td>Header</td>
+                                        <td>Header</td>
+                                        <td>Header</td>
+                                        <td>Header</td>
+                                        <td>Header</td>
+                                        <td>Header</td>
+                                        <td>Header</td>
+                                        <td>Header</td>
+                                        <td>Header</td>
+                                        <td>Header</td>
+                                        <td>Header</td>
+                                        <td>Header</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                        <td>Item</td>
+                                    </tr>
+                                </table>
+                            </div>
+
+                            <!--
+                            Requisition modal
+                            Requisition modal
+                            -->
+
+                            <!-- The Modal -->
+                            <div class="modal" id="req_modal">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Requisition States</h4>
+                                            <button type="button" class="close" data-dismiss="modal">x</button>
+                                        </div>
+
+                                        <!-- Modal body -->
+                                        <div class="modal-body">
+                                            <div class="v_steps">
+                                                <div class="step">
+                                                    <div class="step_circle v_line">
+                                                        <div class="circle_inner">
+                                                            <svg class="circle_icon" width="20" height="20"
+                                                                 viewBox="0 0 24 24" fill="none"
+                                                                 xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M5 13L9 17L19 7" stroke="#1D1D1F" stroke-width="1"
+                                                                      stroke-linecap="round"
+                                                                      stroke-linejoin="round"/>
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+                                                    <div class="step_text">
+                                                        <div>
+                                                            <div>Department Head</div>
+                                                        </div>
+                                                        <div>
+                                                            <div class="step_accepted">Accepted</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="step">
+                                                    <div class="step_circle v_line">
+                                                        <div class="circle_inner">
+                                                            <svg class="circle_icon" width="20" height="20"
+                                                                 viewBox="0 0 24 24" fill="none"
+                                                                 xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M5 13L9 17L19 7" stroke="#1D1D1F" stroke-width="1"
+                                                                      stroke-linecap="round"
+                                                                      stroke-linejoin="round"/>
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+                                                    <div class="step_text">
+                                                        <div>
+                                                            <div>It Department</div>
+                                                        </div>
+                                                        <div>
+                                                            <div class="step_accepted">Accepted</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="step">
+                                                    <div class="step_circle v_line">
+                                                        <div class="circle_inner">
+                                                            <svg class="circle_icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                                                      xmlns="http://www.w3.org/2000/svg">
+                                                                      <path d="M5 13L9 17L19 7" stroke="#1D1D1F" stroke-width="1" stroke-linecap="round"
+                                                                          stroke-linejoin="round" />
+                                                                  </svg>
+                                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                                                 xmlns="http://www.w3.org/2000/svg">
+                                                                <path
+                                                                        d="M12 8V12L15 15M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                                                                        stroke="#1D1D1F" stroke-width="1"
+                                                                        stroke-linecap="round" stroke-linejoin="round"/>
+                                                            </svg>
+
+                                                        </div>
+                                                    </div>
+                                                    <div class="step_text">
+                                                        <div>
+                                                            <div>Admin Department</div>
+                                                        </div>
+                                                        <div>
+                                                            <!-- <div class="step_accepted">Accepted</div> -->
+                                                            <div class="step_received">Received</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="step">
+                                                    <div class="step_circle v_line">
+                                                        <div class="circle_inner">
+                                                            <svg class="circle_icon" width="20" height="20"
+                                                                 viewBox="0 0 24 24" fill="none"
+                                                                 xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M5 13L9 17L19 7" stroke="#1D1D1F" stroke-width="1"
+                                                                      stroke-linecap="round"
+                                                                      stroke-linejoin="round"/>
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+                                                    <div class="step_text">
+                                                        <div>
+                                                            <div>Finance Department</div>
+                                                        </div>
+                                                        <div>
+                                                            <div class="step_accepted">Accepted</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="step">
+                                                    <div class="step_circle">
+                                                        <div class="circle_inner">
+                                                            <svg class="circle_icon" width="20" height="20"
+                                                                 viewBox="0 0 24 24" fill="none"
+                                                                 xmlns="http://www.w3.org/2000/svg">
+                                                                <path d="M5 13L9 17L19 7" stroke="#1D1D1F" stroke-width="1"
+                                                                      stroke-linecap="round"
+                                                                      stroke-linejoin="round"/>
+                                                            </svg>
+                                                        </div>
+                                                    </div>
+                                                    <div class="step_text">
+                                                        <div>
+                                                            <div>SCM Department</div>
+                                                        </div>
+                                                        <div>
+                                                            <div class="step_accepted">Accepted</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-danger" data-dismiss="modal">
+                                                Close</button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--
+                            End Requisition modal
+                            End Requisition modal
+                            -->
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- Optional JavaScript -->
+                <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+                <script src="/bd_portal/static/js/jquery-3.6.0.min.js"></script>
+                <script src="/bd_portal/static/js/popper.min.js"></script>
+                <script src="/bd_portal/static/js/bootstrap.min.js"></script>
+                <script src="/bd_portal/static/js/font-awesome.js"></script>
+
+                <!-- Custom Javascript -->
+                <script src="/bd_portal/static/js/sales_portal_details.js"></script>
+
+            </body>
+
+        </html>
+    </template>
+</odoo>

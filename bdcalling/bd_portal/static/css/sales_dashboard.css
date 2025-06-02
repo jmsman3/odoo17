@@ -1,0 +1,227 @@
+.db_home {
+    display: flex;
+    background-color: #F4F4F4;
+    min-height: 100vh;
+}
+
+.db_home .db_home_nav {
+    width: 20%;
+    background-color: white;
+    padding: 20px 20px;
+}
+
+.db_home .db_home_nav img {
+    width: 50px;
+    object-fit: cover;
+}
+
+.db_home .db_home_content {
+    /* width: 80%; */
+}
+
+.nav_items svg {
+    width: 20px;
+}
+
+.nav_items>div {
+    margin: 10px 0px;
+}
+
+.nav_items_a {
+    text-decoration: none;
+    display: block;
+    margin: 10px 10px;
+    padding: 5px 15px;
+    color: black;
+    text-decoration: none;
+    transition: background-color .5s;
+    font-size: 17px;
+}
+
+.nav_items_a:hover {
+    text-decoration: none;
+    background-color: black;
+    color: white;
+    border-radius: 3px;
+}
+
+.nav_items .active {
+    text-decoration: none;
+    background-color: black;
+    color: white;
+    border-radius: 3px;
+}
+
+.nav_items_a:hover svg path {
+    stroke: white;
+}
+
+.nav_items_a_logout {
+    color: red;
+}
+
+/* ===================================
+db_home_content
+==================================== */
+.db_home_content {
+    padding: 0px 20px 20px 20px;
+}
+
+.db-cards {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.db-cards>div {
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    padding: 10px 15px;
+    border-radius: 6px;
+    min-width: 150px;
+    background-color: white;
+}
+
+.db-cards-content {
+    display: flex;
+    align-items: center;
+}
+
+.db-cards-content .bold_number {
+    font-weight: bold;
+}
+
+.db-cards-content .container-icon {
+    margin-right: 10px;
+}
+
+.t-text-color {
+    color: rgb(66, 66, 66);
+}
+
+/* best-performer */
+.best-performer {
+    display: flex;
+    align-items: center;
+}
+
+.bp_left_content {
+    margin-right: 10px;
+}
+
+.bp_right_content .name {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+/* ------------------------
+All Order Information
+-------------------------- */
+.orders .top_bar {
+    /*margin-top: 30px;*/
+    background-color: black;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+.orders .top_bar .ctl_button {
+    background-color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.orders .table-container {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.orders .table-container::-webkit-scrollbar {
+    width: 8px;
+    height: 10px;
+}
+
+.orders .table-container::-webkit-scrollbar-track {
+    background-color: white;
+}
+
+.orders .table-container::-webkit-scrollbar-thumb {
+    background: #AFAFAF;
+    border-radius: 4px;
+}
+
+.orders table {
+    width: 100%;
+    background-color: white;
+    width: max-content;
+    border-collapse: collapse;
+}
+
+.orders table .tr_header td {
+    background-color: #F0F0F0;
+    font-weight: bold;
+    font-size: 13px;
+    padding-bottom: 5px !important;
+}
+
+.orders table td {
+    border: 1px solid rgb(225 225 225);
+    padding: 7px 5px 7px 5px;
+    white-space: nowrap;
+    /* min-width: 150px; */
+    max-width: 339px;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+}
+
+.orders table tr:nth-child(odd) {
+    background-color: #FCFCFC;
+    /* Light gray background */
+}
+
+/* -------------------------
+pagination
+-------------------------- */
+.pagination {
+    margin-top: 15px;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination>div>a {
+    display: block;
+    padding: 7px 15px;
+    color: #5494fb;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.pagination>div>a:hover:not(.disable) {
+    background-color: #ccdffc;
+    text-decoration: none;
+}
+
+.pagination .active {
+    background-color: #A6C8FF;
+    color: black;
+}
+
+.pagination .disable {
+    color: rgb(199, 199, 199) !important;
+    /* stroke: rgb(213, 213, 213); */
+    cursor: not-allowed;
+}
+
+/* .svg_disable {
+    stroke: rgb(213, 213, 213) !important;
+} */
+
+.vertical_align_middle {
+    vertical-align: middle;
+}
